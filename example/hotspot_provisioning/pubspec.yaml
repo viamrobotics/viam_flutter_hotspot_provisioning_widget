@@ -12,8 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  viam_flutter_provisioning_widget:
-    path: ../
+  plugin_wifi_connect:
+    git:
+      url: https://github.com/viamrobotics/plugin_wifi_connect
+      ref: 0.0.2
+  viam_sdk: 0.5.1
 
 dev_dependencies:
   flutter_test:
