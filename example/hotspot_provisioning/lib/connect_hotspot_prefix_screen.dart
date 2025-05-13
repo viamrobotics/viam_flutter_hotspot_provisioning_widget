@@ -53,6 +53,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   Future<void> _createRobot() async {
     final location = await _viam.appClient.createLocation(Consts.organizationId, 'TEST-${Random().nextInt(1000)}');
     final String robotName = "tester-${Random().nextInt(1000)}";
+    debugPrint('robotName: $robotName');
     final robotId = await _viam.appClient.newMachine(robotName, location.id);
     _robot = await _viam.appClient.getRobot(robotId);
     _mainPart = (await _viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
