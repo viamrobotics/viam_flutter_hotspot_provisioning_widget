@@ -158,9 +158,9 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                     labelText: "Leave blank if network has no password.",
                     labelStyle: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.black),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
-                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
                     suffixIcon: IconButton(
                       icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
                       onPressed: () => setState(() => obscureText = !obscureText),
