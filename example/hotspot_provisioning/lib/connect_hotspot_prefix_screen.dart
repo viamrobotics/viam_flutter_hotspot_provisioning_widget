@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
+import 'consts.dart';
+
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   const ConnectHotspotPrefixScreen({super.key});
 
@@ -12,8 +14,6 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
 }
 
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
-  final String _hotspotPrefix = 'office';
-  final String _hotspotPassword = 'GOSTadm1n';
   bool _isAttemptingConnectionToHotspot = false;
   bool _isRetryingHotspot = false;
   Timer? _pollingTimer;
@@ -66,12 +66,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   }
 
   Future<ProvisioningInfo?> getSmartMachineStatus() async {
-    final viam = await Viam.withApiKey('apiKeyId', 'apiKey');
+    final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
     final response = await viam.provisioningClient.getSmartMachineStatus();
-    //alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials;
-    if (response.errors.isNotEmpty) {
-      //logProvisioningStatus('machine_status', Level.error, 'getSmartMachineStatus errors: ${response.errors}');
-    }
+    // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
     return response.provisioningInfo;
   }
 
@@ -84,7 +81,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       });
       final connectedSSID = await PluginWifiConnect.ssid;
       debugPrint('Current SSID: $connectedSSID');
-      if (connectedSSID != null && connectedSSID.startsWith(_hotspotPrefix)) {
+      if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) {
         debugPrint('Already connected to gost hotspot');
         if (context.mounted) {
           setState(() {
@@ -98,8 +95,8 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       debugPrint('disconnected: $disconnected');
       debugPrint('Connecting to gost-#### hotspot');
       final connected = await PluginWifiConnect.connectToSecureNetworkByPrefix(
-        _hotspotPrefix,
-        _hotspotPassword,
+        Consts.hotspotPrefix,
+        Consts.hotspotPassword,
         isWep: false,
         isWpa3: false,
         saveNetwork: true, // flips joinOnce on iOS to false
@@ -109,11 +106,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           debugPrint('Connected to hotspot');
           if (context.mounted) {
             _retryCount = 0;
-            // Provider.of<ProvisioningState>(context, listen: false).logProvisioningStatus(
-            //   'hotspot_connection',
-            //   Level.info,
-            //   'Connected to hotspot',
-            // );
             setState(() {
               _isAttemptingConnectionToHotspot = false; // Connection attempt phase is over
             });
@@ -140,11 +132,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       } else {
         if (context.mounted) {
           debugPrint('Error connecting to hotspot: ${e.toString()}');
-          // showErrorDialog(
-          //   context,
-          //   title: 'Error Connecting to Hotspot',
-          //   error: 'Please ensure your machine is online and you\'re nearby.',
-          // );
           setState(() {
             _isRetryingHotspot = true;
             _retryCount = 0;
@@ -155,6 +142,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     }
   }
 
+  // TODO: implement this
   void _navigateToNetworkSelection() {
     // if (!mounted) return;
     // debugPrint('Navigating to network selection screen...');
