@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
-import 'consts.dart';
-
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
-  const ConfirmationScreen({super.key, required this.robot});
+  const ConfirmationScreen({super.key, required this.robot, required this.viam});
 
+  final Viam viam;
   final Robot robot;
 
   @override
@@ -47,10 +46,10 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
   void _getRobotStatus() async {
     try {
-      final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
-      final reloadedRobot = await viam.appClient.getRobot(widget.robot.id);
+      // TODO: Call disconnect?
+      final reloadedRobot = await widget.viam.appClient.getRobot(widget.robot.id);
       final newRobotStatus = await calculateRobotStatus(reloadedRobot);
-      debugPrint('Robot status: $newRobotStatus');
+      debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
       if (newRobotStatus == RobotStatus.online) {
         _timer?.cancel();
       }

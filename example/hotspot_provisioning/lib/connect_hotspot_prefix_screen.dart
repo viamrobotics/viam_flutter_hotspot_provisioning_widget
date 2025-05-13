@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:viam_sdk/viam_sdk.dart';
+import 'package:viam_sdk/protos/app/app.dart';
 
 import 'consts.dart';
 import 'primary_button.dart';
+import 'network_selection_screen.dart';
 
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   const ConnectHotspotPrefixScreen({super.key});
@@ -17,25 +20,42 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
   bool _isAttemptingConnectionToHotspot = false;
   bool _isRetryingHotspot = false;
+  bool _connectedToHotspot = false;
   Timer? _pollingTimer;
   bool foundValidSmartMachineStatus = false;
   bool _pollingForMachine = false;
   int _retryCount = 0;
 
+  late Viam _viam;
+  late Robot _robot;
+  late RobotPart _mainPart;
   static const listStyle = TextStyle(
-    color: Colors.black,
+    color: Colors.white,
     fontSize: 16.0,
   );
 
   @override
   void initState() {
     super.initState();
+    _viam = Viam.withAccessToken(Consts.accessToken);
+    // you MUST create the robot before connecting to the hotspot
+    // once connected to the hotspot you can communicate with the machine, but will not have interet access
+    // TODO: only create if you haven't
+    _createRobot();
   }
 
   @override
   void dispose() {
     _pollingTimer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _createRobot() async {
+    final location = await _viam.appClient.createLocation(Consts.organizationId, 'TEST-${Random().nextInt(1000)}');
+    final String robotName = "tester-${Random().nextInt(1000)}";
+    final robotId = await _viam.appClient.newMachine(robotName, location.id);
+    _robot = await _viam.appClient.getRobot(robotId);
+    _mainPart = (await _viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
   }
 
   void _findProvisionedMachine() {
@@ -67,10 +87,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   }
 
   Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
-    final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
-    final response = await viam.provisioningClient.getSmartMachineStatus();
+    final response = await _viam?.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
-    return response.provisioningInfo;
+    return response?.provisioningInfo;
   }
 
   void _connectToHotspot(BuildContext context) async {
@@ -86,6 +105,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         debugPrint('Already connected to hotspot');
         if (context.mounted) {
           setState(() {
+            _connectedToHotspot = true;
             _isAttemptingConnectionToHotspot = false;
           });
           _findProvisionedMachine();
@@ -108,6 +128,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           if (context.mounted) {
             _retryCount = 0;
             setState(() {
+              _connectedToHotspot = true;
               _isAttemptingConnectionToHotspot = false; // Connection attempt phase is over
             });
             _findProvisionedMachine();
@@ -143,26 +164,25 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     }
   }
 
-  // TODO: implement this
   void _navigateToNetworkSelection() {
-    // if (!mounted) return;
-    // debugPrint('Navigating to network selection screen...');
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     settings: const RouteSettings(name: '/network-selection'),
-    //     builder: (context) => NetworkSelectionScreen(),
-    //   ),
-    // );
+    if (!mounted) return;
+    debugPrint('Navigating to network selection screen...');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        settings: const RouteSettings(name: '/network-selection'),
+        builder: (context) => NetworkSelectionScreen(viam: _viam, robot: _robot, mainPart: _mainPart),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.grey,
-        title: const Text('Connect to Device Hotspot'),
+        backgroundColor: Colors.black,
+        title: const Text('Connect to Device Hotspot', style: TextStyle(color: Colors.white)),
       ),
       body: SafeArea(
         child: Column(
@@ -178,7 +198,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                         "Steps to connect to your device:",
                         style: const TextStyle(
                           fontSize: 20.0,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -194,6 +214,16 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                       padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
                       child: Text("3. Press the button below to connect to the device's hotspot.", style: listStyle),
                     ),
+                    if (_connectedToHotspot)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                        child: Column(
+                          children: [
+                            Text("You are connected to the device's hotspot.", style: listStyle),
+                            Icon(Icons.check_circle, color: Colors.green),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:viam_sdk/protos/provisioning/provisioning.dart';
+import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
 import 'no_content_widget.dart';
@@ -10,7 +10,16 @@ import 'provisioning_list_item.dart';
 import 'password_input_screen.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
-  const NetworkSelectionScreen({super.key});
+  final Viam viam;
+  final Robot robot;
+  final RobotPart mainPart;
+
+  const NetworkSelectionScreen({
+    super.key,
+    required this.viam,
+    required this.robot,
+    required this.mainPart,
+  });
 
   @override
   State<NetworkSelectionScreen> createState() => _NetworkSelectionScreenState();
@@ -36,8 +45,11 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
         await Future.delayed(Duration(milliseconds: 500));
       }
       if (mounted) {
-        // TODO: DO DIRECTLY!
-        //await Provider.of<ProvisioningState>(context, listen: false).getNetworkList();
+        final networks = await widget.viam.provisioningClient.getNetworkList();
+        final sortedNetworks = networks.toList()..sort((b, a) => a.signal.compareTo(b.signal));
+        setState(() {
+          machineVisibleNetworks = sortedNetworks;
+        });
       }
     } catch (e) {
       debugPrint('getNetworkList error: ${e.toString()}'); // not showing error, but _loadingNetworks=false allows the retry
@@ -56,7 +68,14 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
   void _goToPasswordInputScreen(NetworkInfo network) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PasswordInputScreen(network: network)),
+      MaterialPageRoute(
+        builder: (context) => PasswordInputScreen(
+          network: network,
+          viam: widget.viam,
+          robot: widget.robot,
+          mainPart: widget.mainPart,
+        ),
+      ),
     );
   }
 

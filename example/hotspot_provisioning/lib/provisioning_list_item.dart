@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../main.dart';
-
 class ProvisioningListItem extends StatelessWidget {
   final String textString;
   final Widget leading;

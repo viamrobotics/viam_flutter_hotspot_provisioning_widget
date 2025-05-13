@@ -3,13 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 import 'package:viam_sdk/protos/app/app.dart';
 
-import 'consts.dart';
 import 'confirmation_screen.dart';
 
 class PasswordInputScreen extends StatefulWidget {
   final NetworkInfo network;
+  final Viam viam;
+  final Robot robot;
+  final RobotPart mainPart;
 
-  const PasswordInputScreen({super.key, required this.network});
+  const PasswordInputScreen({
+    super.key,
+    required this.network,
+    required this.viam,
+    required this.robot,
+    required this.mainPart,
+  });
 
   @override
   State<PasswordInputScreen> createState() => _PasswordInputScreenState();
@@ -32,22 +40,24 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
       loading = true;
     });
     try {
-      final robot = await _setSmartMachineCredentials();
-      await _setNetworkCredentials();
+      await _setSmartMachineCredentials();
+      _setNetworkCredentials(); // not awaiting
       _retryCount = 0;
       if (mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ConfirmationScreen(robot: robot)),
+          MaterialPageRoute(
+            builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam),
+          ),
         );
       }
-    } catch (exception) {
+    } catch (e) {
       if (_retryCount < 1) {
         _retryCount++;
         await Future.delayed(const Duration(seconds: 2));
         await _submitPassword();
       } else {
-        debugPrint('Failed to connect to Wi-Fi');
+        debugPrint('Failed to provision machine: ${e.toString()}');
         _retryCount = 0;
       }
       if (mounted) {
@@ -58,22 +68,15 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     }
   }
 
-  Future<Robot> _setSmartMachineCredentials() async {
-    // TODO: only create if you haven't
-    final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
-    final location = await viam.appClient.createLocation(Consts.organizationId, _controller.text);
-    final robots = await viam.appClient.listRobots(location.id);
-    final String robotName = "specter-ai-${robots.length}";
-    final robotId = await viam.appClient.newMachine(robotName, location.id);
-    final robot = await viam.appClient.getRobot(robotId);
-    final mainPart = (await viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
-    await viam.provisioningClient.setSmartMachineCredentials(id: mainPart.id, secret: mainPart.secret);
-    return robot;
+  Future<void> _setSmartMachineCredentials() async {
+    await widget.viam.provisioningClient.setSmartMachineCredentials(
+      id: widget.mainPart.id,
+      secret: widget.mainPart.secret,
+    );
   }
 
   Future<void> _setNetworkCredentials() async {
-    final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
-    await viam.provisioningClient.setNetworkCredentials(
+    await widget.viam.provisioningClient.setNetworkCredentials(
       type: NetworkType.wifi,
       ssid: widget.network.ssid,
       psk: _controller.text,
