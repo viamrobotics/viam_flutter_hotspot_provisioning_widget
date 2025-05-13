@@ -87,9 +87,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   }
 
   Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
-    final response = await _viam?.provisioningClient.getSmartMachineStatus();
+    final response = await _viam.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
-    return response?.provisioningInfo;
+    return response.provisioningInfo;
   }
 
   void _connectToHotspot(BuildContext context) async {
