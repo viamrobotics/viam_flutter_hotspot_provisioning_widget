@@ -5,6 +5,7 @@ import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
 import 'consts.dart';
+import 'primary_button.dart';
 
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   const ConnectHotspotPrefixScreen({super.key});
@@ -158,7 +159,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
+        backgroundColor: Colors.grey,
         title: const Text('Connect to Device Hotspot'),
       ),
       body: SafeArea(
@@ -172,10 +175,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 24.0),
                       child: Text(
-                        "Steps to connect to your Specter AI device:",
+                        "Steps to connect to your device:",
                         style: const TextStyle(
                           fontSize: 20.0,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -200,10 +203,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 28.0),
-                  child: ElevatedButton(
+                  child: PrimaryButton(
                     onPressed: _isAttemptingConnectionToHotspot || _pollingForMachine ? null : () => _connectToHotspot(context),
-                    child: Text(_isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot"),
-                    // isLoading: _isAttemptingConnectionToHotspot || _pollingForMachine,
+                    text: _isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
+                    isLoading: _isAttemptingConnectionToHotspot || _pollingForMachine,
                   ),
                 ),
               ],
