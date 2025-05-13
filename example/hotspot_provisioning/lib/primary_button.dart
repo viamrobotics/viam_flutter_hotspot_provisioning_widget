@@ -16,7 +16,7 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: (isLoading || onPressed == null) ? null : onPressed,
-      style: FilledButton.styleFrom(backgroundColor: Colors.white),
+      style: OutlinedButton.styleFrom(backgroundColor: Colors.black),
       child: isLoading
           ? const SizedBox(
               width: 20,
@@ -27,7 +27,7 @@ class PrimaryButton extends StatelessWidget {
             )
           : Text(
               text,
-              style: TextStyle(fontWeight: FontWeight.w500, color: onPressed != null ? Colors.black : Color(0x80F7F7F8)),
+              style: TextStyle(fontWeight: FontWeight.w500, color: onPressed != null ? Colors.white : Color(0x80F7F7F8)),
             ),
     );
   }

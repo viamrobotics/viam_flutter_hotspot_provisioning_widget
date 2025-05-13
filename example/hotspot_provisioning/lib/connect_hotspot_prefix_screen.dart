@@ -30,7 +30,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   late Robot _robot;
   late RobotPart _mainPart;
   static const listStyle = TextStyle(
-    color: Colors.white,
+    color: Colors.black,
     fontSize: 16.0,
   );
 
@@ -180,10 +180,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Connect to Device Hotspot', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white,
+        title: const Text('Connect to Device Hotspot', style: TextStyle(color: Colors.black)),
       ),
       body: SafeArea(
         child: Column(
@@ -199,7 +199,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                         "Steps to connect to your device:",
                         style: const TextStyle(
                           fontSize: 20.0,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),
