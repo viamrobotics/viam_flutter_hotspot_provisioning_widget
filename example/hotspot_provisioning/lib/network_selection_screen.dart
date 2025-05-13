@@ -115,10 +115,10 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                         child: Text(
-                          "Connect to your vessel’s Wi-Fi",
+                          "Connect to your machine's Wi-Fi",
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                         ),
                       ),

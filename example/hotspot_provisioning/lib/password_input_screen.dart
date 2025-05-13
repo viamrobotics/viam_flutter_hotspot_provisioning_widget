@@ -124,7 +124,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                       "Wi-Fi network: ",
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                     Text(
@@ -132,7 +132,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                       style: TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -145,7 +145,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -156,13 +156,13 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                   controller: _controller,
                   decoration: InputDecoration(
                     labelText: "Leave blank if network has no password.",
-                    labelStyle: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.grey),
+                    labelStyle: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.black),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 3.0)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 3.0)),
-                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 3.0)),
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
+                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3.0)),
                     suffixIcon: IconButton(
-                      icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.white),
+                      icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
                       onPressed: () => setState(() => obscureText = !obscureText),
                     ),
                   ),
