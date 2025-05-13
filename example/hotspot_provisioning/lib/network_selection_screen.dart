@@ -7,6 +7,7 @@ import 'package:viam_sdk/viam_sdk.dart';
 import 'no_content_widget.dart';
 import 'pill_button.dart';
 import 'provisioning_list_item.dart';
+import 'password_input_screen.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
   const NetworkSelectionScreen({super.key});
@@ -53,11 +54,10 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
   }
 
   void _goToPasswordInputScreen(NetworkInfo network) {
-    // TODO: DO!
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => PasswordInputScreen(network: network)),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PasswordInputScreen(network: network)),
+    );
   }
 
   @override
