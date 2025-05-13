@@ -48,7 +48,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
         try {
           debugPrint('checking smart machine status');
-          final provisioningInfo = await getSmartMachineStatus();
+          final provisioningInfo = await getSmartMachineProvisioningInfo();
           if (provisioningInfo != null) {
             debugPrint('provisioningInfo: $provisioningInfo');
             _pollingTimer?.cancel();
@@ -65,7 +65,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     }
   }
 
-  Future<ProvisioningInfo?> getSmartMachineStatus() async {
+  Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
     final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
     final response = await viam.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
@@ -82,7 +82,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       final connectedSSID = await PluginWifiConnect.ssid;
       debugPrint('Current SSID: $connectedSSID');
       if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) {
-        debugPrint('Already connected to gost hotspot');
+        debugPrint('Already connected to hotspot');
         if (context.mounted) {
           setState(() {
             _isAttemptingConnectionToHotspot = false;
@@ -93,7 +93,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       }
       final disconnected = await PluginWifiConnect.disconnect();
       debugPrint('disconnected: $disconnected');
-      debugPrint('Connecting to gost-#### hotspot');
+      debugPrint('Connecting to ${Consts.hotspotPrefix}-#### hotspot');
       final connected = await PluginWifiConnect.connectToSecureNetworkByPrefix(
         Consts.hotspotPrefix,
         Consts.hotspotPassword,
