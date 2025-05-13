@@ -40,7 +40,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     _viam = Viam.withAccessToken(Consts.accessToken);
     // you MUST create the robot before connecting to the hotspot
     // once connected to the hotspot you can communicate with the machine, but will not have interet access
-    // TODO: only create if you haven't
     _createRobot();
   }
 
@@ -220,8 +219,12 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                         padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
                         child: Column(
                           children: [
-                            Text("You are connected to the device's hotspot.", style: listStyle),
-                            Icon(Icons.check_circle, color: Colors.green),
+                            Row(
+                              children: [
+                                Text("You are connected to the device's hotspot.", style: listStyle),
+                                Icon(Icons.check_circle, color: Colors.green),
+                              ],
+                            ),
                           ],
                         ),
                       ),
