@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:viam_sdk/protos/provisioning/provisioning.dart';
 import 'package:viam_sdk/viam_sdk.dart';
+import 'package:viam_sdk/protos/app/app.dart';
 
 import 'consts.dart';
+import 'confirmation_screen.dart';
 
 class PasswordInputScreen extends StatefulWidget {
   final NetworkInfo network;
@@ -31,32 +32,21 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
       loading = true;
     });
     try {
-      // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
-      // This is why we are NOT sending them at the same time.
-      await _setSmartMachineCredentials();
-      // I am not awaiting setNetworkCredentials because it takes a unknown, but long amount of time to complete.
+      final robot = await _setSmartMachineCredentials();
       await _setNetworkCredentials();
       _retryCount = 0;
-      // TODO: NEXT/FINAL
-      // if (mounted) {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ConfirmationScreen()),
-      //   );
-      // }
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ConfirmationScreen(robot: robot)),
+        );
+      }
     } catch (exception) {
       if (_retryCount < 1) {
         _retryCount++;
         await Future.delayed(const Duration(seconds: 2));
         await _submitPassword();
       } else {
-        // if (mounted) {
-        //   showErrorDialog(
-        //     context,
-        //     title: 'Failed to connect to Wi-Fi',
-        //     error: 'Please try again.',
-        //   );
-        // }
         debugPrint('Failed to connect to Wi-Fi');
         _retryCount = 0;
       }
@@ -68,10 +58,17 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     }
   }
 
-  Future<void> _setSmartMachineCredentials() async {
+  Future<Robot> _setSmartMachineCredentials() async {
+    // TODO: only create if you haven't
     final viam = await Viam.withApiKey(Consts.viamApiKeyId, Consts.viamApiKey);
-    // TODO: create the machine here too and get these
-    await viam.provisioningClient.setSmartMachineCredentials(id: '', secret: '');
+    final location = await viam.appClient.createLocation(Consts.organizationId, _controller.text);
+    final robots = await viam.appClient.listRobots(location.id);
+    final String robotName = "specter-ai-${robots.length}";
+    final robotId = await viam.appClient.newMachine(robotName, location.id);
+    final robot = await viam.appClient.getRobot(robotId);
+    final mainPart = (await viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
+    await viam.provisioningClient.setSmartMachineCredentials(id: mainPart.id, secret: mainPart.secret);
+    return robot;
   }
 
   Future<void> _setNetworkCredentials() async {
