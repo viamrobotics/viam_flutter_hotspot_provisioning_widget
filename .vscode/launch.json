@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "viam_flutter_provisioning_widget",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "viam_flutter_provisioning_widget (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "viam_flutter_provisioning_widget (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "bluetooth_provisioning",
+            "cwd": "example/bluetooth_provisioning",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "bluetooth_provisioning (profile mode)",
+            "cwd": "example/bluetooth_provisioning",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "bluetooth_provisioning (release mode)",
+            "cwd": "example/bluetooth_provisioning",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "hotspot_provisioning",
+            "cwd": "example/hotspot_provisioning",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "hotspot_provisioning (profile mode)",
+            "cwd": "example/hotspot_provisioning",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "hotspot_provisioning (release mode)",
+            "cwd": "example/hotspot_provisioning",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
