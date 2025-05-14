@@ -37,16 +37,24 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    _viam = Viam.withAccessToken(Consts.accessToken);
-    // you MUST create the robot before connecting to the hotspot
-    // once connected to the hotspot you can communicate with the machine, but will not have interet access
-    _createRobot();
+    _initViam();
   }
 
   @override
   void dispose() {
     _pollingTimer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _initViam() async {
+    try {
+      _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
+      // you MUST create the robot before connecting to the hotspot
+      // once connected to the hotspot you can communicate with the machine, but will not have interet access
+      _createRobot();
+    } catch (e) {
+      debugPrint('Error initializing Viam: $e');
+    }
   }
 
   Future<void> _createRobot() async {
