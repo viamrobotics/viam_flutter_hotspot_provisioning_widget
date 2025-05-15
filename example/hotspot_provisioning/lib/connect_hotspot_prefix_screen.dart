@@ -37,10 +37,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    _viam = Viam.withAccessToken(Consts.accessToken);
-    // you MUST create the robot before connecting to the hotspot
-    // once connected to the hotspot you can communicate with the machine, but will not have interet access
-    _createRobot();
+    _initViam();
   }
 
   @override
@@ -49,10 +46,21 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     super.dispose();
   }
 
+  Future<void> _initViam() async {
+    try {
+      _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
+      // you MUST create the robot before connecting to the hotspot
+      // once connected to the hotspot you can communicate with the machine, but will not have interet access
+      _createRobot();
+    } catch (e) {
+      debugPrint('Error initializing Viam: $e');
+    }
+  }
+
   Future<void> _createRobot() async {
-    final location = await _viam.appClient.createLocation(Consts.organizationId, 'TEST-${Random().nextInt(1000)}');
+    final location = await _viam.appClient.createLocation(Consts.organizationId, 'test-location-${Random().nextInt(1000)}');
     final String robotName = "tester-${Random().nextInt(1000)}";
-    debugPrint('robotName: $robotName');
+    debugPrint('robotName: $robotName, locationId: ${location.name}');
     final robotId = await _viam.appClient.newMachine(robotName, location.id);
     _robot = await _viam.appClient.getRobot(robotId);
     _mainPart = (await _viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);

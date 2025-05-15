@@ -1,7 +1,9 @@
 class Consts {
-  static const String hotspotPrefix = 'hotspot';
-  static const String hotspotPassword = 'password';
+  static const String hotspotPrefix = '';
+  static const String hotspotPassword = '';
 
-  static const String accessToken = '';
+  static const String apiKeyId = '';
+  static const String apiKey = '';
+
   static const String organizationId = '';
 }
