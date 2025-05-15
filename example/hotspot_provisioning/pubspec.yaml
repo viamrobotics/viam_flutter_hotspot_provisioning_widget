@@ -16,7 +16,7 @@ dependencies:
     git:
       url: https://github.com/viamrobotics/plugin_wifi_connect
       ref: 0.0.2
-  viam_sdk: 0.5.1
+  viam_sdk: 0.6.1
 
 dev_dependencies:
   flutter_test:
