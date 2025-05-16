@@ -3,5 +3,6 @@
     "dart.lineLength": 140,
     "[dart]": {
         "editor.rulers": [140],
+        "editor.inlayHints.enabled": "off"
     }
 }
