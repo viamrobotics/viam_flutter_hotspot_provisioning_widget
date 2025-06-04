@@ -22,26 +22,6 @@
             "flutterMode": "release"
         },
         {
-            "name": "bluetooth_provisioning",
-            "cwd": "example/bluetooth_provisioning",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "bluetooth_provisioning (profile mode)",
-            "cwd": "example/bluetooth_provisioning",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "bluetooth_provisioning (release mode)",
-            "cwd": "example/bluetooth_provisioning",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-        {
             "name": "hotspot_provisioning",
             "cwd": "example/hotspot_provisioning",
             "request": "launch",
