@@ -6,6 +6,7 @@ class NoContentWidget extends StatelessWidget {
   final Icon? icon;
   final String titleString;
   final String? bodyString;
+  final List<Widget>? buttons;
   final PillButton? button;
 
   const NoContentWidget({
@@ -14,6 +15,7 @@ class NoContentWidget extends StatelessWidget {
     required this.titleString,
     this.bodyString,
     this.button,
+    this.buttons,
   });
 
   @override
@@ -47,7 +49,19 @@ class NoContentWidget extends StatelessWidget {
                 ),
               ),
             ),
-          if (button != null)
+          if (buttons != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: Column(
+                children: buttons!
+                    .map((button) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: button,
+                        ))
+                    .toList(),
+              ),
+            )
+          else if (button != null)
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: button!,

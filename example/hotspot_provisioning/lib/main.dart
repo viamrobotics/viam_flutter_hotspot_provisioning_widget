@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'connect_hotspot_prefix_screen.dart';
+import 'start_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const ConnectHotspotPrefixScreen(),
+      home: StartScreen(),
     );
   }
 }
