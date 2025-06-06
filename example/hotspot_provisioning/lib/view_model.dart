@@ -1,1 +1,0 @@
-// i want to extract out the writing config code here so that we dont need to pass mainParts all the way through the screens 
