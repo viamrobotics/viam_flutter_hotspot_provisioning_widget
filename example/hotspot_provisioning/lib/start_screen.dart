@@ -8,6 +8,7 @@ import 'package:viam_sdk/protos/app/app.dart';
 
 import 'connect_hotspot_prefix_screen.dart';
 import 'consts.dart';
+import 'primary_button.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -19,22 +20,25 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen> {
   String? _robotName;
   bool _isLoading = false;
+  late Viam viam;
+  late Robot robot;
+  late RobotPart mainPart;
 
   @override
   void initState() {
     super.initState();
-    _createRobot(); // creates robot and gets main part
+    _initViam();
   }
 
-// this initializes viam, gets the robot, gets the main part, and then goes to the intro screen.
-// TODO: should we be initializing robot, viam, and main part and storing them in a viewModel or a repository?
-// TODO: also we should have one function for one thing - one for init viam, one for creating robot, one for the main part.
+  Future<void> _initViam() async {
+    viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
+  }
+
   Future<void> _createRobot() async {
     setState(() {
       _isLoading = true;
     });
     try {
-      final viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
       final location = await viam.appClient.createLocation(Consts.organizationId, 'test-location-${Random().nextInt(1000)}');
       final String robotName = "tester-${Random().nextInt(1000)}";
       setState(() {
@@ -42,38 +46,54 @@ class _StartScreenState extends State<StartScreen> {
       });
       debugPrint('robotName: $robotName, locationId: ${location.name}');
       final robotId = await viam.appClient.newMachine(robotName, location.id);
-      final robot = await viam.appClient.getRobot(robotId);
-      final mainPart = (await viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
+      robot = await viam.appClient.getRobot(robotId);
+      await _getMainPart();
       await Future.delayed(const Duration(seconds: 3));
-      if (mounted) {
-        _goToIntroScreenOne(context, viam, robot, mainPart);
-      }
     } catch (e) {
-      debugPrint('Error initializing Viam: $e');
+      debugPrint('Error creating robot: $e');
+      setState(() {
+        _robotName = null;
+      });
+      rethrow;
     } finally {
       setState(() {
         _isLoading = false;
-        _robotName = null;
       });
     }
   }
 
-  void _goToIntroScreenOne(BuildContext context, Viam viam, Robot robot, RobotPart mainPart) async {
+  Future<void> _getMainPart() async {
+    mainPart = (await viam.appClient.listRobotParts(robot.id)).firstWhere((element) => element.mainPart);
+  }
+
+  void _goToIntroScreenOne() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ConnectHotspotPrefixScreen(
         robot: robot,
-        mode: ProvisioningMode.newMachine,
         viam: viam,
         mainPart: mainPart,
       ),
     ));
   }
 
+  void _startFlow() async {
+    try {
+      await _createRobot();
+      if (mounted) {
+        _goToIntroScreenOne();
+      }
+    } catch (e) {
+      debugPrint('Failed to start flow: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Bluetooth Provisioning'),
+        backgroundColor: Colors.white,
+        title: const Text('Hotspot Provisioning', style: TextStyle(color: Colors.black)),
       ),
       body: Center(
         child: Column(
@@ -81,9 +101,10 @@ class _StartScreenState extends State<StartScreen> {
           children: [
             if (_robotName != null) Text('Provisioning machine named: $_robotName'),
             if (_robotName != null) const SizedBox(height: 16),
-            FilledButton(
-              onPressed: _createRobot,
-              child: _isLoading ? const CircularProgressIndicator.adaptive(backgroundColor: Colors.white) : const Text('Start Flow'),
+            PrimaryButton(
+              onPressed: _startFlow,
+              text: _isLoading ? 'Loading...' : 'Start Flow',
+              isLoading: _isLoading,
             ),
           ],
         ),

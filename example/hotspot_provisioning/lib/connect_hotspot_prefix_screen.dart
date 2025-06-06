@@ -4,25 +4,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 import 'package:viam_sdk/protos/app/app.dart';
-import 'package:viam_sdk/src/utils.dart'; // ignore: implementation_imports
 
 import 'consts.dart';
 import 'primary_button.dart';
 import 'network_selection_screen.dart';
 
-enum ProvisioningMode { newMachine, reconnect }
+// Currently, we are assuming that we are always provisioning a new machine. 
 
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   final Robot robot;
-  final ProvisioningMode mode;
-  final String? hotspotSsid;
   final Viam viam;
   final RobotPart mainPart;
 
-  const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.mode, this.hotspotSsid, required this.viam, required this.mainPart});
+
+  const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.viam, required this.mainPart});
 
   @override
   State<ConnectHotspotPrefixScreen> createState() => _ConnectHotspotPrefixScreenState();
@@ -36,7 +33,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   bool _pollingForMachine = false;
   bool _connectedToHotspot = false;
   int _retryCount = 0;
-  String? _storedSsid;
+  // String? _storedSsid;
   static const listStyle = TextStyle(
     color: Colors.black,
     fontSize: 16.0,
@@ -45,9 +42,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    if (widget.mode == ProvisioningMode.reconnect) {
-      _getStoredSsid();
-    }
     if (Platform.isAndroid) {
       _getLocationPermission();
     }
@@ -61,21 +55,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
 
   // TODO: separate out business logic from view logic for entire screen.
 
-  Future<void> _getStoredSsid() async {
-    final metadata = await widget.viam.appClient.getRobotMetadata(widget.robot.id);
-    final metadataMap = metadata.data.toMap();
-    _storedSsid = metadataMap['hotspot_ssid'] as String?;
-    if (_storedSsid == null) {
-      // if still null, try to get from shared prefs and update the robot metadata
-      final robotId = widget.robot.id; // just using the robot i was given
-      final sharedPrefs = await SharedPreferences.getInstance();
-      final sharedPrefsSsid = sharedPrefs.getString('${robotId}_hotspot_ssid');
-      if (sharedPrefsSsid != null) {
-        _storedSsid = sharedPrefsSsid;
-        await widget.viam.appClient.updateRobotMetadata(robotId, {'hotspot_ssid': sharedPrefsSsid});
-      }
-    }
-  }
   /// Android considers Wi-Fi information to be location information
   /// If we don't have location permission any connected ssid will show as 'unown ssid'
   Future<void> _getLocationPermission() async {
@@ -98,7 +77,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     return await widget.viam.provisioningClient.getSmartMachineStatus();
   }
 
-  void _findProvisionedMachine(String hotspotSsid) {
+  void _findProvisionedMachine() {
     if (!mounted || _pollingForMachine || _foundValidSmartMachineStatus) return;
     setState(() {
       _pollingForMachine = true;
@@ -112,7 +91,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
         try {
           debugPrint('checking smart machine status');
-          // final provisioningState = Provider.of<ProvisioningState>(context, listen: false);
           final response = await getSmartMachineStatus();
           debugPrint('provisioningInfo: ${response.provisioningInfo}');
           _pollingTimer?.cancel();
@@ -120,10 +98,8 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
             _foundValidSmartMachineStatus = true;
             _pollingForMachine = false;
           });
-          _continueWithFoundMachine(
-            hotspotSsid: hotspotSsid,
-            hasSmartMachineCredentials: response.hasSmartMachineCredentials,
-          );
+          // TODO: continue with a found machine for machine already exists flow
+          _navigateToNetworkSelection();
         } catch (e) {
           debugPrint('Error during smart machine status check, continuing polling. Error: $e');
         }
@@ -135,51 +111,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     final response = await widget.viam.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
     return response.provisioningInfo;
-  }
-
-  void _continueWithFoundMachine({required String hotspotSsid, required bool hasSmartMachineCredentials}) async {
-    switch (widget.mode) {
-      case ProvisioningMode.newMachine:
-        if (hasSmartMachineCredentials) {
-          _machineExistsDialog();
-        } else {
-          _navigateToNetworkSelection(hotspotSsid);
-        }
-      case ProvisioningMode.reconnect:
-        if (hasSmartMachineCredentials) {
-          if (_storedSsid == hotspotSsid) {
-            _navigateToNetworkSelection(hotspotSsid);
-          } else {
-            _machineExistsDialog();
-          }
-        } else {
-          // In this case the machine exists but doesn't have machine creds yet.
-          // This can happen if the user created the machine but didn't complete the provisioning process.
-          // We should allow them to complete the provisioning process now
-          _navigateToNetworkSelection(hotspotSsid);
-        }
-    }
-  }
-
-  Future<void> _machineExistsDialog() async {
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Machine has Credentials'),
-          content: const Text(
-            'The machine with this hotspot has Viam credentials set.\n\nYou can find and re-connect this machine from the home screen if you\'re the owner.',
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _needLocationPermissionDialog() async {
@@ -195,24 +126,13 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           actions: <Widget>[
             OutlinedButton(
               child: const Text('Continue'),
-              onPressed: () => _navigateToHomeScreenCleanup(),
+              // TODO: we need to do some clean up with the robot here if we were provisioning a new machine, if we care about that. 
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         );
       },
     );
-  }
-// TODO: decide if we need this function here? what is the use case here?
-  Future<void> _navigateToHomeScreenCleanup() async {
-    await PluginWifiConnect.disconnect(); // can't delete if still on the hotspot
-    if (widget.mode == ProvisioningMode.newMachine && widget.robot != null) {
-      // shouldn't delete if use is reconnecting
-      // should only delete the case where the use setup a new machine that we won't ever get online
-      widget.viam.appClient.deleteRobot(widget.robot.id); // fire and forget
-    }
-    if (mounted) {
-      Navigator.of(context).pop(); // im not sure if this is even the right place to pop and do this in
-    }
   }
 
   void _connectToHotspot(BuildContext context) async {
@@ -226,7 +146,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       debugPrint('Current SSID: $connectedSSID');
       if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) {
         debugPrint('Already connected to gost hotspot');
-        _findProvisionedMachine(connectedSSID);
+        _findProvisionedMachine();
         return;
       }
       final disconnected = await PluginWifiConnect.disconnect();
@@ -245,7 +165,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           if (context.mounted) {
             final connectedSSID = await PluginWifiConnect.ssid;
             if (connectedSSID != null && connectedSSID != '<unknown ssid>') {
-              _findProvisionedMachine(connectedSSID);
+              _findProvisionedMachine();
             } else {
               throw Exception('Connected to hotspot but no or unknown SSID returned');
             }
@@ -282,15 +202,16 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       }
     }
   }
+
 // TODO: control navigation outside of this screen.
-  void _navigateToNetworkSelection(String hotspotSsid) {
+  void _navigateToNetworkSelection() {
     if (!mounted) return;
     debugPrint('Navigating to network selection screen...');
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         settings: const RouteSettings(name: '/network-selection'),
-        builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: hotspotSsid, mainPart: widget.mainPart),
+        builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: widget.viam, mainPart: widget.mainPart),
       ),
     );
   }

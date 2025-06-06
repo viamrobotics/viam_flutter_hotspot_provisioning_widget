@@ -5,20 +5,19 @@ import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
 import 'no_content_widget.dart';
+import 'primary_button.dart';
 import 'provisioning_list_item.dart';
 import 'password_input_screen.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
   final Viam viam;
   final Robot robot;
-  final String hotspotSsid;
   final RobotPart mainPart;
 
   const NetworkSelectionScreen({
     super.key,
     required this.viam,
     required this.robot,
-    required this.hotspotSsid,
     required this.mainPart,
   });
 
@@ -75,7 +74,6 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
           network: network,
           viam: widget.viam,
           robot: widget.robot,
-          hotspotSsid: widget.hotspotSsid,
           mainPart: widget.mainPart,
         ),
       ),
@@ -87,10 +85,10 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24.0),
           ),
-          backgroundColor: Color(0xFF646468),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -102,7 +100,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -111,13 +109,13 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   "If you’ve tried this and it still isn’t appearing, you can connect by manually entering your network info.",
                   style: TextStyle(
                     fontSize: 15,
-                    color: Color(0xFF8B949E),
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
+                  child: PrimaryButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.push(
@@ -127,23 +125,22 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                             // not passing networks here bc we dont see the network
                             viam: widget.viam,
                             robot: widget.robot,
-                            hotspotSsid: widget.hotspotSsid,
                             mainPart: widget.mainPart,
                           ),
                         ),
                       );
                     },
-                    child: Text("Manually enter network info", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                    text: "Manually enter network info",
                   ),
                 ),
                 SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
+                  child: PrimaryButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Close", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                    text: "Close",
                   ),
                 ),
               ],
@@ -157,11 +154,15 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
         title: Text('Connect to your vessel’s Wi-Fi'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.grey, size: 24.0),
+            icon: Icon(Icons.refresh, color: Colors.black, size: 24.0),
             onPressed: () => _getNetworks(refresh: true),
           )
         ],
@@ -235,7 +236,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                         child: Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF383C43),
+                              backgroundColor: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

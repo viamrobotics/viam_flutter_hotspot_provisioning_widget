@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'connect_hotspot_prefix_screen.dart';
 import 'no_content_widget.dart';
 import 'pill_button.dart';
 
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
-  const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.hotspotSsid, required this.mainPart});
+  const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.mainPart});
 
   final Viam viam;
   final Robot robot;
-  final String hotspotSsid;
   final RobotPart mainPart;
 
   @override
@@ -34,7 +31,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   @override
   void initState() {
     super.initState();
-    _disconnectAndAssociateHotspot();
+    _disconnectFromHotspot();
     _startCheckingOnline();
   }
 
@@ -55,7 +52,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     });
   }
 
-  Future<void> _disconnectAndAssociateHotspot() async {
+  Future<void> _disconnectFromHotspot() async {
     // TODO: want to await setting network credentials on previous screen, but fails/times out
     // so this is a hack workaround
     // final provisioningState = Provider.of<ProvisioningState>(context, listen: false);
@@ -63,13 +60,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     final disconnected = await PluginWifiConnect.disconnect();
     debugPrint('disconnected from hotspot: $disconnected');
 
-    final robotId = widget.robot.id;
-    final store = await SharedPreferences.getInstance();
-    // store in shared prefs as backup if the network request fails
-    await store.setString('${robotId}_hotspot_ssid', widget.hotspotSsid);
-    // associate with Robot metadata as this is claimed now and has machine credentials
-    // final viam = await AuthService.authenticatedViam;
-    await widget.viam.appClient.updateRobotMetadata(robotId, {'hotspot_ssid': widget.hotspotSsid});
+    // TODO: associate hotspot sside w/ robot metadata as part of the machine already exists flow.
   }
 
   void _getRobotStatus() async {
@@ -100,38 +91,13 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return RobotStatus.loading;
   }
 
-  NoContentWidget showErrorScreen() {
-    return NoContentWidget(
-      icon: Icon(Icons.highlight_off, color: Color(0xFFF86061)),
-      titleString: "Connection failed",
-      bodyString: "Unable to connect to your boat’s Wi-Fi network",
-      button: PillButton(
-        buttonString: "Try again",
-        iconData: Icons.refresh,
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ConnectHotspotPrefixScreen(
-                  robot: widget.robot,
-                  mode: ProvisioningMode.reconnect,
-                  // it will always be reconnect now, since your machine credentials are set
-                  viam: widget.viam,
-                  mainPart: widget.mainPart,
-                ),
-              ));
-        },
-      ),
-    );
-  }
-
   NoContentWidget showLoadingScreen() {
     if (_secondsLoading < provisioningTimeoutSeconds) {
       return NoContentWidget(
         titleString: _secondsLoading < provisioningStillWaitingSeconds ? "Setting up device..." : "Still trying...",
         bodyString: _secondsLoading < provisioningStillWaitingSeconds
             ? null
-            : "Please keep this screen open. We’ll keep trying to connect for a few more minutes.",
+            : "Please keep this screen open. We'll keep trying to connect for a few more minutes.",
       );
     }
     return NoContentWidget(
@@ -142,18 +108,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         buttonString: "Try again",
         iconData: Icons.refresh,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ConnectHotspotPrefixScreen(
-                robot: widget.robot,
-                mode: ProvisioningMode.reconnect,
-                hotspotSsid: widget.hotspotSsid,
-                viam: widget.viam,
-                mainPart: widget.mainPart,
-              ),
-            ),
-          );
+          Navigator.of(context).pop();
+          // TODO: instead of popping, we should navigate to the reconnect flow when a user wants to try and reconnect after a failed provision attempt.
         },
       ),
     );
@@ -163,34 +119,49 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Confirmation'),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
           children: [
             if (_robotStatus == RobotStatus.online)
-              Column(
-                children: [
-                  Text('Robot is online'),
-                  Icon(Icons.check_circle, color: Colors.green),
-                  // TODO: show a robot is online screen here?
-                ],
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Robot is online'),
+                      const Icon(Icons.check_circle, color: Colors.green),
+                      // TODO: show a robot is online screen here?
+                    ],
+                  ),
+                ),
               ),
             if (_robotStatus == RobotStatus.offline)
-              Column(
-                children: [
-                  Text('Robot is offline'),
-                  Icon(Icons.error, color: Colors.red),
-                  showErrorScreen(),
-                ],
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Robot is offline. Connection failed'),
+                      const Icon(Icons.error, color: Colors.red),
+                      // TODO: show error screen that takes user back to reconnect flow
+                    ],
+                  ),
+                ),
               ),
             if (_robotStatus == RobotStatus.loading)
-              Column(
-                children: [
-                  Text('Robot is loading'),
-                  Icon(Icons.hourglass_empty, color: Colors.grey),
-                  showLoadingScreen(),
-                ],
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Robot is loading'),
+                      const SizedBox(height: 24),
+                      showLoadingScreen(),
+                    ],
+                  ),
+                ),
               ),
           ],
         ),

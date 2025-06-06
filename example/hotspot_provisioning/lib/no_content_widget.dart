@@ -44,7 +44,7 @@ class NoContentWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Color(0xFF8B949E),
+                  color: Colors.black,
                   fontWeight: FontWeight.w400,
                 ),
               ),

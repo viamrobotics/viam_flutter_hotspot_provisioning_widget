@@ -10,7 +10,6 @@ class PasswordInputScreen extends StatefulWidget {
   final NetworkInfo? network;
   final Viam viam;
   final Robot robot;
-  final String hotspotSsid;
   final RobotPart mainPart;
 
   const PasswordInputScreen({
@@ -18,7 +17,6 @@ class PasswordInputScreen extends StatefulWidget {
     this.network,
     required this.viam,
     required this.robot,
-    required this.hotspotSsid,
     required this.mainPart,
   });
 
@@ -93,7 +91,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: widget.hotspotSsid, mainPart: widget.mainPart),
+            builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam, mainPart: widget.mainPart),
           ),
         );
       }
@@ -151,7 +149,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool canSubmit = widget.network != null || (_ssidController.text.isNotEmpty && _passwordController.text.isNotEmpty);
+    final bool canSubmit = widget.network != null || _ssidController.text.isNotEmpty;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -171,7 +169,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF0EB4CE),
+                            color: canSubmit ? Color(0xFF0EB4CE) : Colors.grey,
                           ),
                         ),
                 ),
@@ -241,7 +239,9 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                     ),
                   ),
                   onSubmitted: (String value) {
-                    _submitPassword();
+                    if (canSubmit) {
+                      _submitPassword();
+                    }
                   },
                 ),
               ),
