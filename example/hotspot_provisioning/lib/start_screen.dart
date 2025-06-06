@@ -6,7 +6,6 @@ import 'package:viam_sdk/viam_sdk.dart';
 // ignore: depend_on_referenced_packages
 import 'package:viam_sdk/protos/app/app.dart';
 
-
 import 'connect_hotspot_prefix_screen.dart';
 import 'consts.dart';
 
@@ -21,6 +20,15 @@ class _StartScreenState extends State<StartScreen> {
   String? _robotName;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _createRobot(); // creates robot and gets main part
+  }
+
+// this initializes viam, gets the robot, gets the main part, and then goes to the intro screen.
+// TODO: should we be initializing robot, viam, and main part and storing them in a viewModel or a repository?
+// TODO: also we should have one function for one thing - one for init viam, one for creating robot, one for the main part.
   Future<void> _createRobot() async {
     setState(() {
       _isLoading = true;
@@ -55,6 +63,8 @@ class _StartScreenState extends State<StartScreen> {
       builder: (context) => ConnectHotspotPrefixScreen(
         robot: robot,
         mode: ProvisioningMode.newMachine,
+        viam: viam,
+        mainPart: mainPart,
       ),
     ));
   }

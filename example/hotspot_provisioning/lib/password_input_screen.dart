@@ -93,7 +93,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: widget.hotspotSsid),
+            builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: widget.hotspotSsid, mainPart: widget.mainPart),
           ),
         );
       }
@@ -150,97 +150,6 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
   }
 
   @override
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () => FocusScope.of(context).unfocus(),
-  //     child: Scaffold(
-  //       appBar: AppBar(
-  //         title: Text('Connect to Wi-Fi'),
-  //         actions: [
-  //           Center(
-  //             child: Padding(
-  //               padding: const EdgeInsets.all(6.0),
-  //               child: GestureDetector(
-  //                 onTap: _submitPassword,
-  //                 child: loading
-  //                     ? const CupertinoActivityIndicator()
-  //                     : Text(
-  //                         "Done",
-  //                         style: TextStyle(
-  //                           fontSize: 14.0,
-  //                           fontWeight: FontWeight.bold,
-  //                           color: Colors.teal,
-  //                         ),
-  //                       ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       body: SafeArea(
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Padding(
-  //               padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
-  //               child: Row(
-  //                 children: [
-  //                   Text(
-  //                     "Wi-Fi network: ",
-  //                     style: TextStyle(
-  //                       fontSize: 14.0,
-  //                       color: Colors.black,
-  //                     ),
-  //                   ),
-  //                   Text(
-  //                     widget.network.ssid,
-  //                     style: TextStyle(
-  //                       fontSize: 15.0,
-  //                       fontWeight: FontWeight.bold,
-  //                       color: Colors.black,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
-  //               child: Text(
-  //                 "Password",
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: 16.0,
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.all(12.0),
-  //               child: TextField(
-  //                 obscureText: obscureText,
-  //                 controller: _controller,
-  //                 decoration: InputDecoration(
-  //                   labelText: "Leave blank if network has no password.",
-  //                   labelStyle: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.black),
-  //                   floatingLabelBehavior: FloatingLabelBehavior.never,
-  //                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-  //                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-  //                   border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-  //                   suffixIcon: IconButton(
-  //                     icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
-  //                     onPressed: () => setState(() => obscureText = !obscureText),
-  //                   ),
-  //                 ),
-  //                 onSubmitted: (String value) => _submitPassword(),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
   Widget build(BuildContext context) {
     final bool canSubmit = widget.network != null || (_ssidController.text.isNotEmpty && _passwordController.text.isNotEmpty);
 
@@ -269,7 +178,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
               ),
             ),
           ],
-          // pop: true,
+          // pop: true, TODO: do we need pop? what cannot we not do without it?
         ),
         body: SafeArea(
           child: Column(
@@ -285,7 +194,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                         "Wi-Fi network: ",
                         style: TextStyle(
                           fontSize: 14.0,
-                          color: Color(0xFF8B949E),
+                          color: Colors.black,
                         ),
                       ),
                       Text(
@@ -293,7 +202,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF8B949E),
+                          color: Colors.black,
                         ),
                       ),
                     ],
@@ -308,7 +217,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
-                    color: Color(0xFFF7F7F8),
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -321,13 +230,13 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                   decoration: InputDecoration(
                     helperText: "If your network has no password, leave this field blank.",
                     helperMaxLines: 2,
-                    helperStyle: TextStyle(fontSize: 14.0, color: Color(0xFF8B949E)),
+                    helperStyle: TextStyle(fontSize: 14.0, color: Colors.black),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
-                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
                     suffixIcon: IconButton(
-                      icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Color(0xFFF7F7F8)),
+                      icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
                       onPressed: () => setState(() => obscureText = !obscureText),
                     ),
                   ),
@@ -354,7 +263,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
-              color: Color(0xFFF7F7F8),
+              color: Colors.black,
             ),
           ),
         ),
@@ -364,11 +273,11 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
             controller: _ssidController,
             autocorrect: false,
             decoration: InputDecoration(
-              labelStyle: TextStyle(fontSize: 14.0, color: Color(0xFF8B949E)),
+              labelStyle: TextStyle(fontSize: 14.0, color: Colors.black),
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFF7F7F8), width: 3.0)),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+              border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
             ),
           ),
         ),

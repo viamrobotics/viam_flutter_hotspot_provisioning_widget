@@ -5,7 +5,6 @@ import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
 import 'no_content_widget.dart';
-import 'pill_button.dart';
 import 'provisioning_list_item.dart';
 import 'password_input_screen.dart';
 
@@ -67,7 +66,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
     return Icons.wifi;
   }
 
-// TODO: why do we only use this once and other times we just navigate directly to this screen?
+// TODO: sometimes we call this function and othertimes we just navigation to passwordInput screen. why?
   void _goToPasswordInputScreen(NetworkInfo network) {
     Navigator.push(
       context,

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
@@ -20,22 +19,16 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
   final Robot robot;
   final ProvisioningMode mode;
   final String? hotspotSsid;
+  final Viam viam;
+  final RobotPart mainPart;
 
-  const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.mode, this.hotspotSsid});
+  const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.mode, this.hotspotSsid, required this.viam, required this.mainPart});
 
   @override
   State<ConnectHotspotPrefixScreen> createState() => _ConnectHotspotPrefixScreenState();
 }
 
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
-  // bool _isAttemptingConnectionToHotspot = false;
-  // bool _isRetryingHotspot = false;
-  // bool _connectedToHotspot = false;
-  // Timer? _pollingTimer;
-  // bool foundValidSmartMachineStatus = false;
-  // bool _pollingForMachine = false;
-  // int _retryCount = 0;
-
   bool _isAttemptingConnectionToHotspot = false;
   bool _isRetryingHotspot = false;
   Timer? _pollingTimer;
@@ -44,10 +37,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   bool _connectedToHotspot = false;
   int _retryCount = 0;
   String? _storedSsid;
-
-  late Viam _viam;
-  // late Robot _robot;
-  late RobotPart _mainPart;
   static const listStyle = TextStyle(
     color: Colors.black,
     fontSize: 16.0,
@@ -56,9 +45,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    _initViam();
-    // do we need to reset the robot for any reason here??
-    // do we need to reset the main part for any reason here?
     if (widget.mode == ProvisioningMode.reconnect) {
       _getStoredSsid();
     }
@@ -73,34 +59,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     super.dispose();
   }
 
-  Future<void> _initViam() async {
-    try {
-      _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
-      // you MUST create the robot before connecting to the hotspot
-      // once connected to the hotspot you can communicate with the machine, but will not have interet access
-      _getMainPart(); // do we need this if we already have a robot?
-    } catch (e) {
-      debugPrint('Error initializing Viam: $e');
-    }
-  }
-// we already have a robot when we get to this screen
-  // Future<void> _createRobot() async {
-  //   final location = await _viam.appClient.createLocation(Consts.organizationId, 'test-location-${Random().nextInt(1000)}');
-  //   final String robotName = "tester-${Random().nextInt(1000)}";
-  //   debugPrint('robotName: $robotName, locationId: ${location.name}');
-  //   final robotId = await _viam.appClient.newMachine(robotName, location.id);
-  //   _robot = await _viam.appClient.getRobot(robotId);
-  //   _mainPart = (await _viam.appClient.listRobotParts(robotId)).firstWhere((element) => element.mainPart);
-  // }
-
-  // move to view model
-  Future<void> _getMainPart() async {
-    _mainPart = (await _viam.appClient.listRobotParts(widget.robot.id)).firstWhere((element) => element.mainPart);
-  }
+  // TODO: separate out business logic from view logic for entire screen.
 
   Future<void> _getStoredSsid() async {
-    // final provisioningState = Provider.of<ProvisioningState>(context, listen: false);
-    final metadata = await _viam.appClient.getRobotMetadata(widget.robot.id);
+    final metadata = await widget.viam.appClient.getRobotMetadata(widget.robot.id);
     final metadataMap = metadata.data.toMap();
     _storedSsid = metadataMap['hotspot_ssid'] as String?;
     if (_storedSsid == null) {
@@ -110,12 +72,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       final sharedPrefsSsid = sharedPrefs.getString('${robotId}_hotspot_ssid');
       if (sharedPrefsSsid != null) {
         _storedSsid = sharedPrefsSsid;
-        await _viam.appClient.updateRobotMetadata(robotId, {'hotspot_ssid': sharedPrefsSsid});
+        await widget.viam.appClient.updateRobotMetadata(robotId, {'hotspot_ssid': sharedPrefsSsid});
       }
     }
   }
-// this should be in a view model too probs
-
   /// Android considers Wi-Fi information to be location information
   /// If we don't have location permission any connected ssid will show as 'unown ssid'
   Future<void> _getLocationPermission() async {
@@ -132,37 +92,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         assert(false, 'Statuses on iOS only');
     }
   }
-  // void _findProvisionedMachine() {
-  //   if (!mounted || _pollingForMachine || foundValidSmartMachineStatus) return;
-  //   setState(() {
-  //     _pollingForMachine = true;
-  //   });
-  //   // Ensure we don't start multiple timers
-  //   if (!foundValidSmartMachineStatus && (_pollingTimer == null || !_pollingTimer!.isActive)) {
-  //     debugPrint('Starting periodic check every 3 seconds');
-  //     _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
-  //       try {
-  //         debugPrint('checking smart machine status');
-  //         final provisioningInfo = await getSmartMachineProvisioningInfo();
-  //         if (provisioningInfo != null) {
-  //           debugPrint('provisioningInfo: $provisioningInfo');
-  //           _pollingTimer?.cancel();
-  //           setState(() {
-  //             foundValidSmartMachineStatus = true;
-  //             _pollingForMachine = false;
-  //           });
-  //           _navigateToNetworkSelection();
-  //         }
-  //       } catch (e) {
-  //         debugPrint('Error during smart machine status check, continuing polling. Error: $e');
-  //       }
-  //     });
-  //   }
-  // }
 
   // this needs to be moved to view model also
   Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {
-    return await _viam.provisioningClient.getSmartMachineStatus();
+    return await widget.viam.provisioningClient.getSmartMachineStatus();
   }
 
   void _findProvisionedMachine(String hotspotSsid) {
@@ -199,7 +132,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   }
 
   Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
-    final response = await _viam.provisioningClient.getSmartMachineStatus();
+    final response = await widget.viam.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
     return response.provisioningInfo;
   }
@@ -269,90 +202,19 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       },
     );
   }
-
+// TODO: decide if we need this function here? what is the use case here?
   Future<void> _navigateToHomeScreenCleanup() async {
     await PluginWifiConnect.disconnect(); // can't delete if still on the hotspot
     if (widget.mode == ProvisioningMode.newMachine && widget.robot != null) {
       // shouldn't delete if use is reconnecting
       // should only delete the case where the use setup a new machine that we won't ever get online
-      _viam.appClient.deleteRobot(widget.robot.id); // fire and forget
+      widget.viam.appClient.deleteRobot(widget.robot.id); // fire and forget
     }
     if (mounted) {
       Navigator.of(context).pop(); // im not sure if this is even the right place to pop and do this in
     }
   }
 
-  // void _connectToHotspot(BuildContext context) async {
-  //   try {
-  //     debugPrint('connectToHotspot called and retryCount is $_retryCount');
-  //     setState(() {
-  //       _isAttemptingConnectionToHotspot = true;
-  //       _isRetryingHotspot = false;
-  //     });
-  //     final connectedSSID = await PluginWifiConnect.ssid;
-  //     debugPrint('Current SSID: $connectedSSID');
-  //     if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) {
-  //       debugPrint('Already connected to hotspot');
-  //       if (context.mounted) {
-  //         setState(() {
-  //           _connectedToHotspot = true;
-  //           _isAttemptingConnectionToHotspot = false;
-  //         });
-  //         _findProvisionedMachine(hotspotSsid);
-  //       }
-  //       return;
-  //     }
-  //     final disconnected = await PluginWifiConnect.disconnect();
-  //     debugPrint('disconnected: $disconnected');
-  //     debugPrint('Connecting to ${Consts.hotspotPrefix}-#### hotspot');
-  //     final connected = await PluginWifiConnect.connectToSecureNetworkByPrefix(
-  //       Consts.hotspotPrefix,
-  //       Consts.hotspotPassword,
-  //       isWep: false,
-  //       isWpa3: false,
-  //       saveNetwork: true, // flips joinOnce on iOS to false
-  //     );
-  //     switch (connected) {
-  //       case true:
-  //         debugPrint('Connected to hotspot');
-  //         if (context.mounted) {
-  //           _retryCount = 0;
-  //           setState(() {
-  //             _connectedToHotspot = true;
-  //             _isAttemptingConnectionToHotspot = false; // Connection attempt phase is over
-  //           });
-  //           _findProvisionedMachine();
-  //         }
-  //         break;
-  //       case false:
-  //         throw Exception('Finished connection attempt with connected=false and no error');
-  //       case null:
-  //         if (mounted) {
-  //           setState(() {
-  //             _isAttemptingConnectionToHotspot = false; // Stop loading indicator
-  //           });
-  //         }
-  //         break; // user cancelled, do nothing
-  //     }
-  //   } catch (e) {
-  //     if (_retryCount < 2) {
-  //       _retryCount++;
-  //       await Future.delayed(const Duration(seconds: 2));
-  //       if (context.mounted) {
-  //         _connectToHotspot(context);
-  //       }
-  //     } else {
-  //       if (context.mounted) {
-  //         debugPrint('Error connecting to hotspot: ${e.toString()}');
-  //         setState(() {
-  //           _isRetryingHotspot = true;
-  //           _retryCount = 0;
-  //           _isAttemptingConnectionToHotspot = false;
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
   void _connectToHotspot(BuildContext context) async {
     try {
       debugPrint('connectToHotspot called and retryCount is $_retryCount');
@@ -420,7 +282,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       }
     }
   }
-
+// TODO: control navigation outside of this screen.
   void _navigateToNetworkSelection(String hotspotSsid) {
     if (!mounted) return;
     debugPrint('Navigating to network selection screen...');
@@ -428,7 +290,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       context,
       MaterialPageRoute(
         settings: const RouteSettings(name: '/network-selection'),
-        builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: _viam, hotspotSsid: hotspotSsid, mainPart: _mainPart),
+        builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: hotspotSsid, mainPart: widget.mainPart),
       ),
     );
   }

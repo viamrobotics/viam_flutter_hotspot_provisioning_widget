@@ -13,11 +13,12 @@ import 'pill_button.dart';
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
-  const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.hotspotSsid});
+  const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.hotspotSsid, required this.mainPart});
 
   final Viam viam;
   final Robot robot;
   final String hotspotSsid;
+  final RobotPart mainPart;
 
   @override
   State<ConfirmationScreen> createState() => _ConfirmationScreenState();
@@ -33,7 +34,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   @override
   void initState() {
     super.initState();
-    // _initTimer();
     _disconnectAndAssociateHotspot();
     _startCheckingOnline();
   }
@@ -44,16 +44,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     super.dispose();
   }
 
-  // void _initTimer() {
-  //   if (_timer != null && _timer!.isActive) return;
-
-  //   _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-  //     _getRobotStatus();
-  //     setState(() {
-  //       _secondsLoading += 5;
-  //     });
-  //   });
-  // }
   void _startCheckingOnline() async {
     if (_timer != null && _timer!.isActive) return;
 
@@ -89,7 +79,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       final newRobotStatus = await calculateRobotStatus(reloadedRobot);
       debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
       if (newRobotStatus == RobotStatus.online) {
-        // goToRobotScreen();
+        // TODO: before we had goToRobotScreen();, decide if we should do something here.
         _timer?.cancel();
       }
       setState(() {
@@ -124,7 +114,10 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               MaterialPageRoute(
                 builder: (context) => ConnectHotspotPrefixScreen(
                   robot: widget.robot,
-                  mode: ProvisioningMode.reconnect, // it will always be reconnect now, since your machine credentials are set
+                  mode: ProvisioningMode.reconnect,
+                  // it will always be reconnect now, since your machine credentials are set
+                  viam: widget.viam,
+                  mainPart: widget.mainPart,
                 ),
               ));
         },
@@ -156,6 +149,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                 robot: widget.robot,
                 mode: ProvisioningMode.reconnect,
                 hotspotSsid: widget.hotspotSsid,
+                viam: widget.viam,
+                mainPart: widget.mainPart,
               ),
             ),
           );
@@ -178,7 +173,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                 children: [
                   Text('Robot is online'),
                   Icon(Icons.check_circle, color: Colors.green),
-                  showLoadingScreen(), // does this make sense here?
+                  // TODO: show a robot is online screen here?
                 ],
               ),
             if (_robotStatus == RobotStatus.offline)
