@@ -33,7 +33,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   bool _pollingForMachine = false;
   bool _connectedToHotspot = false;
   int _retryCount = 0;
-  // String? _storedSsid;
   static const listStyle = TextStyle(
     color: Colors.black,
     fontSize: 16.0,

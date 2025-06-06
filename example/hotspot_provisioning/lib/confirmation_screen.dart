@@ -55,7 +55,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Future<void> _disconnectFromHotspot() async {
     // TODO: want to await setting network credentials on previous screen, but fails/times out
     // so this is a hack workaround
-    // final provisioningState = Provider.of<ProvisioningState>(context, listen: false);
     await Future.delayed(const Duration(seconds: 5));
     final disconnected = await PluginWifiConnect.disconnect();
     debugPrint('disconnected from hotspot: $disconnected');
@@ -65,7 +64,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
   void _getRobotStatus() async {
     try {
-      // TODO: Call disconnect?
       final reloadedRobot = await widget.viam.appClient.getRobot(widget.robot.id);
       final newRobotStatus = await calculateRobotStatus(reloadedRobot);
       debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
