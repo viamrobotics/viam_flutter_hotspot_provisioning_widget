@@ -1,12 +1,5 @@
-import 'dart:async';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
-import 'package:flutter/material.dart';
-import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
-import 'package:viam_sdk/protos/app/app.dart';
-import 'package:viam_sdk/viam_sdk.dart';
-
-import 'no_content_widget.dart';
-import 'pill_button.dart';
 
 enum RobotStatus { online, offline, loading }
 
@@ -69,6 +62,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
       if (newRobotStatus == RobotStatus.online) {
         // TODO: before we had goToRobotScreen();, decide if we should do something here.
+        // a callback that they can choose to do something with --> the flow will do something with it
         _timer?.cancel();
       }
       setState(() {
@@ -107,6 +101,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         iconData: Icons.refresh,
         onPressed: () {
           Navigator.of(context).pop();
+          // add a callback that allows the user to fill in what they want to do / where they want to go. 
           // TODO: instead of popping, we should navigate to the reconnect flow when a user wants to try and reconnect after a failed provision attempt.
         },
       ),

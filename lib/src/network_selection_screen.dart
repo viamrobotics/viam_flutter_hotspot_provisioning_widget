@@ -1,13 +1,4 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:viam_sdk/protos/app/app.dart';
-import 'package:viam_sdk/viam_sdk.dart';
-
-import 'no_content_widget.dart';
-import 'primary_button.dart';
-import 'provisioning_list_item.dart';
-import 'password_input_screen.dart';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
   final Viam viam;

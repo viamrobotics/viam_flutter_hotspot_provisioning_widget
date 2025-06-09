@@ -1,10 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:viam_sdk/viam_sdk.dart';
-import 'package:viam_sdk/protos/app/app.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-
-import 'confirmation_screen.dart';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputScreen extends StatefulWidget {
   final NetworkInfo? network;
@@ -31,8 +25,6 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
   bool obscureText = true;
   bool loading = false;
 
-  // int _retryCount = 0;
-
   @override
   void dispose() {
     _passwordController.dispose();
@@ -40,38 +32,6 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     super.dispose();
   }
 
-  // Future<void> _submitPassword() async {
-  //   setState(() {
-  //     loading = true;
-  //   });
-  //   try {
-  //     await _setSmartMachineCredentials();
-  //     _setNetworkCredentials(); // not awaiting
-  //     _retryCount = 0;
-  //     if (mounted) {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => ConfirmationScreen(robot: widget.robot, viam: widget.viam, hotspotSsid: widget.hotspotSsid),
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (_retryCount < 1) {
-  //       _retryCount++;
-  //       await Future.delayed(const Duration(seconds: 2));
-  //       await _submitPassword();
-  //     } else {
-  //       debugPrint('Failed to provision machine: ${e.toString()}');
-  //       _retryCount = 0;
-  //     }
-  //     if (mounted) {
-  //       setState(() {
-  //         loading = false;
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> _submitPassword() async {
     setState(() {
       loading = true;

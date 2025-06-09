@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'pill_button.dart';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NoContentWidget extends StatelessWidget {
   final Icon? icon;
