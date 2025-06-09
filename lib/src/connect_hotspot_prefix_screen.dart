@@ -1,23 +1,11 @@
-import 'dart:async';
-import 'dart:io';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
-import 'package:flutter/material.dart';
-import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
-import 'package:permission_handler/permission_handler.dart' as ph;
-import 'package:viam_sdk/viam_sdk.dart';
-import 'package:viam_sdk/protos/app/app.dart';
-
-import 'consts.dart';
-import 'primary_button.dart';
-import 'network_selection_screen.dart';
-
-// Currently, we are assuming that we are always provisioning a new machine. 
+// Currently, we are assuming that we are always provisioning a new machine.
 
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   final Robot robot;
   final Viam viam;
   final RobotPart mainPart;
-
 
   const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.viam, required this.mainPart});
 
@@ -125,7 +113,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           actions: <Widget>[
             OutlinedButton(
               child: const Text('Continue'),
-              // TODO: we need to do some clean up with the robot here if we were provisioning a new machine, if we care about that. 
+              // TODO: we need to do some clean up with the robot here if we were provisioning a new machine, if we care about that.
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -143,7 +131,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       });
       final connectedSSID = await PluginWifiConnect.ssid;
       debugPrint('Current SSID: $connectedSSID');
-      if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) {
+      if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) { // TODO CHANGE THIS
         debugPrint('Already connected to gost hotspot');
         _findProvisionedMachine();
         return;
@@ -152,7 +140,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       debugPrint('disconnected: $disconnected');
       debugPrint('Connecting to gost-#### hotspot');
       final connected = await PluginWifiConnect.connectToSecureNetworkByPrefix(
-        Consts.hotspotPrefix,
+        Consts.hotspotPrefix, // TODO: this will just get changed 
         Consts.hotspotPassword,
         isWep: false,
         isWpa3: false,

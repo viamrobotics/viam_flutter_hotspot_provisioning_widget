@@ -1,14 +1,10 @@
 import 'dart:math';
 
+import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
-import 'package:viam_sdk/viam_sdk.dart';
-// ignore: depend_on_referenced_packages
-import 'package:viam_sdk/protos/app/app.dart';
 
-import 'connect_hotspot_prefix_screen.dart';
 import 'consts.dart';
-import 'primary_button.dart';
+
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});

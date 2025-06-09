@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PillButton extends StatelessWidget {
   final IconData? iconData;
