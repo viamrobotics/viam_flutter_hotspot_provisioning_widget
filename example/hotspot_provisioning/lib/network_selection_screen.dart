@@ -5,7 +5,7 @@ import 'package:viam_sdk/protos/app/app.dart';
 import 'package:viam_sdk/viam_sdk.dart';
 
 import 'no_content_widget.dart';
-import 'pill_button.dart';
+import 'primary_button.dart';
 import 'provisioning_list_item.dart';
 import 'password_input_screen.dart';
 
@@ -65,6 +65,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
     return Icons.wifi;
   }
 
+// TODO: sometimes we call this function and othertimes we just navigation to passwordInput screen. why?
   void _goToPasswordInputScreen(NetworkInfo network) {
     Navigator.push(
       context,
@@ -79,14 +80,89 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
     );
   }
 
+  void _showTroubleshootingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Troubleshooting",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "If your boat’s Wi-Fi network isn’t showing up in this list, turn your Specter AI device off and back on again.\n\n"
+                  "If you’ve tried this and it still isn’t appearing, you can connect by manually entering your network info.",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PasswordInputScreen(
+                            // not passing networks here bc we dont see the network
+                            viam: widget.viam,
+                            robot: widget.robot,
+                            mainPart: widget.mainPart,
+                          ),
+                        ),
+                      );
+                    },
+                    text: "Manually enter network info",
+                  ),
+                ),
+                SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    text: "Close",
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
         title: Text('Connect to your vessel’s Wi-Fi'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.grey, size: 24.0),
+            icon: Icon(Icons.refresh, color: Colors.black, size: 24.0),
             onPressed: () => _getNetworks(refresh: true),
           )
         ],
@@ -100,14 +176,27 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
             : machineVisibleNetworks.isEmpty
                 ? NoContentWidget(
                     icon: Icon(Icons.error, color: Colors.red),
-                    button: PillButton(
-                      iconData: Icons.refresh,
-                      buttonString: "Try again",
-                      onPressed: _loadingNetworks ? null : () => _getNetworks(refresh: true),
-                    ),
+                    buttons: [
+                      FilledButton(
+                        onPressed: () {
+                          _showTroubleshootingDialog();
+                        },
+                        child: Text("My network isn't showing up", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                      ),
+                      FilledButton(
+                        onPressed: _loadingNetworks ? null : () => _getNetworks(refresh: true),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.refresh, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text("Try again", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
+                    ],
                     titleString: "No networks found",
-                    bodyString: "Make sure your device is turned on and nearby",
-                  )
+                    bodyString: "Is your device powered on and nearby? Try turning the device off and back on.")
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -140,6 +229,25 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                               ),
                             );
                           },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                            ),
+                            onPressed: _showTroubleshootingDialog,
+                            child: Text(
+                              "My network isn't showing up",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
                       ),
                     ],

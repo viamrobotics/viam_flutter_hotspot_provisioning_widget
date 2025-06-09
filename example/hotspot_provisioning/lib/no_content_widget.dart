@@ -6,6 +6,7 @@ class NoContentWidget extends StatelessWidget {
   final Icon? icon;
   final String titleString;
   final String? bodyString;
+  final List<Widget>? buttons;
   final PillButton? button;
 
   const NoContentWidget({
@@ -14,6 +15,7 @@ class NoContentWidget extends StatelessWidget {
     required this.titleString,
     this.bodyString,
     this.button,
+    this.buttons,
   });
 
   @override
@@ -42,12 +44,24 @@ class NoContentWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Color(0xFF8B949E),
+                  color: Colors.black,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-          if (button != null)
+          if (buttons != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: Column(
+                children: buttons!
+                    .map((button) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: button,
+                        ))
+                    .toList(),
+              ),
+            )
+          else if (button != null)
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: button!,
