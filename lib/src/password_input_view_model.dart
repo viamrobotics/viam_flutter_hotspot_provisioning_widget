@@ -6,7 +6,10 @@ class PasswordInputViewModel extends ChangeNotifier {
   VoidCallback onPasswordSubmitted;
   final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
 
-  PasswordInputViewModel(this._viam, this._mainPart, this.onPasswordSubmitted, this._showErrorDialog);
+  PasswordInputViewModel(this._viam, this._mainPart, this.onPasswordSubmitted, this._showErrorDialog) {
+    passwordController.addListener(notifyListeners);
+    ssidController.addListener(notifyListeners);
+  }
 
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController ssidController = TextEditingController();
@@ -16,6 +19,13 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   bool _loading = false;
   bool get loading => _loading;
+
+  bool get areCredentialsEntered {
+    if (_network != null) {
+      return true;
+    }
+    return ssidController.text.isNotEmpty;
+  }
 
   NetworkInfo? _network;
   NetworkInfo? get network => _network;
@@ -32,12 +42,15 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    passwordController.removeListener(notifyListeners);
+    ssidController.removeListener(notifyListeners);
     passwordController.dispose();
     ssidController.dispose();
     super.dispose();
   }
 
   Future<void> submitPassword(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     _loading = true;
     notifyListeners();
     try {
