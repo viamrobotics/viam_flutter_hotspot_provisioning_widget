@@ -90,7 +90,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         break;
       case 2:
         title = 'Connect to Wi-Fi';
-        final canSubmit = passwordInputViewModel.network != null || passwordInputViewModel.ssidController.text.isNotEmpty;
+        final canSubmit = passwordInputViewModel.areCredentialsEntered;
         actions = [
           Center(
             child: Padding(
@@ -124,6 +124,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, size: 24, color: Colors.black),
         onPressed: () {
+          FocusScope.of(context).unfocus();
           if (_pageController.page == 0) {
             Navigator.of(context).pop();
           } else {
