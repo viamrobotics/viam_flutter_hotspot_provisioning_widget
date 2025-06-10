@@ -119,31 +119,11 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           widget.onlineBuilder != null
               ? widget.onlineBuilder!(context)
               : Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Robot is online'),
-                        const Icon(Icons.check_circle, color: Colors.green),
-                      ],
-                    ),
-                  ),
-                ),
+                  child: RobotOnlineWidget(
+                  robot: widget.robot,
+                )),
         if (_robotStatus == RobotStatus.offline)
-          widget.offlineBuilder != null
-              ? widget.offlineBuilder!(context)
-              : Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Robot is offline. Connection failed'),
-                        const Icon(Icons.error, color: Colors.red),
-                        // TOOD: take the user back to reconnect flow??
-                      ],
-                    ),
-                  ),
-                ),
+          widget.offlineBuilder != null ? widget.offlineBuilder!(context) : const Expanded(child: RobotOfflineWidget()),
         if (_robotStatus == RobotStatus.loading)
           Expanded(
             child: Center(
