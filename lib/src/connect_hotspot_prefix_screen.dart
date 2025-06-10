@@ -6,8 +6,18 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
   final Robot robot;
   final Viam viam;
   final RobotPart mainPart;
+  final VoidCallback onNavigateToNetworkSelection;
+  final String hotspotPrefix;
+  final String hotspotPassword;
 
-  const ConnectHotspotPrefixScreen({super.key, required this.robot, required this.viam, required this.mainPart});
+  const ConnectHotspotPrefixScreen(
+      {super.key,
+      required this.robot,
+      required this.viam,
+      required this.mainPart,
+      required this.onNavigateToNetworkSelection,
+      required this.hotspotPrefix,
+      required this.hotspotPassword});
 
   @override
   State<ConnectHotspotPrefixScreen> createState() => _ConnectHotspotPrefixScreenState();
@@ -86,7 +96,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
             _pollingForMachine = false;
           });
           // TODO: continue with a found machine for machine already exists flow
-          _navigateToNetworkSelection();
+          widget.onNavigateToNetworkSelection();
         } catch (e) {
           debugPrint('Error during smart machine status check, continuing polling. Error: $e');
         }
@@ -131,17 +141,17 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       });
       final connectedSSID = await PluginWifiConnect.ssid;
       debugPrint('Current SSID: $connectedSSID');
-      if (connectedSSID != null && connectedSSID.startsWith(Consts.hotspotPrefix)) { // TODO CHANGE THIS
-        debugPrint('Already connected to gost hotspot');
+      if (connectedSSID != null && connectedSSID.startsWith(widget.hotspotPrefix)) {
+        debugPrint('Already connected to ${widget.hotspotPrefix} hotspot');
         _findProvisionedMachine();
         return;
       }
       final disconnected = await PluginWifiConnect.disconnect();
       debugPrint('disconnected: $disconnected');
-      debugPrint('Connecting to gost-#### hotspot');
+      debugPrint('Connecting to ${widget.hotspotPrefix}-#### hotspot');
       final connected = await PluginWifiConnect.connectToSecureNetworkByPrefix(
-        Consts.hotspotPrefix, // TODO: this will just get changed 
-        Consts.hotspotPassword,
+        widget.hotspotPrefix,
+        widget.hotspotPassword,
         isWep: false,
         isWpa3: false,
         saveNetwork: true, // flips joinOnce on iOS to false
@@ -189,93 +199,71 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       }
     }
   }
-
-// TODO: control navigation outside of this screen.
-  void _navigateToNetworkSelection() {
-    if (!mounted) return;
-    debugPrint('Navigating to network selection screen...');
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        settings: const RouteSettings(name: '/network-selection'),
-        builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: widget.viam, mainPart: widget.mainPart),
-      ),
-    );
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Connect to Device Hotspot', style: TextStyle(color: Colors.black)),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 24.0),
-                      child: Text(
-                        "Steps to connect to your device:",
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                      child: Text("1. Turn on the device you are trying to connect to.", style: listStyle),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                      child: Text("2. Make sure you are nearby the device.", style: listStyle),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                      child: Text("3. Press the button below to connect to the device's hotspot.", style: listStyle),
-                    ),
-                    if (_connectedToHotspot)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                        child: Column(
-                          children: [
-                            Text("You are connected to the device's hotspot.", style: listStyle),
-                            Row(
-                              children: [
-                                Icon(Icons.check_circle, color: Colors.green),
-                                Spacer(),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 28.0),
-                  child: PrimaryButton(
-                    onPressed: _isAttemptingConnectionToHotspot || _pollingForMachine ? null : () => _connectToHotspot(context),
-                    text: _isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
-                    isLoading: _isAttemptingConnectionToHotspot || _pollingForMachine,
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 24.0),
+                  child: Text(
+                    "Steps to connect to your device:",
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                  child: Text("1. Turn on the device you are trying to connect to.", style: listStyle),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                  child: Text("2. Make sure you are nearby the device.", style: listStyle),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                  child: Text("3. Press the button below to connect to the device's hotspot.", style: listStyle),
+                ),
+                if (_connectedToHotspot)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                    child: Column(
+                      children: [
+                        Text("You are connected to the device's hotspot.", style: listStyle),
+                        Row(
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.green),
+                            Spacer(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
               ],
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 28.0),
+              child: PrimaryButton(
+                onPressed: _isAttemptingConnectionToHotspot || _pollingForMachine ? null : () => _connectToHotspot(context),
+                text: _isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
+                isLoading: _isAttemptingConnectionToHotspot || _pollingForMachine,
+              ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }

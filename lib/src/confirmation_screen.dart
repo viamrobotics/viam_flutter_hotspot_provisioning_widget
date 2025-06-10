@@ -1,6 +1,5 @@
 part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
-
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
@@ -101,7 +100,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         iconData: Icons.refresh,
         onPressed: () {
           Navigator.of(context).pop();
-          // add a callback that allows the user to fill in what they want to do / where they want to go. 
+          // add a callback that allows the user to fill in what they want to do / where they want to go.
           // TODO: instead of popping, we should navigate to the reconnect flow when a user wants to try and reconnect after a failed provision attempt.
         },
       ),
@@ -110,55 +109,48 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            if (_robotStatus == RobotStatus.online)
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Robot is online'),
-                      const Icon(Icons.check_circle, color: Colors.green),
-                      // TODO: show a robot is online screen here?
-                    ],
-                  ),
-                ),
+    return Column(
+      children: [
+        if (_robotStatus == RobotStatus.online)
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Robot is online'),
+                  const Icon(Icons.check_circle, color: Colors.green),
+                  // TODO: show a robot is online screen here?
+                ],
               ),
-            if (_robotStatus == RobotStatus.offline)
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Robot is offline. Connection failed'),
-                      const Icon(Icons.error, color: Colors.red),
-                      // TODO: show error screen that takes user back to reconnect flow
-                    ],
-                  ),
-                ),
+            ),
+          ),
+        if (_robotStatus == RobotStatus.offline)
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Robot is offline. Connection failed'),
+                  const Icon(Icons.error, color: Colors.red),
+                  // TODO: show error screen that takes user back to reconnect flow
+                ],
               ),
-            if (_robotStatus == RobotStatus.loading)
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Robot is loading'),
-                      const SizedBox(height: 24),
-                      showLoadingScreen(),
-                    ],
-                  ),
-                ),
+            ),
+          ),
+        if (_robotStatus == RobotStatus.loading)
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Robot is loading'),
+                  const SizedBox(height: 24),
+                  showLoadingScreen(),
+                ],
               ),
-          ],
-        ),
-      ),
+            ),
+          ),
+      ],
     );
   }
 }

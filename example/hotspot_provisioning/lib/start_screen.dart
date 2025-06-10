@@ -1,10 +1,8 @@
 import 'dart:math';
 
-import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'consts.dart';
-
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -62,21 +60,19 @@ class _StartScreenState extends State<StartScreen> {
     mainPart = (await viam.appClient.listRobotParts(robot.id)).firstWhere((element) => element.mainPart);
   }
 
-  void _goToIntroScreenOne() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ConnectHotspotPrefixScreen(
-        robot: robot,
-        viam: viam,
-        mainPart: mainPart,
-      ),
-    ));
-  }
-
   void _startFlow() async {
     try {
       await _createRobot();
       if (mounted) {
-        _goToIntroScreenOne();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => HotspotProvisioningFlow(
+            robot: robot,
+            viam: viam,
+            mainPart: mainPart,
+            hotspotPrefix: Consts.hotspotPrefix,
+            hotspotPassword: Consts.hotspotPassword,
+          ),
+        ));
       }
     } catch (e) {
       debugPrint('Failed to start flow: $e');
