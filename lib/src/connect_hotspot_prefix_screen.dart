@@ -199,20 +199,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
       }
     }
   }
-
-// TODO: control navigation outside of this screen.
-  // void _navigateToNetworkSelection() {
-  //   if (!mounted) return;
-  //   debugPrint('Navigating to network selection screen...');
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(
-  //       settings: const RouteSettings(name: '/network-selection'),
-  //       builder: (context) => NetworkSelectionScreen(robot: widget.robot, viam: widget.viam, mainPart: widget.mainPart),
-  //     ),
-  //   );
-  // }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart' hide Consts;
 import 'package:flutter/material.dart';
-
+import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'consts.dart';
 
 class StartScreen extends StatefulWidget {
