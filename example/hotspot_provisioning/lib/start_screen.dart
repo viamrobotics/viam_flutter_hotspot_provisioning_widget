@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
+import 'offline_screen.dart';
+import 'online_screen.dart';
 import 'consts.dart';
 
 class StartScreen extends StatefulWidget {
@@ -71,6 +73,12 @@ class _StartScreenState extends State<StartScreen> {
             mainPart: mainPart,
             hotspotPrefix: Consts.hotspotPrefix,
             hotspotPassword: Consts.hotspotPassword,
+            onlineBuilder: (navContext) {
+              return OnlineScreen(onPressed: () => Navigator.of(navContext).pop());
+            },
+            offlineBuilder: (navContext) {
+              return OfflineScreen(onPressed: () => Navigator.of(navContext).pop());
+            },
           ),
         ));
       }
