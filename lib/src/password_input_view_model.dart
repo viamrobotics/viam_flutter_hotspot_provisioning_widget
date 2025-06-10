@@ -30,14 +30,25 @@ class PasswordInputViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+    passwordController.dispose();
+    ssidController.dispose();
+    super.dispose();
+  }
+
   Future<void> submitPassword(BuildContext context) async {
     _loading = true;
     notifyListeners();
     try {
+      // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
+      // This is why we are NOT sending them at the same time.
       final response = await getSmartMachineStatus();
       if (!response.hasSmartMachineCredentials) {
         await _setSmartMachineCredentials();
       }
+      // We are not awaiting setNetworkCredentials because it takes a unknown, but long amount of time to complete, or times out.
+      // If the user has gotten this far, we've validated that this is their machine, so we can just set the network credentials.
       _setNetworkCredentials(network?.ssid.trim() ?? ssidController.text.trim(), passwordController.text.trim());
       onPasswordSubmitted();
     } catch (e) {
@@ -69,12 +80,6 @@ class PasswordInputViewModel extends ChangeNotifier {
       ssid: ssid,
       psk: psk,
     );
-  }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    ssidController.dispose();
-    super.dispose();
+    // TOOD: include provisioning attempts like we have in gost??
   }
 }
