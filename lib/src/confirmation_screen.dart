@@ -3,11 +3,14 @@ part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
-  const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.mainPart});
+  const ConfirmationScreen(
+      {super.key, required this.robot, required this.viam, required this.mainPart, this.onlineBuilder, this.offlineBuilder});
 
   final Viam viam;
   final Robot robot;
   final RobotPart mainPart;
+  final Widget Function(BuildContext context)? onlineBuilder;
+  final Widget Function(BuildContext context)? offlineBuilder;
 
   @override
   State<ConfirmationScreen> createState() => _ConfirmationScreenState();
@@ -60,13 +63,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       final newRobotStatus = await calculateRobotStatus(reloadedRobot);
       debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
       if (newRobotStatus == RobotStatus.online) {
-        // TODO: before we had goToRobotScreen();, decide if we should do something here.
-        // a callback that they can choose to do something with --> the flow will do something with it
         _timer?.cancel();
+        // TODO: show a robot is online screen here?
       }
-      setState(() {
-        _robotStatus = newRobotStatus;
-      });
+      if (mounted) {
+        setState(() {
+          _robotStatus = newRobotStatus;
+        });
+      }
     } catch (e) {
       // if an error, that means we still lack network connection
       debugPrint('Error getting robot status ${e.toString()}');
@@ -112,31 +116,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return Column(
       children: [
         if (_robotStatus == RobotStatus.online)
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Robot is online'),
-                  const Icon(Icons.check_circle, color: Colors.green),
-                  // TODO: show a robot is online screen here?
-                ],
-              ),
-            ),
-          ),
+          widget.onlineBuilder != null
+              ? widget.onlineBuilder!(context)
+              : Expanded(
+                  child: RobotOnlineWidget(
+                  robot: widget.robot,
+                )),
         if (_robotStatus == RobotStatus.offline)
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Robot is offline. Connection failed'),
-                  const Icon(Icons.error, color: Colors.red),
-                  // TODO: show error screen that takes user back to reconnect flow
-                ],
-              ),
-            ),
-          ),
+          widget.offlineBuilder != null ? widget.offlineBuilder!(context) : const Expanded(child: RobotOfflineWidget()),
         if (_robotStatus == RobotStatus.loading)
           Expanded(
             child: Center(

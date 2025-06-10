@@ -6,6 +6,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final RobotPart mainPart;
   final String hotspotPrefix;
   final String hotspotPassword;
+  final Widget Function(BuildContext context)? onlineBuilder;
+  final Widget Function(BuildContext context)? offlineBuilder;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -14,6 +16,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required this.mainPart,
     required this.hotspotPrefix,
     required this.hotspotPassword,
+    this.onlineBuilder,
+    this.offlineBuilder,
   });
 
   @override
@@ -174,6 +178,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   robot: widget.robot,
                   viam: widget.viam,
                   mainPart: widget.mainPart,
+                  onlineBuilder: widget.onlineBuilder,
+                  offlineBuilder: widget.offlineBuilder,
                 )
               ],
             ),
