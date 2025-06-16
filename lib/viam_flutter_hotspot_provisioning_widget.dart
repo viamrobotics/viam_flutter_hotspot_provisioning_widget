@@ -29,5 +29,6 @@ part 'src/widgets/no_content_widget.dart';
 part 'src/widgets/pill_button.dart';
 part 'src/widgets/primary_button.dart';
 part 'src/widgets/provisioning_list_item.dart';
+part 'src/widgets/robot_loading_widget.dart';
 part 'src/widgets/robot_online_widget.dart';
 part 'src/widgets/robot_offline_widget.dart';

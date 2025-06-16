@@ -121,7 +121,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     }
 
     return AppBar(
-      title: Text(title, style: const TextStyle(color: Colors.black)),
+      title: Text(title, style: const TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w500)),
       backgroundColor: Colors.white,
       elevation: 0,
       actions: actions,

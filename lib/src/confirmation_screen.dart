@@ -64,7 +64,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       debugPrint('Robot status: $newRobotStatus, name: ${reloadedRobot.name}');
       if (newRobotStatus == RobotStatus.online) {
         _timer?.cancel();
-        // TODO: show a robot is online screen here?
       }
       if (mounted) {
         setState(() {
@@ -86,58 +85,26 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return RobotStatus.loading;
   }
 
-  NoContentWidget showLoadingScreen() {
-    if (_secondsLoading < provisioningTimeoutSeconds) {
-      return NoContentWidget(
-        titleString: _secondsLoading < provisioningStillWaitingSeconds ? "Setting up device..." : "Still trying...",
-        bodyString: _secondsLoading < provisioningStillWaitingSeconds
-            ? null
-            : "Please keep this screen open. We'll keep trying to connect for a few more minutes.",
-      );
-    }
-    return NoContentWidget(
-      icon: Icon(Icons.highlight_off, color: Color(0xFFF86061)),
-      titleString: "Connection failed",
-      bodyString: "Unable to connect to your device's Wi-Fi network",
-      button: PillButton(
-        buttonString: "Try again",
-        iconData: Icons.refresh,
-        onPressed: () {
-          Navigator.of(context).pop();
-          // add a callback that allows the user to fill in what they want to do / where they want to go.
-          // TODO: instead of popping, we should navigate to the reconnect flow when a user wants to try and reconnect after a failed provision attempt.
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (_robotStatus == RobotStatus.online)
-          widget.onlineBuilder != null
-              ? widget.onlineBuilder!(context)
-              : Expanded(
-                  child: RobotOnlineWidget(
-                  robot: widget.robot,
-                )),
-        if (_robotStatus == RobotStatus.offline)
-          widget.offlineBuilder != null ? widget.offlineBuilder!(context) : const Expanded(child: RobotOfflineWidget()),
-        if (_robotStatus == RobotStatus.loading)
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Robot is loading'),
-                  const SizedBox(height: 24),
-                  showLoadingScreen(),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
+    if (_robotStatus == RobotStatus.online) {
+      return widget.onlineBuilder != null
+          ? widget.onlineBuilder!(context)
+          : Expanded(
+              child: RobotOnlineWidget(
+              robot: widget.robot,
+            ));
+    } else if (_robotStatus == RobotStatus.offline) {
+      return widget.offlineBuilder != null ? widget.offlineBuilder!(context) : const Expanded(child: RobotOfflineWidget());
+    } else if (_secondsLoading >= provisioningTimeoutSeconds) {
+      return widget.offlineBuilder != null ? widget.offlineBuilder!(context) : const Expanded(child: RobotOfflineWidget());
+    } else {
+      return Expanded(
+        child: RobotLoadingWidget(
+          secondsLoading: _secondsLoading,
+          provisioningStillWaitingSeconds: provisioningStillWaitingSeconds,
+        ),
+      );
+    }
   }
 }
