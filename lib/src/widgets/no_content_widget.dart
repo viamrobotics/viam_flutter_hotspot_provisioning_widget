@@ -30,7 +30,7 @@ class NoContentWidget extends StatelessWidget {
             titleString,
             style: TextStyle(
               fontSize: 16.0,
-              color: Color(0xFFF7F7F8),
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
