@@ -34,7 +34,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool get connectedToHotspot => _connectedToHotspot;
   int get retryCount => _retryCount;
 
-  // Setters that notify listeners
   void _setIsAttemptingConnectionToHotspot(bool value) {
     _isAttemptingConnectionToHotspot = value;
     notifyListeners();
@@ -65,8 +64,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Android considers Wi-Fi information to be location information
-  /// If we don't have location permission any connected ssid will show as 'unown ssid'
+  // Android considers Wi-Fi information to be location information
+  // If we don't have location permission any connected ssid will show as 'unown ssid'
   Future<void> getLocationPermission() async {
     final status = await ph.Permission.location.request();
     switch (status) {
@@ -139,7 +138,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
     final response = await _viam.provisioningClient.getSmartMachineStatus();
     // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
-
     return response.provisioningInfo;
   }
 

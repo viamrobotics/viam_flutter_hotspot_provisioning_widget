@@ -20,11 +20,9 @@ class ConfirmationViewModel extends ChangeNotifier {
   static const int provisioningTimeoutSeconds = 90;
   static const int provisioningStillWaitingSeconds = 45;
 
-  // Getters
   RobotStatus get robotStatus => _robotStatus;
   int get secondsLoading => _secondsLoading;
 
-  // Setters that notify listeners
   void _setRobotStatus(RobotStatus value) {
     if (_robotStatus != value) {
       _robotStatus = value;
@@ -49,9 +47,12 @@ class ConfirmationViewModel extends ChangeNotifier {
   }
 
   Future<void> _disconnectFromHotspot() async {
+    // TODO: want to await setting network credentials on previous screen, but fails/times out
+    // so this is a hack workaround
     await Future.delayed(const Duration(seconds: 5));
     final disconnected = await PluginWifiConnect.disconnect();
     debugPrint('disconnected from hotspot: $disconnected');
+    // TODO: associate hotspot ssid w/ robot metadata as part of the machine already exists flow.
   }
 
   void _getRobotStatus() async {
@@ -64,6 +65,7 @@ class ConfirmationViewModel extends ChangeNotifier {
       }
       _setRobotStatus(newRobotStatus);
     } catch (e) {
+      // if an error, that means we still lack network connection
       debugPrint('Error getting robot status ${e.toString()}');
     }
   }

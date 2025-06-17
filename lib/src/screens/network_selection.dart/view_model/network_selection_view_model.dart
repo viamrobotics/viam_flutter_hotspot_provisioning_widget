@@ -7,15 +7,12 @@ class NetworkSelectionViewModel extends ChangeNotifier {
 
   final Viam _viam;
 
-  // Private state variables
   bool _loadingNetworks = false;
   List<NetworkInfo> _machineVisibleNetworks = [];
 
-  // Getters
   bool get loadingNetworks => _loadingNetworks;
   List<NetworkInfo> get machineVisibleNetworks => _machineVisibleNetworks;
 
-  // Setters that notify listeners
   void _setLoadingNetworks(bool value) {
     _loadingNetworks = value;
     notifyListeners();
