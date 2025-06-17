@@ -1,4 +1,4 @@
-part of '../../viam_flutter_hotspot_provisioning_widget.dart';
+part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class RobotOnlineWidget extends StatelessWidget {
   final Robot robot;
