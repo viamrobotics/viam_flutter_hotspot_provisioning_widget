@@ -1,4 +1,4 @@
-part of '../../viam_flutter_hotspot_provisioning_widget.dart';
+part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 // Currently, we are assuming that we are always provisioning a new machine.
 
