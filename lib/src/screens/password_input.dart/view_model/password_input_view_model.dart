@@ -1,58 +1,83 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputViewModel extends ChangeNotifier {
-  final Viam _viam;
-  final RobotPart _mainPart;
-  VoidCallback onPasswordSubmitted;
-  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
-
-  PasswordInputViewModel(this._viam, this._mainPart, this.onPasswordSubmitted, this._showErrorDialog) {
-    passwordController.addListener(notifyListeners);
-    ssidController.addListener(notifyListeners);
+  PasswordInputViewModel({
+    required Viam viam,
+    required RobotPart mainPart,
+    required VoidCallback onPasswordSubmitted,
+    required Function(BuildContext, {required String title, String? error}) showErrorDialog,
+  })  : _viam = viam,
+        _mainPart = mainPart,
+        _onPasswordSubmitted = onPasswordSubmitted,
+        _showErrorDialog = showErrorDialog {
+    _passwordController.addListener(_notifyListeners);
+    _ssidController.addListener(_notifyListeners);
   }
 
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController ssidController = TextEditingController();
+  final Viam _viam;
+  final RobotPart _mainPart;
+  final VoidCallback _onPasswordSubmitted;
+  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
 
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _ssidController = TextEditingController();
   bool _obscureText = true;
-  bool get obscureText => _obscureText;
-
   bool _loading = false;
+  NetworkInfo? _network;
+
+  TextEditingController get passwordController => _passwordController;
+  TextEditingController get ssidController => _ssidController;
+  bool get obscureText => _obscureText;
   bool get loading => _loading;
+  NetworkInfo? get network => _network;
 
   bool get areCredentialsEntered {
     if (_network != null) {
       return true;
     }
-    return ssidController.text.isNotEmpty;
+    return _ssidController.text.isNotEmpty;
   }
 
-  NetworkInfo? _network;
-  NetworkInfo? get network => _network;
+  void _notifyListeners() {
+    notifyListeners();
+  }
 
-  set network(NetworkInfo? network) {
-    _network = network;
+  void _setObscureText(bool value) {
+    _obscureText = value;
+    notifyListeners();
+  }
+
+  void _setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  void _setNetwork(NetworkInfo? value) {
+    _network = value;
     notifyListeners();
   }
 
   void toggleObscureText() {
-    _obscureText = !_obscureText;
-    notifyListeners();
+    _setObscureText(!_obscureText);
+  }
+
+  set network(NetworkInfo? network) {
+    _setNetwork(network);
   }
 
   @override
   void dispose() {
-    passwordController.removeListener(notifyListeners);
-    ssidController.removeListener(notifyListeners);
-    passwordController.dispose();
-    ssidController.dispose();
+    _passwordController.removeListener(_notifyListeners);
+    _ssidController.removeListener(_notifyListeners);
+    _passwordController.dispose();
+    _ssidController.dispose();
     super.dispose();
   }
 
   Future<void> submitPassword(BuildContext context) async {
     FocusScope.of(context).unfocus();
-    _loading = true;
-    notifyListeners();
+    _setLoading(true);
+
     try {
       // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
       // This is why we are NOT sending them at the same time.
@@ -62,8 +87,8 @@ class PasswordInputViewModel extends ChangeNotifier {
       }
       // We are not awaiting setNetworkCredentials because it takes a unknown, but long amount of time to complete, or times out.
       // If the user has gotten this far, we've validated that this is their machine, so we can just set the network credentials.
-      _setNetworkCredentials(network?.ssid.trim() ?? ssidController.text.trim(), passwordController.text.trim());
-      onPasswordSubmitted();
+      _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), _passwordController.text.trim());
+      _onPasswordSubmitted();
     } catch (e) {
       if (!context.mounted) return;
       _showErrorDialog(
@@ -72,8 +97,8 @@ class PasswordInputViewModel extends ChangeNotifier {
         error: 'Please try again.',
       );
     }
-    _loading = false;
-    notifyListeners();
+
+    _setLoading(false);
   }
 
   Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {

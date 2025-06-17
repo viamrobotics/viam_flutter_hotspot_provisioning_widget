@@ -34,12 +34,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    _networkSelectionViewModel = NetworkSelectionViewModel(widget.viam);
+    _networkSelectionViewModel = NetworkSelectionViewModel(viam: widget.viam);
     _passwordInputViewModel = PasswordInputViewModel(
-      widget.viam,
-      widget.mainPart,
-      () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
-      (context, {required title, String? error}) => showAdaptiveDialog(
+      viam: widget.viam,
+      mainPart: widget.mainPart,
+      onPasswordSubmitted: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+      showErrorDialog: (context, {required title, String? error}) => showAdaptiveDialog(
         context: context,
         builder: (context) => AlertDialog.adaptive(
           title: Text(title),
@@ -164,6 +164,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   hotspotPrefix: widget.hotspotPrefix,
                 ),
                 NetworkSelectionScreen(
+                  viam: widget.viam,
                   onSelectNetwork: (network) {
                     _passwordInputViewModel.network = network;
                     _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);

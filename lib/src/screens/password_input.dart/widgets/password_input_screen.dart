@@ -66,12 +66,12 @@ class PasswordInputScreen extends StatelessWidget {
                 border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
                 suffixIcon: IconButton(
                   icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
-                  onPressed: () => context.read<PasswordInputViewModel>().toggleObscureText(),
+                  onPressed: () => viewModel.toggleObscureText(),
                 ),
               ),
               onSubmitted: (String value) {
                 if (canSubmit) {
-                  context.read<PasswordInputViewModel>().submitPassword(context);
+                  viewModel.submitPassword(context);
                 }
               },
             ),
