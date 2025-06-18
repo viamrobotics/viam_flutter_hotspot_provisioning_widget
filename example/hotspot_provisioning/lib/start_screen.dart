@@ -66,24 +66,46 @@ class _StartScreenState extends State<StartScreen> {
     try {
       await _createRobot();
       if (mounted) {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => HotspotProvisioningFlow(
-            robot: robot,
-            viam: viam,
-            mainPart: mainPart,
-            hotspotPrefix: Consts.hotspotPrefix,
-            hotspotPassword: Consts.hotspotPassword,
-            onlineBuilder: (navContext) {
-              return OnlineScreen(onPressed: () => Navigator.of(navContext).pop());
-            },
-            offlineBuilder: (navContext) {
-              return OfflineScreen(onPressed: () => Navigator.of(navContext).pop());
-            },
-          ),
-        ));
+        debugPrint('Starting flow');
+
+        // the result is a robot, and a robot status
+        final result = await HotspotProvisioningFlow.show(
+          context,
+          robot: robot,
+          viam: viam,
+          mainPart: mainPart,
+          hotspotPrefix: Consts.hotspotPrefix,
+          hotspotPassword: Consts.hotspotPassword,
+        );
+
+        if (result != null) {
+          // HotspotProvisioningFlow completed and returned a result
+          debugPrint('Provisioning Result: Robot ${result.robot.name}, Status: ${result.status}');
+          if (result.status == RobotStatus.online) {
+            if (mounted) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
+            }
+          } else {
+            // if the robot is offline or the provisioning timed out, we should show the offline screen
+            if (mounted) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
+            }
+          }
+        } else {
+          // User cancelled the provisioning flow
+          debugPrint('Hotspot provisioning cancelled.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Hotspot provisioning cancelled.')),
+          );
+        }
       }
     } catch (e) {
       debugPrint('Failed to start flow: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
     }
   }
 

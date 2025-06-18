@@ -6,15 +6,21 @@ class OnlineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Robot is online! I passed this screen in the onlineBuilder'),
-            const SizedBox(height: 16),
-            const Icon(Icons.check_circle, color: Colors.green, size: 48),
-            const SizedBox(height: 16),
+            const Text(
+              'Robot is online. This is from example app.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: onPressed,
               child: const Text('Done'),
