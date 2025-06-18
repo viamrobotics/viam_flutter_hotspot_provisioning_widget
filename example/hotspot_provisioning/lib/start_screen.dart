@@ -67,8 +67,7 @@ class _StartScreenState extends State<StartScreen> {
       await _createRobot();
       if (mounted) {
         debugPrint('Starting flow');
-
-        // the result is a robot, and a robot status
+        // result is a robot and a robot status
         final result = await HotspotProvisioningFlow.show(
           context,
           robot: robot,
@@ -77,28 +76,22 @@ class _StartScreenState extends State<StartScreen> {
           hotspotPrefix: Consts.hotspotPrefix,
           hotspotPassword: Consts.hotspotPassword,
         );
-
         if (result != null) {
-          // HotspotProvisioningFlow completed and returned a result
-          debugPrint('Provisioning Result: Robot ${result.robot.name}, Status: ${result.status}');
+          // HotspotProvisioningFlow completed successfully and the robot is online
           if (result.status == RobotStatus.online) {
             if (mounted) {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
             }
           } else {
-            // if the robot is offline or the provisioning timed out, we should show the offline screen
+            // HotspotProvisioningFlow timed out or the robot is offline
             if (mounted) {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
             }
           }
         } else {
-          // User cancelled the provisioning flow
-          debugPrint('Hotspot provisioning cancelled.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Hotspot provisioning cancelled.')),
-          );
+          debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
         }
       }
     } catch (e) {
