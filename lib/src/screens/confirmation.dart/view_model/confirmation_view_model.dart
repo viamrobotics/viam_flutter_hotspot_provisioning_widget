@@ -59,8 +59,7 @@ class ConfirmationViewModel extends ChangeNotifier {
   void _checkForTimeout() {
     if (_robotStatus == RobotStatus.loading && _secondsLoading >= provisioningTimeoutSeconds) {
       debugPrint('robot provisioning timed out and is offline');
-      _onStatusDetermined.call(_robot, RobotStatus.offline);
-      _timer?.cancel();
+      _setRobotStatus(RobotStatus.offline);
     }
   }
 
