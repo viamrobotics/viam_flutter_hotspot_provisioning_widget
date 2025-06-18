@@ -33,7 +33,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     super.dispose();
   }
 
-// Note: The only UI we need to show is the loading screen. Once the robot is online or offline, the callback will be triggered, and the parent (HotspotProvisioningFlow) will pop this screen. THis way the user can decide what to do when the robot is online or offline.
+// The only UI we need to show is the loading screen.
+// Once the robot is online or offline, the callback will be triggered, and the parent (HotspotProvisioningFlow) will pop this screen.
+// This way the user can decide what to do when the robot is online or offline.
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -45,8 +47,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
             provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,
           );
         }
-        // If status is online/offline/timed out, the callback should have already fired.
-        // so we return a small placeholder since this screen is about to be popped.
+        // If status is online/offline/timed out, the callback should have already fired and this screen is about to be popped.
         return const SizedBox.shrink();
       },
     );
