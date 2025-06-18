@@ -99,12 +99,12 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
     }
   }
 
-  void _goToHotspotProvisioningFlow(BuildContext context, Viam viam, Robot robot) async {
-    final mainPart = (await viam.appClient.listRobotParts(robot.id)).firstWhere((element) => element.mainPart);
+  void _goToHotspotProvisioningFlow(BuildContext context, Viam viam, Robot existingRobot) async {
+    final mainPart = (await viam.appClient.listRobotParts(existingRobot.id)).firstWhere((element) => element.mainPart);
     if (context.mounted) {
       final result = await HotspotProvisioningFlow.show(
         context,
-        robot: robot,
+        robot: existingRobot,
         viam: viam,
         mainPart: mainPart,
         hotspotPrefix: Consts.hotspotPrefix,
@@ -168,11 +168,11 @@ extension _RobotStatusIcon on _RobotStatus {
   Icon get statusIcon {
     switch (this) {
       case _RobotStatus.online:
-        return const Icon(Icons.check_circle, color: Colors.green);
+        return const Icon(Icons.wifi_tethering, color: Colors.green);
       case _RobotStatus.offline:
-        return const Icon(Icons.offline_bolt, color: Colors.grey);
+        return const Icon(Icons.wifi_tethering, color: Colors.red);
       case _RobotStatus.awaitingSetup:
-        return const Icon(Icons.snooze, color: Colors.blue);
+        return const Icon(Icons.wifi_tethering, color: Colors.blue);
       case _RobotStatus.loading:
         return const Icon(Icons.hourglass_empty, color: Colors.black);
     }
