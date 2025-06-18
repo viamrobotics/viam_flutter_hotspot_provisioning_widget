@@ -103,9 +103,6 @@ class _StartScreenState extends State<StartScreen> {
       }
     } catch (e) {
       debugPrint('Failed to start flow: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
     }
   }
 
