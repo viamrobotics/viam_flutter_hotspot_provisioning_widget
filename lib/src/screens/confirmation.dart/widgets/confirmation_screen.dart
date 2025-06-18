@@ -46,8 +46,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           );
         }
         // If status is online/offline/timed out, the callback should have already fired.
-        // We can return an empty SizedBox or a very minimal placeholder here,
-        // as this screen is about to be popped.
+        // so we return a small placeholder since this screen is about to be popped.
         return const SizedBox.shrink();
       },
     );
