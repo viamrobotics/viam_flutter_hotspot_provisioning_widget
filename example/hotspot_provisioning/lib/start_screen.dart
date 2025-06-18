@@ -66,21 +66,33 @@ class _StartScreenState extends State<StartScreen> {
     try {
       await _createRobot();
       if (mounted) {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => HotspotProvisioningFlow(
-            robot: robot,
-            viam: viam,
-            mainPart: mainPart,
-            hotspotPrefix: Consts.hotspotPrefix,
-            hotspotPassword: Consts.hotspotPassword,
-            onlineBuilder: (navContext) {
-              return OnlineScreen(onPressed: () => Navigator.of(navContext).pop());
-            },
-            offlineBuilder: (navContext) {
-              return OfflineScreen(onPressed: () => Navigator.of(navContext).pop());
-            },
-          ),
-        ));
+        debugPrint('Starting flow');
+        // result is a robot and a robot status
+        final result = await HotspotProvisioningFlow.show(
+          context,
+          robot: robot,
+          viam: viam,
+          mainPart: mainPart,
+          hotspotPrefix: Consts.hotspotPrefix,
+          hotspotPassword: Consts.hotspotPassword,
+        );
+        if (result != null) {
+          // HotspotProvisioningFlow completed successfully and the robot is online
+          if (result.status == RobotStatus.online) {
+            if (mounted) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
+            }
+          } else {
+            // HotspotProvisioningFlow timed out or the robot is offline
+            if (mounted) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
+            }
+          }
+        } else {
+          debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
+        }
       }
     } catch (e) {
       debugPrint('Failed to start flow: $e');

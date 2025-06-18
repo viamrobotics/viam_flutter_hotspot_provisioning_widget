@@ -6,8 +6,6 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final RobotPart mainPart;
   final String hotspotPrefix;
   final String hotspotPassword;
-  final Widget Function(BuildContext context)? onlineBuilder;
-  final Widget Function(BuildContext context)? offlineBuilder;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -16,9 +14,29 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required this.mainPart,
     required this.hotspotPrefix,
     required this.hotspotPassword,
-    this.onlineBuilder,
-    this.offlineBuilder,
   });
+
+// Static method to push this flow and get a result
+  static Future<HotspotProvisioningResult?> show(
+    BuildContext context, {
+    required Robot robot,
+    required Viam viam,
+    required RobotPart mainPart,
+    required String hotspotPrefix,
+    required String hotspotPassword,
+  }) {
+    return Navigator.of(context).push<HotspotProvisioningResult?>(
+      MaterialPageRoute(
+        builder: (context) => HotspotProvisioningFlow(
+          robot: robot,
+          viam: viam,
+          mainPart: mainPart,
+          hotspotPrefix: hotspotPrefix,
+          hotspotPassword: hotspotPassword,
+        ),
+      ),
+    );
+  }
 
   @override
   State<HotspotProvisioningFlow> createState() => _HotspotProvisioningFlowState();
@@ -71,6 +89,13 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _networkSelectionViewModel.dispose();
     _passwordInputViewModel.dispose();
     super.dispose();
+  }
+
+  // when the confirmation screen determines the status, we want to pop this flow and return the result to the caller of HotspotProvisioningFlow.show()
+  void onConfirmationStatusDetermined(Robot robot, RobotStatus status) {
+    if (mounted) {
+      Navigator.of(context).pop(HotspotProvisioningResult(robot: robot, status: status));
+    }
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -179,8 +204,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   robot: widget.robot,
                   viam: widget.viam,
                   mainPart: widget.mainPart,
-                  onlineBuilder: widget.onlineBuilder,
-                  offlineBuilder: widget.offlineBuilder,
+                  onStatusDetermined: onConfirmationStatusDetermined,
                 )
               ],
             ),
@@ -190,3 +214,4 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     );
   }
 }
+

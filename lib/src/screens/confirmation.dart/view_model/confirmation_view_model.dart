@@ -4,14 +4,17 @@ class ConfirmationViewModel extends ChangeNotifier {
   ConfirmationViewModel({
     required Viam viam,
     required Robot robot,
+    required void Function(Robot robot, RobotStatus status) onStatusDetermined,
   })  : _viam = viam,
-        _robot = robot {
+        _robot = robot,
+        _onStatusDetermined = onStatusDetermined {
     _disconnectFromHotspot();
     _startCheckingOnline();
   }
 
   final Viam _viam;
   final Robot _robot;
+  final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
 
   Timer? _timer;
   RobotStatus _robotStatus = RobotStatus.loading;
@@ -27,6 +30,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     if (_robotStatus != value) {
       _robotStatus = value;
       notifyListeners();
+      _whenFinalRobotStatusIsDetermined();
     }
   }
 
@@ -34,6 +38,28 @@ class ConfirmationViewModel extends ChangeNotifier {
     if (_secondsLoading != value) {
       _secondsLoading = value;
       notifyListeners();
+      // Check for timeout when seconds are updated
+      _checkForTimeout();
+    }
+  }
+
+// triggers a callback to the hotspot provisioning flow to to indicate if the robot is online or offline
+  void _whenFinalRobotStatusIsDetermined() {
+    // robot provisioned succesfully and is online
+    if (_robotStatus == RobotStatus.online) {
+      _onStatusDetermined.call(_robot, RobotStatus.online);
+      _timer?.cancel();
+      // robot provisioning did not complete successfully and is offline
+    } else if (_robotStatus == RobotStatus.offline) {
+      _onStatusDetermined.call(_robot, RobotStatus.offline);
+      _timer?.cancel();
+    }
+  }
+
+  void _checkForTimeout() {
+    if (_robotStatus == RobotStatus.loading && _secondsLoading >= provisioningTimeoutSeconds) {
+      debugPrint('robot provisioning timed out and is offline');
+      _setRobotStatus(RobotStatus.offline);
     }
   }
 
