@@ -135,11 +135,13 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     }
   }
 
-  Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
-    final response = await _viam.provisioningClient.getSmartMachineStatus();
-    // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
-    return response.provisioningInfo;
-  }
+  // Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
+  //   final response = await _viam.provisioningClient.getSmartMachineStatus();
+  //   // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
+  //   // final alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials;
+
+  //   return response.provisioningInfo;
+  // }
 
   void connectToHotspot() async {
     try {

@@ -5,6 +5,7 @@ import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_pr
 import 'offline_screen.dart';
 import 'online_screen.dart';
 import 'consts.dart';
+import 'reconnect_machines_screen.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -99,6 +100,12 @@ class _StartScreenState extends State<StartScreen> {
     }
   }
 
+  void _goToReconnectMachinesFlow(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ReconnectRobotsScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +124,11 @@ class _StartScreenState extends State<StartScreen> {
               onPressed: _startFlow,
               text: _isLoading ? 'Loading...' : 'Start Flow',
               isLoading: _isLoading,
+            ),
+            const SizedBox(height: 16),
+            PrimaryButton(
+              onPressed: () => _goToReconnectMachinesFlow(context),
+              text: 'Reconnect Machine',
             ),
           ],
         ),
