@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart'; // Import HotspotProvisioningFlow
-import 'package:viam_sdk/viam_sdk.dart'; // Import Robot, Viam, and RobotPart
-import 'package:viam_sdk/src/gen/app/v1/app.pb.dart'; // Import AppClient classes for RobotStatus
+import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'consts.dart';
 import 'offline_screen.dart';
 import 'online_screen.dart';
