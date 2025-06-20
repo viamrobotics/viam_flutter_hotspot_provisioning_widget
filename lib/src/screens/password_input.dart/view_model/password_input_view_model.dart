@@ -65,6 +65,10 @@ class PasswordInputViewModel extends ChangeNotifier {
     _setNetwork(network);
   }
 
+  bool isPublicNetwork(NetworkInfo network) {
+    return network.security == '-';
+  }
+
   @override
   void dispose() {
     _passwordController.removeListener(_notifyListeners);
@@ -87,7 +91,10 @@ class PasswordInputViewModel extends ChangeNotifier {
       }
       // We are not awaiting setNetworkCredentials because it takes a unknown, but long amount of time to complete, or times out.
       // If the user has gotten this far, we've validated that this is their machine, so we can just set the network credentials.
-      _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), _passwordController.text.trim());
+
+      // For public networks, submit empty string as password
+      final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
+      _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
       _onPasswordSubmitted();
     } catch (e) {
       if (!context.mounted) return;

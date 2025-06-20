@@ -7,6 +7,7 @@ class PasswordInputScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<PasswordInputViewModel>();
     final bool canSubmit = viewModel.network != null || viewModel.ssidController.text.isNotEmpty;
+    final bool isPublicNetwork = viewModel.network != null && viewModel.isPublicNetwork(viewModel.network!);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -39,43 +40,45 @@ class PasswordInputScreen extends StatelessWidget {
             )
           else
             _manuallyEnterSSIDInput(context),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
-            child: Text(
-              "Password",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              obscureText: viewModel.obscureText,
-              controller: viewModel.passwordController,
-              autocorrect: false,
-              decoration: InputDecoration(
-                helperText: "If your network has no password, leave this field blank.",
-                helperMaxLines: 2,
-                helperStyle: const TextStyle(fontSize: 14.0, color: Colors.black),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-                border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-                suffixIcon: IconButton(
-                  icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
-                  onPressed: () => viewModel.toggleObscureText(),
+          if (!isPublicNetwork) ...[
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
+              child: Text(
+                "Password",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.black,
                 ),
               ),
-              onSubmitted: (String value) {
-                if (canSubmit) {
-                  viewModel.submitPassword(context);
-                }
-              },
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextField(
+                obscureText: viewModel.obscureText,
+                controller: viewModel.passwordController,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  helperText: "If your network has no password, leave this field blank.",
+                  helperMaxLines: 2,
+                  helperStyle: const TextStyle(fontSize: 14.0, color: Colors.black),
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                  border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                  suffixIcon: IconButton(
+                    icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
+                    onPressed: () => viewModel.toggleObscureText(),
+                  ),
+                ),
+                onSubmitted: (String value) {
+                  if (canSubmit) {
+                    viewModel.submitPassword(context);
+                  }
+                },
+              ),
+            ),
+          ],
         ],
       ),
     );
