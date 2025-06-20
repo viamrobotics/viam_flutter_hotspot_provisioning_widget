@@ -59,9 +59,6 @@ class PasswordInputScreen extends StatelessWidget {
                 controller: viewModel.passwordController,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  helperText: "If your network has no password, leave this field blank.",
-                  helperMaxLines: 2,
-                  helperStyle: const TextStyle(fontSize: 14.0, color: Colors.black),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
                   focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
