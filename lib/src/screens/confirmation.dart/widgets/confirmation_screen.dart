@@ -1,6 +1,6 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
-enum RobotStatus { online, offline, loading, timedOut }
+enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
   const ConfirmationScreen({super.key, required this.robot, required this.viam, required this.mainPart, required this.onStatusDetermined});
