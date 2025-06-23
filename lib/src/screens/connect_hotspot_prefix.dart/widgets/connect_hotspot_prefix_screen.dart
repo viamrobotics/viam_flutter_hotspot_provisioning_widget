@@ -91,10 +91,11 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                         padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
                         child: Column(
                           children: [
-                            Text("You are connected to the device's hotspot.", style: listStyle),
                             Row(
                               children: [
                                 Icon(Icons.check_circle, color: Colors.green),
+                                const SizedBox(width: 8.0),
+                                Text("You are connected to the device's hotspot.", style: listStyle),
                                 Spacer(),
                               ],
                             ),
