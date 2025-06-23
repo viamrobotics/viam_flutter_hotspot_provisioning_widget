@@ -6,7 +6,9 @@ class PasswordInputScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<PasswordInputViewModel>();
-    final bool canSubmit = viewModel.network != null || viewModel.ssidController.text.isNotEmpty;
+    // final bool canSubmit = viewModel.network != null || viewModel.ssidController.text.isNotEmpty;
+    final bool canSubmit = viewModel.areCredentialsEntered;
+
     final bool isPublicNetwork = viewModel.network != null && viewModel.isPublicNetwork(viewModel.network!);
 
     return GestureDetector(
