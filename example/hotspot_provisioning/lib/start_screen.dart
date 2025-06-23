@@ -1,102 +1,22 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
-import 'offline_screen.dart';
-import 'online_screen.dart';
-import 'consts.dart';
+import 'reconnect_machines_screen.dart';
+import 'provision_new_machine.dart';
 
-class StartScreen extends StatefulWidget {
+class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
-  @override
-  State<StartScreen> createState() => _StartScreenState();
-}
-
-class _StartScreenState extends State<StartScreen> {
-  String? _robotName;
-  bool _isLoading = false;
-  late Viam viam;
-  late Robot robot;
-  late RobotPart mainPart;
-
-  @override
-  void initState() {
-    super.initState();
-    _initViam();
+  void _goToProvisionNewMachineFlow(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ProvisionNewMachineScreen(),
+    ));
   }
 
-  Future<void> _initViam() async {
-    viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
-  }
-
-  Future<void> _createRobot() async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      final location = await viam.appClient.createLocation(Consts.organizationId, 'test-location-${Random().nextInt(1000)}');
-      final String robotName = "tester-${Random().nextInt(1000)}";
-      setState(() {
-        _robotName = robotName;
-      });
-      debugPrint('robotName: $robotName, locationId: ${location.name}');
-      final robotId = await viam.appClient.newMachine(robotName, location.id);
-      robot = await viam.appClient.getRobot(robotId);
-      await _getMainPart();
-      await Future.delayed(const Duration(seconds: 3));
-    } catch (e) {
-      debugPrint('Error creating robot: $e');
-      setState(() {
-        _robotName = null;
-      });
-      rethrow;
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _getMainPart() async {
-    mainPart = (await viam.appClient.listRobotParts(robot.id)).firstWhere((element) => element.mainPart);
-  }
-
-  void _startFlow() async {
-    try {
-      await _createRobot();
-      if (mounted) {
-        debugPrint('Starting flow');
-        // result is a robot and a robot status
-        final result = await HotspotProvisioningFlow.show(
-          context,
-          robot: robot,
-          viam: viam,
-          mainPart: mainPart,
-          hotspotPrefix: Consts.hotspotPrefix,
-          hotspotPassword: Consts.hotspotPassword,
-        );
-        if (result != null) {
-          // HotspotProvisioningFlow completed successfully and the robot is online
-          if (result.status == RobotStatus.online) {
-            if (mounted) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
-            }
-          } else {
-            // HotspotProvisioningFlow timed out or the robot is offline
-            if (mounted) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
-            }
-          }
-        } else {
-          debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
-        }
-      }
-    } catch (e) {
-      debugPrint('Failed to start flow: $e');
-    }
+  void _goToReconnectMachinesFlow(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ReconnectRobotsScreen(),
+    ));
   }
 
   @override
@@ -111,12 +31,14 @@ class _StartScreenState extends State<StartScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_robotName != null) Text('Provisioning machine named: $_robotName'),
-            if (_robotName != null) const SizedBox(height: 16),
             PrimaryButton(
-              onPressed: _startFlow,
-              text: _isLoading ? 'Loading...' : 'Start Flow',
-              isLoading: _isLoading,
+              onPressed: () => _goToProvisionNewMachineFlow(context),
+              text: 'Provision New Machine',
+            ),
+            const SizedBox(height: 16),
+            PrimaryButton(
+              onPressed: () => _goToReconnectMachinesFlow(context),
+              text: 'Reconnect Machine',
             ),
           ],
         ),

@@ -135,12 +135,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     }
   }
 
-  Future<ProvisioningInfo?> getSmartMachineProvisioningInfo() async {
-    final response = await _viam.provisioningClient.getSmartMachineStatus();
-    // TODO: alreadyHasSmartMachineCredentials = response.hasSmartMachineCredentials; use to skip step later
-    return response.provisioningInfo;
-  }
-
   void connectToHotspot() async {
     try {
       debugPrint('connectToHotspot called and retryCount is $_retryCount');
