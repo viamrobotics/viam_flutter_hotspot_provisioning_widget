@@ -4,8 +4,9 @@ class ProvisioningListItem extends StatelessWidget {
   final String textString;
   final Widget leading;
   final bool add;
+  final Widget? trailing;
 
-  const ProvisioningListItem({super.key, required this.textString, required this.leading, required this.add});
+  const ProvisioningListItem({super.key, required this.textString, required this.leading, required this.add, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class ProvisioningListItem extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
+            trailing: trailing,
           ),
         ),
       ),

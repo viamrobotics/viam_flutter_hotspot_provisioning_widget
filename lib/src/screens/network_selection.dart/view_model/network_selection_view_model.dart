@@ -29,6 +29,13 @@ class NetworkSelectionViewModel extends ChangeNotifier {
     return Icons.wifi;
   }
 
+  IconData securityToIcon(String? security) {
+    if (security == '-') {
+      return Icons.lock_open;
+    }
+    return Icons.lock;
+  }
+
   Future<void> initialize() async {
     await getNetworks();
   }

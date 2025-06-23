@@ -33,6 +33,4 @@ part 'src/screens/shared_widgets/pill_button.dart';
 part 'src/screens/shared_widgets/primary_button.dart';
 part 'src/screens/network_selection.dart/widgets/provisioning_list_item.dart';
 part 'src/screens/confirmation.dart/widgets/robot_loading_widget.dart';
-part 'src/screens/confirmation.dart/widgets/robot_online_widget.dart';
-part 'src/screens/confirmation.dart/widgets/robot_offline_widget.dart';
 part 'src/screens/network_selection.dart/widgets/troubleshooting_dialog.dart';

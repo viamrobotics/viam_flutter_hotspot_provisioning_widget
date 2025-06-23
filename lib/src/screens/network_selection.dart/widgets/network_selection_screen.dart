@@ -115,6 +115,11 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                                         color: Colors.grey,
                                       ),
                                       add: false,
+                                      trailing: Icon(
+                                        _viewModel!.securityToIcon(_viewModel!.machineVisibleNetworks[index].security),
+                                        size: 20.0,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   );
                                 },
