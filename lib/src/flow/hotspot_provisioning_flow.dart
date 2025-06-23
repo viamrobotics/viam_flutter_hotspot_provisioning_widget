@@ -119,7 +119,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         break;
       case 2:
         title = 'Connect to Wi-Fi';
-        final canSubmit = passwordInputViewModel.areCredentialsEntered;
+        final canSubmit = passwordInputViewModel.areNetworkCredentialsValid;
         actions = [
           Center(
             child: Padding(
@@ -214,4 +214,3 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     );
   }
 }
-

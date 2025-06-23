@@ -31,7 +31,7 @@ class PasswordInputViewModel extends ChangeNotifier {
   bool get loading => _loading;
   NetworkInfo? get network => _network;
 
-  bool get areCredentialsEntered {
+  bool get areNetworkCredentialsValid {
     if (_network != null) {
       // For public networks, credentials are entered even with empty password
       // For private networks, password must be non-empty
