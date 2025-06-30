@@ -1,7 +1,24 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
-class PasswordInputScreen extends StatelessWidget {
+class PasswordInputScreen extends StatefulWidget {
   const PasswordInputScreen({super.key});
+
+  @override
+  State<PasswordInputScreen> createState() => _PasswordInputScreenState();
+}
+
+class _PasswordInputScreenState extends State<PasswordInputScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Clear password when screen is first shown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final viewModel = context.read<PasswordInputViewModel>();
+        viewModel.clearPassword();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

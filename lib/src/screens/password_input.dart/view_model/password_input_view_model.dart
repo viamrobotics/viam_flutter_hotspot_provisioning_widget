@@ -63,6 +63,10 @@ class PasswordInputViewModel extends ChangeNotifier {
     _setObscureText(!_obscureText);
   }
 
+  void clearPassword() {
+    _passwordController.clear();
+  }
+
   set network(NetworkInfo? network) {
     _setNetwork(network);
   }
