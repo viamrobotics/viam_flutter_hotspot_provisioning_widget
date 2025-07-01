@@ -16,18 +16,21 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: (isLoading || onPressed == null) ? null : onPressed,
-      style: OutlinedButton.styleFrom(backgroundColor: Colors.black),
+      style: OutlinedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
       child: isLoading
-          ? const SizedBox(
+          ? SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator.adaptive(
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
             )
           : Text(
               text,
-              style: TextStyle(fontWeight: FontWeight.w500, color: onPressed != null ? Colors.white : Color(0x80F7F7F8)),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: onPressed != null ? Theme.of(context).colorScheme.onPrimary : Colors.grey.shade500,
+              ),
             ),
     );
   }

@@ -26,10 +26,10 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
 
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
   late final ConnectHotspotPrefixViewModel _viewModel;
-  static const listStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 16.0,
-  );
+  TextStyle get listStyle => TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
+        fontSize: 16.0,
+      );
 
   @override
   void initState() {
@@ -68,9 +68,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 24.0),
                       child: Text(
                         "Steps to connect to your device:",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20.0,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),

@@ -107,10 +107,10 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Provision New Machine', style: TextStyle(color: Colors.black)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Provision New Machine', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
       ),
       body: Center(
         child: Column(
@@ -118,10 +118,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
           children: [
             if (_robotName != null) Text('Provisioning machine named: $_robotName'),
             if (_robotName != null) const SizedBox(height: 16),
-            if (_isLoading)
-              const CircularProgressIndicator.adaptive(
-                backgroundColor: Colors.black,
-              ),
+            if (_isLoading) const CircularProgressIndicator.adaptive(),
           ],
         ),
       ),

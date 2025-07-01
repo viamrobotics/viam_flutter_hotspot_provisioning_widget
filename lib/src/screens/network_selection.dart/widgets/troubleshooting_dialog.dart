@@ -11,7 +11,7 @@ class TroubleshootingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24.0),
       ),
@@ -21,21 +21,21 @@ class TroubleshootingDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Troubleshooting",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w400,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               "If your boat's Wi-Fi network isn't showing up in this list, turn your Specter AI device off and back on again.\n\n"
               "If you've tried this and it still isn't appearing, you can connect by manually entering your network info.",
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 24),

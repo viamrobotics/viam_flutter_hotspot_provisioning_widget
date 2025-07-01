@@ -112,7 +112,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         title = "Connect to your vessel's Wi-Fi";
         actions = [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.black, size: 24.0),
+            icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.onSurface, size: 24.0),
             onPressed: () => networkSelectionViewModel.getNetworks(refresh: true),
           )
         ];
@@ -142,16 +142,16 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         ];
         break;
       case 3:
-        return AppBar(backgroundColor: Colors.white, elevation: 0, automaticallyImplyLeading: false);
+        return AppBar(backgroundColor: Theme.of(context).colorScheme.surface, elevation: 0, automaticallyImplyLeading: false);
     }
 
     return AppBar(
-      title: Text(title, style: const TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w500)),
-      backgroundColor: Colors.white,
+      title: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18.0, fontWeight: FontWeight.w500)),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       actions: actions,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, size: 24, color: Colors.black),
+        icon: Icon(Icons.arrow_back, size: 24, color: Theme.of(context).colorScheme.onSurface),
         onPressed: () {
           FocusScope.of(context).unfocus();
           if (_pageController.page == 0) {
@@ -173,6 +173,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       ],
       child: Builder(builder: (context) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: _buildAppBar(context),
           body: SafeArea(
             child: PageView(
