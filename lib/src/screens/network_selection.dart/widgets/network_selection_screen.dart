@@ -103,7 +103,8 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
               ),
               // ListView in the middle
               Expanded(
-                child: Container(
+                child: Material(
+                  elevation: 0,
                   color: Theme.of(context).colorScheme.surface,
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -141,6 +142,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                         borderRadius: BorderRadius.circular(24.0),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                      elevation: 0,
                     ),
                     onPressed: () {
                       showDialog(
