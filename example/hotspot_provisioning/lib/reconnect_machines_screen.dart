@@ -132,16 +132,17 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reconnect Machines'),
+        title: Text('Reconnect Machines', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator.adaptive(backgroundColor: Colors.black))
+          ? const Center(child: CircularProgressIndicator.adaptive())
           : ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: _robots.length,
               itemBuilder: (context, index) => ListTile(
-                title: Text(_robots[index].robot.name),
-                subtitle: Text('location: ${_robots[index].locationName}'),
+                title: Text(_robots[index].robot.name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                subtitle:
+                    Text('location: ${_robots[index].locationName}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 trailing: _robotStatuses[_robots[index].robot.id]?.statusIcon,
                 onTap: () => _goToHotspotProvisioningFlow(context, _viam!, _robots[index].robot),
               ),

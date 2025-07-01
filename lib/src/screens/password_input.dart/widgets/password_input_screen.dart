@@ -36,19 +36,19 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
               padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     "Wi-Fi network: ",
                     style: TextStyle(
                       fontSize: 14.0,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   Text(
                     viewModel.network!.ssid,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -57,14 +57,14 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
           else
             _manuallyEnterSSIDInput(context),
           if (!isPublicNetwork) ...[
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
               child: Text(
                 "Password",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -80,7 +80,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                   focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
                   border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
                   suffixIcon: IconButton(
-                    icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.black),
+                    icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
+                        color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () => viewModel.toggleObscureText(),
                   ),
                 ),
@@ -102,14 +103,14 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
           child: Text(
             "Wi-Fi network name",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -118,8 +119,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
           child: TextField(
             controller: viewModel.ssidController,
             autocorrect: false,
-            decoration: const InputDecoration(
-              labelStyle: TextStyle(fontSize: 14.0, color: Colors.black),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onSurface),
               floatingLabelBehavior: FloatingLabelBehavior.never,
               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),

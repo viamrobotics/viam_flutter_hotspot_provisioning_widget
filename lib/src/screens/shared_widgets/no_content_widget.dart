@@ -30,7 +30,7 @@ class NoContentWidget extends StatelessWidget {
             titleString,
             style: TextStyle(
               fontSize: 16.0,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -42,7 +42,7 @@ class NoContentWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w400,
                 ),
               ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'reconnect_machines_screen.dart';
@@ -22,10 +21,10 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Hotspot Provisioning', style: TextStyle(color: Colors.black)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Hotspot Provisioning', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
       ),
       body: Center(
         child: Column(

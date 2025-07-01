@@ -14,7 +14,7 @@ class ProvisioningListItem extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           border: Border.all(
             width: 1.0,
             color: Colors.grey,
@@ -29,7 +29,7 @@ class ProvisioningListItem extends StatelessWidget {
               textString,
               style: TextStyle(
                 fontSize: 16.0,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             trailing: trailing,
