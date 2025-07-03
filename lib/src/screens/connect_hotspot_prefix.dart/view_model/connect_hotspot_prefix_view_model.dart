@@ -115,24 +115,27 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     _setIsAttemptingConnectionToHotspot(false);
     _setRetryCount(0);
 
-    // Ensure we don't start multiple timers
-    if (!_foundValidSmartMachineStatus && (_pollingTimer == null || !_pollingTimer!.isActive)) {
-      debugPrint('Starting periodic check every 3 seconds');
-      _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
-        try {
-          debugPrint('checking smart machine status');
-          final response = await getSmartMachineStatus();
-          debugPrint('provisioningInfo: ${response.provisioningInfo}');
-          _pollingTimer?.cancel();
-          _setFoundValidSmartMachineStatus(true);
-          _setPollingForMachine(false);
-          // TODO: continue with a found machine for machine already exists flow
-          _onNavigateToNetworkSelection();
-        } catch (e) {
-          debugPrint('Error during smart machine status check, continuing polling. Error: $e');
-        }
-      });
-    }
+    // Add a delay to allow the robot's provisioning service to start up
+    Future.delayed(const Duration(seconds: 5), () {
+      // Ensure we don't start multiple timers
+      if (!_foundValidSmartMachineStatus && (_pollingTimer == null || !_pollingTimer!.isActive)) {
+        debugPrint('Starting periodic check every 3 seconds');
+        _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
+          try {
+            debugPrint('checking smart machine status');
+            final response = await getSmartMachineStatus();
+            debugPrint('provisioningInfo: ${response.provisioningInfo}');
+            _pollingTimer?.cancel();
+            _setFoundValidSmartMachineStatus(true);
+            _setPollingForMachine(false);
+            // TODO: continue with a found machine for machine already exists flow
+            _onNavigateToNetworkSelection();
+          } catch (e) {
+            debugPrint('Error during smart machine status check, continuing polling. Error: $e');
+          }
+        });
+      }
+    });
   }
 
   void connectToHotspot() async {

@@ -100,7 +100,7 @@ class PasswordInputViewModel extends ChangeNotifier {
 
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
-      _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+      await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
       await _viam.provisioningClient.exitProvisioning();
       _onPasswordSubmitted();
     } catch (e) {
