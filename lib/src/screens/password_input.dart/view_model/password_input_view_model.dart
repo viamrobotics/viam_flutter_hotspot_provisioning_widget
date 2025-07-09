@@ -95,6 +95,7 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (!response.hasSmartMachineCredentials) {
         await _setSmartMachineCredentials();
       }
+      // TODO: if we have smart machine credenitals, should we tell them>
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
       await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
