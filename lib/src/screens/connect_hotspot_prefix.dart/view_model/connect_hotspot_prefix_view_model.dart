@@ -148,13 +148,14 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   void connectToHotspot() async {
     try {
       debugPrint('connectToHotspot called and retryCount is $_retryCount');
+      _setWrongPassword(false);
       _setIsAttemptingConnectionToHotspot(true);
       _setIsRetryingHotspot(false);
 
       final connectedSSID = await PluginWifiConnect.ssid;
       debugPrint('Current SSID: $connectedSSID');
       // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
-      if (connectedSSID != null && connectedSSID.startsWith(_hotspotPrefix)) {
+      if (connectedSSID != null && connectedSSID.startsWith(_hotspotPrefix) && _connectedToHotspot) {
         debugPrint('Already connected to $_hotspotPrefix hotspot');
         _findProvisionedMachine();
         return;
