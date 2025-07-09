@@ -102,6 +102,26 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                           ],
                         ),
                       ),
+                    if (_viewModel.wrongPassword)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.error, color: Colors.red),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                  child: Text(
+                                    "Having trouble connecting? The password may be incorrect. Please check it or try again.",
+                                    style: listStyle.copyWith(fontSize: 15.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
