@@ -160,7 +160,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
         _findProvisionedMachine();
         return;
       }
-      // If we are not connected to the hotspot, we need to connect to it. 
+      // If we are not connected to the hotspot, we need to connect to it.
       final disconnected = await PluginWifiConnect.disconnect();
       debugPrint('disconnected: $disconnected');
       debugPrint('Connecting to $_hotspotPrefix-#### hotspot');
@@ -171,7 +171,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
         isWpa3: false,
         saveNetwork: true, // flips joinOnce on iOS to false
       );
-      // Now that we have attempted to connect to the hotspot, we need to check if we were successful. 
+      // Now that we have attempted to connect to the hotspot, we need to check if we were successful.
       switch (connected) {
         case true:
           debugPrint('Connected to hotspot');
@@ -184,27 +184,29 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
           }
           break;
         case false:
-          // If we land here, either the password is wrong or the isWep parameter is wrong. 
-          _setWrongPassword(true);
-          throw Exception(
-              'Finished connection attempt with connected=false and no error');
+          // If we land here, either the password is wrong or the isWep parameter is wrong or we are just having network issues.
+          // Since we are not positive what the problem is, we will try a few more times until suggesting the user to check the password.
+          throw Exception('Finished connection attempt with connected=false and no error');
         case null:
           _setIsAttemptingConnectionToHotspot(false);
           break; // user cancelled, do nothing
       }
     } catch (e) {
-      // We will retry connectToHotspot 2 times automatically for the user as a buffer.  
+      // We will retry connectToHotspot 2 times automatically for the user as a buffer.
       if (_retryCount < 2 && !_wrongPassword) {
         _setRetryCount(_retryCount + 1);
         await Future.delayed(const Duration(seconds: 2));
         connectToHotspot();
       } else {
-        // After 2 retries, we will let the user retry if they want. 
-        debugPrint('Error connecting to hotspot: ${e.toString()}');
+        // After 2 retries, we assume it might be a wrong password
+        debugPrint('Error connecting to hotspot after ${_retryCount + 1} attempts: ${e.toString()}');
+        if (e.toString().contains('Finished connection attempt with connected=false and no error')) {
+          _setWrongPassword(true);
+        }
         _setIsRetryingHotspot(true);
         _setRetryCount(0);
         _setIsAttemptingConnectionToHotspot(false);
-        _setConnectedToHotspot(false);  
+        _setConnectedToHotspot(false);
       }
     }
   }

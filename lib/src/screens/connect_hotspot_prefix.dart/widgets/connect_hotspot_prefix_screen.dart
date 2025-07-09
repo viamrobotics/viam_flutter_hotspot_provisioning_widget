@@ -113,7 +113,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                                 const SizedBox(width: 8.0),
                                 Expanded(
                                   child: Text(
-                                    "Incorrect password was given for the device's hotspot. Please check the password and try again.",
+                                    "Having trouble connecting? The password may be incorrect. Please check it or try again.",
                                     style: listStyle.copyWith(fontSize: 15.0),
                                   ),
                                 ),
