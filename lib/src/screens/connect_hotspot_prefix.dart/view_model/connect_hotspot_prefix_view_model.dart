@@ -135,7 +135,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
             _pollingTimer?.cancel();
             _setFoundValidSmartMachineStatus(true);
             _setPollingForMachine(false);
-            // TODO: continue with a found machine for machine already exists flow
+            // TODO (APP-8749): Continue with a found machine for machine already exists flow
             _onNavigateToNetworkSelection();
           } catch (e) {
             debugPrint('Error during smart machine status check, continuing polling. Error: $e');
