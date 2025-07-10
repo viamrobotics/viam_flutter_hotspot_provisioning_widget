@@ -101,7 +101,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
           actions: <Widget>[
             OutlinedButton(
               child: const Text('Continue'),
-              // TODO: we need to do some clean up with the robot here if we were provisioning a new machine, if we care about that.
+              // TODO (APP-8749): If we are provisioning a new machine (not reconnecting) we need to delete the robot and take the user back to the home screen.
+              // This is because we cannot proceed if they do not have location permissions on for Android.
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
