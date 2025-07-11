@@ -134,15 +134,6 @@ if (result != null) {
   }
 }
 ```
-## Additional Features
-- **Manual Network Entry**: Fallback option to manually enter network credentials when automatic detection fails
-- **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
-- **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
-
-### Complete Example
-
-See the `example/` directory for a complete working example.
-
 ## API Reference
 
 ### HotspotProvisioningFlow
@@ -161,6 +152,15 @@ The main widget that handles the entire provisioning flow.
 Contains the result of the provisioning attempt:
 - `robot`: The robot that was provisioned
 - `status`: The robot's status (online/offline)
+
+## Additional Features
+- **Manual Network Entry**: Fallback option to manually enter network credentials when automatic detection fails
+- **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
+- **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
+
+### Complete Example
+
+See the `example/` directory for a complete working example.
 
 ## Dependencies
 
