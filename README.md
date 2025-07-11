@@ -134,13 +134,11 @@ if (result != null) {
   }
 }
 ```
-## API Reference
-
-### HotspotProvisioningFlow
-
+## HotspotProvisioningFlow Widget
 The main widget that handles the entire provisioning flow.
 
-**Constructor Parameters:**
+### Constructor Parameters:
+What you need to pass into the widget:
 - `robot`: The Viam robot to provision
 - `viam`: The Viam SDK instance
 - `mainPart`: The main robot part
@@ -148,7 +146,6 @@ The main widget that handles the entire provisioning flow.
 - `hotspotPassword`: The password for the robot's hotspot
 
 ### HotspotProvisioningResult
-
 Contains the result of the provisioning attempt:
 - `robot`: The robot that was provisioned
 - `status`: The robot's status (online/offline)
