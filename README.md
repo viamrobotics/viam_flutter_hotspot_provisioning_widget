@@ -1,1 +1,178 @@
-# viam_flutter_provisioning_widget
+# Viam Flutter Hotspot Provisioning Widget
+
+A Flutter package for provisioning Viam robots using hotspot connections. This widget provides a complete flow for connecting (or reconnecting) to a robot's hotspot, selecting a network, and provisioning the robot with network credentials.
+
+<img src="/screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
+
+## Installation
+`flutter pub add viam_flutter_hotspot_provisioning_widget`
+
+## Prerequisites
+
+### Machine Setup
+
+Before using this widget, you must flash your device with the Viam defaults configuration:
+
+1. **Flash your Device**: Use the Viam CLI to flash your device: 
+   For more instructions on device, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup) for an example on flashing a Raspberry Pi.
+
+2. **Configure provisioning defaults.**: Create a provisioning configuration file (`viam-defaults.json`), by specifying at least the following info:
+   ```json
+   {
+     "network_configuration": {
+       "hotspot_prefix": "your-hotspot-prefix",
+       "disable_captive_portal_redirect": true,
+       "hotspot_password": "your-hotspot-password",
+       "fragment_id": "your-fragment-id",
+     }
+   }
+   
+   ```
+    For more instructions on setting up the config, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#configure-defaults).
+
+3. **Install viam-agent**: Run the pre-install script and pass in the location of your viam-defaults.json. This way your machine will know the hotspot prefix and password:
+   ```bash
+   sudo ./preinstall.sh
+   ```
+   
+   For more instructions on running the pre-install script, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#install-viam-agent).
+
+## Platform Requirements
+
+### iOS
+
+Add the following to your `Entitlements`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.developer.networking.HotspotConfiguration</key>
+    <true/>
+    <key>com.apple.developer.networking.wifi-info</key>
+    <true/>
+</dict>
+</plist>
+```
+
+Add the following to your `Info.plist`:
+
+```xml
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>Finding and connecting nearby local bluetooth devices</string>
+```
+
+### Android
+
+Add the following permissions to your `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+```
+
+## Usage
+
+### Viam Setup
+
+Before starting the provisioning flow, you need to:
+
+1. **Initialize Viam instance**: Create a Viam instance with your API credentials
+2. **Create or get a robot**: Either create a new robot or retrieve an existing one from your Viam organization
+3. **Get the main part**: Retrieve the main robot part that will be provisioned
+
+These steps are required because the widget needs a valid robot and Viam instance to communicate with the Viam cloud and provision the robot.
+
+### Basic Example
+
+```dart
+import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
+
+// 1. Initialize a Viam instance with your API credentials
+final viam = await Viam.withApiKey(apiKeyId, apiKey);
+
+// 2. Create a new robot or get an existing one
+final robot = await viam.appClient.getRobot(robotId);
+// OR create a new robot:
+// final robotId = await viam.appClient.newMachine(robotName, locationId);
+// final robot = await viam.appClient.getRobot(robotId);
+
+// 3. Get the main robot part
+final mainPart = (await viam.appClient.listRobotParts(robot.id))
+    .firstWhere((element) => element.mainPart);
+
+// 4. Start the provisioning flow
+final result = await HotspotProvisioningFlow.show(
+  context,
+  robot: robot,
+  viam: viam,
+  mainPart: mainPart,
+  hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json
+  hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
+);
+
+// 5. Handle the result
+if (result != null) {
+  if (result.status == RobotStatus.online) {
+    // Robot successfully provisioned. Robot is online
+    print('Robot ${result.robot.name} is online!');
+  } else {
+    // Provisioning failed or timed out. Robot is offline
+    print('Robot provisioning failed');
+  }
+}
+```
+## HotspotProvisioningFlow Widget
+The main widget that handles the entire provisioning flow.
+
+### Constructor Parameters:
+What you need to pass into the widget:
+- `robot`: The Viam robot to provision
+- `viam`: The Viam SDK instance
+- `mainPart`: The main robot part
+- `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json.
+- `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json.
+
+### HotspotProvisioningResult
+Contains the result of the provisioning attempt:
+- `robot`: The robot that was provisioned
+- `status`: The robot's status (online/offline)
+
+### Additional Features
+- **Manual Network Entry**: Fallback option to manually enter network credentials when automatic detection fails
+- **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
+- **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
+
+### Dependencies
+This package depends on:
+- `plugin_wifi_connect`: For Wi-Fi connection functionality
+- `viam_sdk`: For Viam robot communication
+- `permission_handler`: For platform permissions
+- `flutter_platform_widgets`: For platform-specific UI
+- `provider`: For state management
+
+### Looking for a complete example?
+See the [`example/hotspot_provisioning`](example/hotspot_provisioning) directory for a complete working example app that allows you to provision Viam devices.
+
+## Important Notes
+
+- **Do not connect manually**: Users should not connect to the hotspot through their device's Wi-Fi settings. The app will prompt them to connect when ready.
+- **Hotspot credentials**: The hotspot prefix and password must match what's configured in your `viam-defaults.json` file.
+
+## Troubleshooting
+
+1. **Cannot connect to hotspot**: Ensure the hotspot prefix and password match your `viam-defaults.json` configuration.
+
+2. **Permission errors**: Make sure you've added the required iOS entitlements and permissions.
+
+3. **Robot not appearing**: Verify your robot is properly flashed with the Viam image and `viam-defaults.json`.
+
+4. **Network not found**: Ensure your robot's hotspot is active and broadcasting.
+
+## License
+
+See the [LICENSE](LICENSE) file for license rights and limitations.
