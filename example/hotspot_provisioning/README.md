@@ -1,8 +1,15 @@
 # Viam Flutter Hotspot Provisioning Example
-This example project demonstrates how to use the Viam Flutter Hotspot Provisioning Widget to connect robots to the Viam platform. The app showcases two main use cases:
+This example project demonstrates how to use the Viam Flutter Hotspot Provisioning Widget to connect robots to the Viam platform. 
 
+## Getting Started
+
+1. Ensure you have the required Viam API credentials configured in `lib/consts.dart`
+2. Run the example app
+3. Choose "Provision New Machine" or "Reconnect Machine"
+4. Follow the on-screen instructions
 
 ## Use Cases
+The app showcases two main use cases:
 
 ### 1. Provision a new machine
 This flow demonstrates how to connect a **new robot** to the Viam platform for the first time. The process:
@@ -26,10 +33,3 @@ Both flows utilize the same underlying `HotspotProvisioningFlow` widget, which:
 2. Configures the robot's network settings  
 3. Establishes a connection to the Viam platform
 4. Returns the connection status
-
-## Getting Started
-
-1. Ensure you have the required Viam API credentials configured in `lib/consts.dart`
-2. Run the example app
-3. Choose "Provision New Machine" or "Reconnect Machine"
-4. Follow the on-screen instructions
