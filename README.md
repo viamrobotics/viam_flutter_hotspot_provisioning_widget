@@ -155,11 +155,11 @@ Contains the result of the provisioning attempt:
 - **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
 - **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
 
-## Complete Example
+### Complete Example
 
 See the `example/` directory for a complete working example.
 
-## Dependencies
+### Dependencies
 
 This package depends on:
 - `plugin_wifi_connect`: For Wi-Fi connection functionality
