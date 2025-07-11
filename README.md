@@ -5,26 +5,18 @@ A Flutter package for provisioning Viam robots using hotspot connections. This w
 <img src="/screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
 
 ## Installation
+`flutter pub add viam_flutter_hotspot_provisioning_widget`
 
-Add this package to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  viam_flutter_hotspot_provisioning_widget:
-    git:
-      url: https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget.git
-      ref: 0.0.7
-```
 ## Prerequisites
 
 ### Machine Setup
 
-Before using this widget, you must flash your Raspberry Pi with the Viam defaults configuration:
+Before using this widget, you must flash your device with the Viam defaults configuration:
 
-1. **Flash the Pi**: Use the Viam CLI to flash your Raspberry Pi: 
-   For more instructions on flashing your pi, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup).
+1. **Flash your Device**: Use the Viam CLI to flash your device: 
+   For more instructions on device, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup) for an example on flashing a Raspberry Pi.
 
-2. **Configure provisioning defaults.**: Create a provisioning configuration file (viam-defaults.json), by specifying at least the following info:
+2. **Configure provisioning defaults.**: Create a provisioning configuration file (`viam-defaults.json`), by specifying at least the following info:
    ```json
    {
      "network_configuration": {
@@ -49,7 +41,7 @@ Before using this widget, you must flash your Raspberry Pi with the Viam default
 
 ### iOS
 
-Add the following to your `ios/Runner/Runner.entitlements`:
+Add the following to your `Entitlements`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -64,7 +56,7 @@ Add the following to your `ios/Runner/Runner.entitlements`:
 </plist>
 ```
 
-Add the following to your `ios/Runner/Info.plist`:
+Add the following to your `Info.plist`:
 
 ```xml
 <key>NSBluetoothAlwaysUsageDescription</key>
@@ -164,7 +156,7 @@ This package depends on:
 - `provider`: For state management
 
 ### Looking for a complete example?
-See the `example/` directory for a complete working example app that allows you to provision Viam devices.
+See the [`example/hotspot_provisioning`](example/hotspot_provisioning) directory for a complete working example app that allows you to provision Viam devices.
 
 ## Important Notes
 

@@ -3,15 +3,13 @@ This example project demonstrates how to use the Viam Flutter Hotspot Provisioni
 
 ## Getting Started
 
-1. Ensure you have the required Viam API credentials configured in `lib/consts.dart`. This would be the apiKeyId, apiKey, and organizationId.
-2. Ensure you have both hotspotPrefix and hotspotPassword configured in `lib/consts.dart`. 
+1. Ensure you have the required Viam API credentials configured in `lib/consts.dart`. This would be the `apiKeyId`, `apiKey`, and `organizationId`.
+2. Ensure you have both `hotspotPrefix` and `hotspotPassword` configured in `lib/consts.dart`. 
     - These values should match the prefix and password that were set in the viam-defaults.json. 
     - See the [Machine Setup section](../../README.md#machine-setup) for more info on the viam-defaults.json.
-2. Run the example app
+2. Run the example app by running `flutter run`
 3. Choose "Provision New Machine" or "Reconnect Machine"
 4. Follow the on-screen instructions
-
-
 
 ## Use Cases
 The app showcases two main use cases:
@@ -23,7 +21,7 @@ This flow demonstrates how to connect a **new robot** to the Viam platform for t
 - Guides the user through the connection process
 <img src="../../screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
 
-### 2. Reconnect an exisitng machine
+### 2. Reconnect an existing machine
 This flow demonstrates how to **reconnect an existing robot** to a new wifi network. The process:
 - Lists all existing robots in your Viam organization
 - Shows their current connection status (online/offline/awaiting setup)
