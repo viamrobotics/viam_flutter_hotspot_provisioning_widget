@@ -172,3 +172,7 @@ See the [`example/hotspot_provisioning`](example/hotspot_provisioning) directory
 3. **Robot not appearing**: Verify your robot is properly flashed with the Viam image and `viam-defaults.json`.
 
 4. **Network not found**: Ensure your robot's hotspot is active and broadcasting.
+
+## License
+
+See the [LICENSE](LICENSE) file for license rights and limitations.
