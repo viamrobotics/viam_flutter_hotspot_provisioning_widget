@@ -155,9 +155,9 @@ Contains the result of the provisioning attempt:
 - **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
 - **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
 
-### Complete Example
+### Looking for a complete example?
 
-See the `example/` directory for a complete working example.
+See the `example/` directory for a complete working example app that allows you to provision viam devices.
 
 ### Dependencies
 
