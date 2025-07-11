@@ -142,8 +142,8 @@ What you need to pass into the widget:
 - `robot`: The Viam robot to provision
 - `viam`: The Viam SDK instance
 - `mainPart`: The main robot part
-- `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix must match the prefix you set in the viam-default.json.
-- `hotspotPassword`: The password for the robot's hotspot. This password must match the password you set in the viam-default.json.
+- `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json.
+- `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json.
 
 ### HotspotProvisioningResult
 Contains the result of the provisioning attempt:
