@@ -1,4 +1,4 @@
-# viam_flutter_hotspot_provisioning_widget
+# Viam Flutter Hotspot Provisioning Widget
 
 A Flutter package for provisioning Viam robots using hotspot connections. This widget provides a complete flow for connecting (or reconnecting) to a robot's hotspot, selecting a network, and provisioning the robot with network credentials.
 
@@ -22,7 +22,7 @@ dependencies:
 Before using this widget, you must flash your Raspberry Pi with the Viam defaults configuration:
 
 1. **Flash the Pi**: Use the Viam CLI to flash your Raspberry Pi: 
-   For detailed instructions, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup).
+   For more instructions on flashing your pi, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup).
 
 2. **Configure provisioning defaults.**: Create a provisioning configuration file (viam-defaults.json), by specifying at least the following info:
    ```json
@@ -36,14 +36,14 @@ Before using this widget, you must flash your Raspberry Pi with the Viam default
    }
    
    ```
-    For detailed instructions, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#configure-defaults).
+    For more instructions on setting up the config, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#configure-defaults).
 
-3. **Install viam-agent**: Run the preinstall script and pass in the location of your viam-defaults.json. This way your machine will know the hotspot prefix and password:
+3. **Install viam-agent**: Run the pre-install script and pass in the location of your viam-defaults.json. This way your machine will know the hotspot prefix and password:
    ```bash
    sudo ./preinstall.sh
    ```
    
-   For detailed instructions, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#install-viam-agent).
+   For more instructions on running the pre-install script, see the [Viam Documentation](https://docs.viam.com/manage/fleet/provision/setup/#install-viam-agent).
 
 ## Platform Requirements
 
