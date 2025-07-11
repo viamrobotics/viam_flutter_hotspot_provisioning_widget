@@ -1,7 +1,8 @@
 name: viam_flutter_hotspot_provisioning_widget
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+repository: https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget
+homepage: https://www.viam.com/
 
 environment:
   sdk: '>=3.6.1 <4.0.0'
