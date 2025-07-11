@@ -34,5 +34,5 @@ Both flows utilize the same underlying `HotspotProvisioningFlow` widget, which:
 
 ## Previews
 
-<img src="../../screenshots/provisioning_demo.gif" width="400" alt="Provisioning Flow">
-<img src="../../screenshots/reconnect_demo.gif" width="400" alt="Re-provisioning Flow">
+<img src="../../screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
+<img src="../../screenshots/reconnect_demo.gif" width="250" alt="Re-provisioning Flow">
