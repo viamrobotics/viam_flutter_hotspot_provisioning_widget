@@ -150,12 +150,12 @@ Contains the result of the provisioning attempt:
 - `robot`: The robot that was provisioned
 - `status`: The robot's status (online/offline)
 
-## Additional Features
+### Additional Features
 - **Manual Network Entry**: Fallback option to manually enter network credentials when automatic detection fails
 - **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
 - **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
 
-### Complete Example
+## Complete Example
 
 See the `example/` directory for a complete working example.
 
@@ -168,7 +168,7 @@ This package depends on:
 - `flutter_platform_widgets`: For platform-specific UI
 - `provider`: For state management
 
-### Important Notes
+## Important Notes
 
 - **Do not connect manually**: Users should not connect to the hotspot through their device's Wi-Fi settings. The app will prompt them to connect when ready.
 - **Hotspot credentials**: The hotspot prefix and password must match what's configured in your `viam-defaults.json` file.
