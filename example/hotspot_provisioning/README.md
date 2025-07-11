@@ -1,5 +1,4 @@
 # Viam Flutter Hotspot Provisioning Example
-<img src="../../screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow"> <img src="../../screenshots/reconnect_demo.gif" width="250" alt="Re-provisioning Flow">
 This example project demonstrates how to use the Viam Flutter Hotspot Provisioning Widget to connect robots to the Viam platform. The app showcases two main use cases:
 
 
@@ -10,6 +9,7 @@ This flow demonstrates how to connect a **new robot** to the Viam platform for t
 - Creates a new robot instance in your Viam organization
 - Initiates the hotspot provisioning flow to establish the initial connection
 - Guides the user through the connection process
+<img src="../../screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
 
 ### 2. Reconnect an exisitng machine
 This flow demonstrates how to **reconnect an existing robot** to a new wifi network. The process:
@@ -17,6 +17,7 @@ This flow demonstrates how to **reconnect an existing robot** to a new wifi netw
 - Shows their current connection status (online/offline/awaiting setup)
 - Allows you to select any robot and initiate the reconnection process
 - Uses the same hotspot provisioning flow but with an existing robot instance
+<img src="../../screenshots/reconnect_demo.gif" width="250" alt="Re-provisioning Flow">
 
 ## How It Works
 
