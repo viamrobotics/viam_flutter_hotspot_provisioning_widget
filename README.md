@@ -155,18 +155,16 @@ Contains the result of the provisioning attempt:
 - **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
 - **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
 
-### Looking for a complete example?
-
-See the `example/` directory for a complete working example app that allows you to provision viam devices.
-
 ### Dependencies
-
 This package depends on:
 - `plugin_wifi_connect`: For Wi-Fi connection functionality
 - `viam_sdk`: For Viam robot communication
 - `permission_handler`: For platform permissions
 - `flutter_platform_widgets`: For platform-specific UI
 - `provider`: For state management
+
+### Looking for a complete example?
+See the `example/` directory for a complete working example app that allows you to provision Viam devices.
 
 ## Important Notes
 
