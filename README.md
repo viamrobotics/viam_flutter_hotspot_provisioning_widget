@@ -2,6 +2,8 @@
 
 A Flutter package for provisioning Viam robots using hotspot connections. This widget provides a complete flow for connecting (or reconnecting) to a robot's hotspot, selecting a network, and provisioning the robot with network credentials.
 
+<img src="/screenshots/provisioning_demo.gif" width="250" alt="Provisioning Flow">
+
 ## Installation
 `flutter pub add viam_flutter_hotspot_provisioning_widget`
 
