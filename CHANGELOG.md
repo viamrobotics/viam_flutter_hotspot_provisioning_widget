@@ -1,3 +1,42 @@
+## 0.0.9
+- First public release to pub.dev
+- change to published package by @jckras in #25
+
+## 0.0.8
+- Pre-launch release
+- [APP-8478] Hotspot: READMEs (project, example), function docs by @jckras in #24
+
+## 0.0.7
+- Pre-launch release
+- [APP-8620] Explicitly notifying the agent that you are done provisioning by @jckras in #21
+- [APP-8745] wrong hotspot password for hotspot provisioning widget by @jckras in #22
+- Better comments for clarity in hotspot provisioning widget by @jckras in #23
+
+## 0.0.6
+- Pre-launch release
+- [APP-8713] [Hotspot provisioning widget] dark mode in viam mobile app follow up by @jckras in #20
+
+## 0.0.5
+- Pre-launch release
+- [APP-8661] Hotspot provisioning widget doesn't work on android pt1 by @jckras in #18
+- [APP-8713] [Hotspot provisioning widget] dark mode in viam mobile app pt1 by @jckras in #19
+
+## 0.0.4
+- Pre-launch release
+- [APP-8581] Fix spacing on connect to device screen by @jckras in #17
+- [APP-8634] Don't allow private network password to be sent as empty by @jckras in #16
+
+## 0.0.3
+- Pre-launch release
+- Internal-only release tag for correction
+
+## 0.0.2
+- Pre-launch release
+- bump viam sdk by @jckras in #14
+- upgrade dependencies by @jckras in #15
+- [APP-8522] Showcase public vs private wifi's and bypass the pw input screen when it is public by @jckras in #13
+- [APP-8490] Reconnect flow by @jckras in #12
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial pre-launch release
