@@ -1,3 +1,6 @@
+## 0.0.10
+- Fast follow up after releasing to pub.dev
+
 ## 0.0.9
 - First public release to pub.dev
 - change to published package by @jckras in #25
