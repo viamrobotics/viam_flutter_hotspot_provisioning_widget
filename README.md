@@ -146,6 +146,8 @@ Contains the result of the provisioning attempt:
 - **Manual Network Entry**: Fallback option to manually enter network credentials when automatic detection fails
 - **Error Handling**: User-friendly error messages for common issues like incorrect hotspot password.
 - **Network Type Indicators**: Icons to distinguish between public and private Wi-Fi networks
+- **Public Network Support**: Connect to public networks that don't require a password
+
 
 ### Dependencies
 This package depends on:
