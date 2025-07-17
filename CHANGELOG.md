@@ -1,3 +1,6 @@
+## 0.0.11
+- Lower `flutter_platform_widgets` minimum
+
 ## 0.0.10
 - Fast follow up after releasing to pub.dev
 
