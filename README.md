@@ -20,7 +20,7 @@ Before using this widget, you must flash your device with the Viam defaults conf
    ```json
    {
      "network_configuration": {
-       "hotspot_prefix": "your-hotspot-prefix",
+       "hotspot_prefix": "your-hotspot-prefix", // This MUST be at least 3 characters long
        "disable_captive_portal_redirect": true,
        "hotspot_password": "your-hotspot-password",
        "fragment_id": "your-fragment-id",
@@ -111,7 +111,7 @@ final result = await HotspotProvisioningFlow.show(
   robot: robot,
   viam: viam,
   mainPart: mainPart,
-  hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json
+  hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json & must be at least 3 characters long 
   hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
 );
 
@@ -134,7 +134,7 @@ What you need to pass into the widget:
 - `robot`: The Viam robot to provision
 - `viam`: The Viam SDK instance
 - `mainPart`: The main robot part
-- `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json.
+- `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json. **The hotspot prefix must be at least 3 characters long.**
 - `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json.
 
 ### HotspotProvisioningResult

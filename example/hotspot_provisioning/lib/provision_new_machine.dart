@@ -78,7 +78,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
           robot: robot,
           viam: viam,
           mainPart: mainPart,
-          hotspotPrefix: Consts.hotspotPrefix,
+          hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
           hotspotPassword: Consts.hotspotPassword,
         );
         if (result != null) {
