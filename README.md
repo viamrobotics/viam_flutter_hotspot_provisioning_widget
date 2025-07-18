@@ -17,10 +17,13 @@ Before using this widget, you must flash your device with the Viam defaults conf
    For more instructions on device, see the [Viam Documentation](https://docs.viam.com/installation/prepare/rpi-setup) for an example on flashing a Raspberry Pi.
 
 2. **Configure provisioning defaults.**: Create a provisioning configuration file (`viam-defaults.json`), by specifying at least the following info:
+
+   > **Important**: The `hotspot_prefix` must be at least 3 characters long.
+
    ```json
    {
      "network_configuration": {
-       "hotspot_prefix": "your-hotspot-prefix", // This MUST be at least 3 characters long
+       "hotspot_prefix": "your-hotspot-prefix",
        "disable_captive_portal_redirect": true,
        "hotspot_password": "your-hotspot-password",
        "fragment_id": "your-fragment-id",
