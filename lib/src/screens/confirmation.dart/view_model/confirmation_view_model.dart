@@ -5,8 +5,12 @@ class ConfirmationViewModel extends ChangeNotifier {
     required Viam viam,
     required Robot robot,
     required void Function(Robot robot, RobotStatus status) onStatusDetermined,
+    required String? fragmentId,
+    required RobotPart mainPart,
   })  : _viam = viam,
         _robot = robot,
+        _fragmentId = fragmentId,
+        _mainPart = mainPart,
         _onStatusDetermined = onStatusDetermined {
     _disconnectFromHotspot();
     _startCheckingOnline();
@@ -14,6 +18,8 @@ class ConfirmationViewModel extends ChangeNotifier {
 
   final Viam _viam;
   final Robot _robot;
+  final String? _fragmentId;
+  final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
 
   Timer? _timer;
@@ -50,6 +56,8 @@ class ConfirmationViewModel extends ChangeNotifier {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
       // robot provisioning did not complete successfully and is offline
+      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot); // we should call the fragment ovreride when the robot is online?
+
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
       _timer?.cancel();
@@ -78,6 +86,23 @@ class ConfirmationViewModel extends ChangeNotifier {
     debugPrint('disconnected from hotspot: $disconnected');
     // TODO (APP-8749): Associate a unique ID from machine with (maybe hotspot ssid) w/ robot as part of the machine already exists flow.
     // This is so we can associate the machine with the correct robot when we reconnect.
+  }
+
+  Future<void> _fragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
+    if (fragmentId == null || fragmentId.isEmpty) return;
+    // if (fragmentIdToWrite.isNotEmpty) {
+    //   await _fragmentOverride(_viam, fragmentIdToWrite, _mainPart, _robot); // need to pass robot??
+
+    //   // u are not connected to the internet here so we cannot call fragement override.
+    //   // instead we need to save fragmentId somewhere and we can call it later after we are connected.
+    //   // after we are connected to the network, then call fragmentOverride.
+    //   //make this api call when i am checking the robot status after being connected to the network.
+    // }
+
+    Map<String, dynamic> config = {
+      "fragments": [fragmentId]
+    };
+    await viam.appClient.updateRobotPart(robotPart.id, robot.name, config);
   }
 
   void _getRobotStatus() async {
