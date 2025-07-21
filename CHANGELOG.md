@@ -1,3 +1,6 @@
+## 0.0.12
+- [CONSULT-1376] Hotspot package: update to read fragmentId from agent + update part with it by @jckras in #30
+
 ## 0.0.11
 - Lower `flutter_platform_widgets` minimum
 
