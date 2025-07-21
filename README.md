@@ -114,6 +114,7 @@ final result = await HotspotProvisioningFlow.show(
   robot: robot,
   viam: viam,
   mainPart: mainPart,
+  fragmentId: 'your-fragment-id', // Optional, if null, the fragmentId will be read from the device.
   hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json & must be at least 3 characters long 
   hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
 );
@@ -136,6 +137,7 @@ The main widget that handles the entire provisioning flow.
 What you need to pass into the widget:
 - `robot`: The Viam robot to provision
 - `viam`: The Viam SDK instance
+- `fragmentId`: The optional fragment ID you want to configure this robot with.
 - `mainPart`: The main robot part
 - `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json. **The hotspot prefix must be at least 3 characters long.**
 - `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json.

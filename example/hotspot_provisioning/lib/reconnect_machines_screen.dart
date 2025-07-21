@@ -107,7 +107,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
         robot: existingRobot,
         viam: viam,
         mainPart: mainPart,
-        fragmentId: 'test-fragment-id',
+        fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
       );

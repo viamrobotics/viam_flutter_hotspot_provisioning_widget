@@ -78,7 +78,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
           robot: robot,
           viam: viam,
           mainPart: mainPart,
-          fragmentId: 'test-fragment-id',
+          fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
           hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
           hotspotPassword: Consts.hotspotPassword,
         );

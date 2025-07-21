@@ -56,7 +56,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     if (_robotStatus == RobotStatus.online) {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
-      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot); 
+      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot);
       // robot provisioning did not complete successfully and is offline
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
