@@ -6,7 +6,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final RobotPart mainPart;
   final String hotspotPrefix;
   final String hotspotPassword;
-  final String? fragmentId; // I need to make this optional?? but why are we saying it can be null?? 
+  final String? fragmentId;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -26,7 +26,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required RobotPart mainPart,
     required String hotspotPrefix,
     required String hotspotPassword,
-    String? fragmentId, // this is optional??? 
+    String? fragmentId,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
       MaterialPageRoute(
@@ -61,9 +61,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _passwordInputViewModel = PasswordInputViewModel(
       viam: widget.viam,
       mainPart: widget.mainPart,
-      fragmentId: widget.fragmentId, // so if the user does not pass in a fragmentId b/c we just made it optional above, what will be passed here?? the default value for fragmentId is null because its optional and not requred, so if a user does not pass in a fragmentId this will be null. 
-      robot: widget.robot,
-      // onPasswordSubmitted: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+      fragmentId: widget.fragmentId,
       onPasswordSubmitted: (fragmentId) {
         setState(() {
           _determinedFragmentId = fragmentId;

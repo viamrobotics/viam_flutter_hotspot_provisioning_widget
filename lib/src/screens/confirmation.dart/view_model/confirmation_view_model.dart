@@ -50,14 +50,14 @@ class ConfirmationViewModel extends ChangeNotifier {
   }
 
 // triggers a callback to the hotspot provisioning flow to to indicate if the robot is online or offline
+// Also, at this point we know we are online so we can call the fragment override.
   void _whenFinalRobotStatusIsDetermined() {
     // robot provisioned succesfully and is online
     if (_robotStatus == RobotStatus.online) {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
+      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot); 
       // robot provisioning did not complete successfully and is offline
-      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot); // we should call the fragment ovreride when the robot is online?
-
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
       _timer?.cancel();
@@ -90,15 +90,6 @@ class ConfirmationViewModel extends ChangeNotifier {
 
   Future<void> _fragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
     if (fragmentId == null || fragmentId.isEmpty) return;
-    // if (fragmentIdToWrite.isNotEmpty) {
-    //   await _fragmentOverride(_viam, fragmentIdToWrite, _mainPart, _robot); // need to pass robot??
-
-    //   // u are not connected to the internet here so we cannot call fragement override.
-    //   // instead we need to save fragmentId somewhere and we can call it later after we are connected.
-    //   // after we are connected to the network, then call fragmentOverride.
-    //   //make this api call when i am checking the robot status after being connected to the network.
-    // }
-
     Map<String, dynamic> config = {
       "fragments": [fragmentId]
     };

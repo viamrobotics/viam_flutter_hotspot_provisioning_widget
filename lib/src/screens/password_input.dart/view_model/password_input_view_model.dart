@@ -5,14 +5,11 @@ class PasswordInputViewModel extends ChangeNotifier {
     required Viam viam,
     required RobotPart mainPart,
     required String? fragmentId,
-    required Robot robot,
-    // required VoidCallback onPasswordSubmitted,
     required Function(String? fragmentId) onPasswordSubmitted,
     required Function(BuildContext, {required String title, String? error}) showErrorDialog,
   })  : _viam = viam,
         _mainPart = mainPart,
         _fragmentId = fragmentId,
-        _robot = robot,
         _onPasswordSubmitted = onPasswordSubmitted,
         _showErrorDialog = showErrorDialog {
     _passwordController.addListener(_notifyListeners);
@@ -22,8 +19,6 @@ class PasswordInputViewModel extends ChangeNotifier {
   final Viam _viam;
   final RobotPart _mainPart;
   final String? _fragmentId;
-  final Robot _robot;
-  // final VoidCallback _onPasswordSubmitted;
   final Function(String? fragmentId) _onPasswordSubmitted;
   final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
 
@@ -106,19 +101,8 @@ class PasswordInputViewModel extends ChangeNotifier {
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
       await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
-      // do something with the fragmentId here??? response.provisioningInfo.fragmentId
-      // doing some sort of fragment override or something?? 
-      // if fragment id is passed in, use that, otherwise read the fragmentId from the device. 
-      // TODO: check what happens when fragmentId is null. 
-      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId; // if fragmentId is null, then we will read the fragmentId fro mthe device... but how will the device know what to write ?? confused. 
-      // if (fragmentIdToWrite.isNotEmpty) {
-      //   await _fragmentOverride(_viam, fragmentIdToWrite, _mainPart, _robot); // need to pass robot??
-
-      //   // u are not connected to the internet here so we cannot call fragement override.
-      //   // instead we need to save fragmentId somewhere and we can call it later after we are connected. 
-      //   // after we are connected to the network, then call fragmentOverride. 
-      //   //make this api call when i am checking the robot status after being connected to the network. 
-      // }
+      // Get the fragmentId that was passed in to this hotspot provisioning flow or get it from agent.
+      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;  
       await _viam.provisioningClient.exitProvisioning();
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
