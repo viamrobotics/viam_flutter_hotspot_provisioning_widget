@@ -6,6 +6,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final RobotPart mainPart;
   final String hotspotPrefix;
   final String hotspotPassword;
+  final String? fragmentId;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -14,6 +15,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required this.mainPart,
     required this.hotspotPrefix,
     required this.hotspotPassword,
+    this.fragmentId,
   });
 
 // Static method to push this flow and get a result
@@ -24,6 +26,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required RobotPart mainPart,
     required String hotspotPrefix,
     required String hotspotPassword,
+    String? fragmentId,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
       MaterialPageRoute(
@@ -33,6 +36,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
           mainPart: mainPart,
           hotspotPrefix: hotspotPrefix,
           hotspotPassword: hotspotPassword,
+          fragmentId: fragmentId,
         ),
       ),
     );
@@ -47,6 +51,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final NetworkSelectionViewModel _networkSelectionViewModel;
   late final PasswordInputViewModel _passwordInputViewModel;
   int _currentPage = 0;
+  String? _determinedFragmentId;
 
   @override
   void initState() {
@@ -56,7 +61,13 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _passwordInputViewModel = PasswordInputViewModel(
       viam: widget.viam,
       mainPart: widget.mainPart,
-      onPasswordSubmitted: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+      fragmentId: widget.fragmentId,
+      onPasswordSubmitted: (fragmentId) {
+        setState(() {
+          _determinedFragmentId = fragmentId;
+        });
+        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      },
       showErrorDialog: (context, {required title, String? error}) => showAdaptiveDialog(
         context: context,
         builder: (context) => AlertDialog.adaptive(
@@ -206,6 +217,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   viam: widget.viam,
                   mainPart: widget.mainPart,
                   onStatusDetermined: onConfirmationStatusDetermined,
+                  fragmentId: _determinedFragmentId,
                 )
               ],
             ),

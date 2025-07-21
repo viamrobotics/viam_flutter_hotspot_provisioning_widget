@@ -4,10 +4,12 @@ class PasswordInputViewModel extends ChangeNotifier {
   PasswordInputViewModel({
     required Viam viam,
     required RobotPart mainPart,
-    required VoidCallback onPasswordSubmitted,
+    required String? fragmentId,
+    required Function(String? fragmentId) onPasswordSubmitted,
     required Function(BuildContext, {required String title, String? error}) showErrorDialog,
   })  : _viam = viam,
         _mainPart = mainPart,
+        _fragmentId = fragmentId,
         _onPasswordSubmitted = onPasswordSubmitted,
         _showErrorDialog = showErrorDialog {
     _passwordController.addListener(_notifyListeners);
@@ -16,7 +18,8 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   final Viam _viam;
   final RobotPart _mainPart;
-  final VoidCallback _onPasswordSubmitted;
+  final String? _fragmentId;
+  final Function(String? fragmentId) _onPasswordSubmitted;
   final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
 
   final TextEditingController _passwordController = TextEditingController();
@@ -98,8 +101,10 @@ class PasswordInputViewModel extends ChangeNotifier {
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
       await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+      // Get the fragmentId that was passed in to this hotspot provisioning flow or get it from agent.
+      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;  
       await _viam.provisioningClient.exitProvisioning();
-      _onPasswordSubmitted();
+      _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
       if (!context.mounted) return;
       _showErrorDialog(

@@ -5,8 +5,12 @@ class ConfirmationViewModel extends ChangeNotifier {
     required Viam viam,
     required Robot robot,
     required void Function(Robot robot, RobotStatus status) onStatusDetermined,
+    required String? fragmentId,
+    required RobotPart mainPart,
   })  : _viam = viam,
         _robot = robot,
+        _fragmentId = fragmentId,
+        _mainPart = mainPart,
         _onStatusDetermined = onStatusDetermined {
     _disconnectFromHotspot();
     _startCheckingOnline();
@@ -14,6 +18,8 @@ class ConfirmationViewModel extends ChangeNotifier {
 
   final Viam _viam;
   final Robot _robot;
+  final String? _fragmentId;
+  final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
 
   Timer? _timer;
@@ -44,11 +50,13 @@ class ConfirmationViewModel extends ChangeNotifier {
   }
 
 // triggers a callback to the hotspot provisioning flow to to indicate if the robot is online or offline
+// Also, at this point we know we are online so we can call the fragment override.
   void _whenFinalRobotStatusIsDetermined() {
     // robot provisioned succesfully and is online
     if (_robotStatus == RobotStatus.online) {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
+      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot);
       // robot provisioning did not complete successfully and is offline
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
@@ -78,6 +86,14 @@ class ConfirmationViewModel extends ChangeNotifier {
     debugPrint('disconnected from hotspot: $disconnected');
     // TODO (APP-8749): Associate a unique ID from machine with (maybe hotspot ssid) w/ robot as part of the machine already exists flow.
     // This is so we can associate the machine with the correct robot when we reconnect.
+  }
+
+  Future<void> _fragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
+    if (fragmentId == null || fragmentId.isEmpty) return;
+    Map<String, dynamic> config = {
+      "fragments": [fragmentId]
+    };
+    await viam.appClient.updateRobotPart(robotPart.id, robot.name, config);
   }
 
   void _getRobotStatus() async {
