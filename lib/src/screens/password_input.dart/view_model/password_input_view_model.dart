@@ -88,6 +88,7 @@ class PasswordInputViewModel extends ChangeNotifier {
   }
 
   Future<void> submitPassword(BuildContext context) async {
+    Version? agentVersion;
     FocusScope.of(context).unfocus();
     _setLoading(true);
 
@@ -104,8 +105,10 @@ class PasswordInputViewModel extends ChangeNotifier {
       final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;
       // Check if agent version is greater than or equal to 0.20.0
       // If it is, we can call exitProvisioning after setting network credentials, otherwise just set network credentials and move on.
-      final agentVersion = Version.parse(response.agentVersion);
-      if (agentVersion >= Version(0, 20, 0)) {
+      if (response.agentVersion.isNotEmpty) {
+        agentVersion = Version.parse(response.agentVersion);
+      }
+      if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
         await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
         await _viam.provisioningClient.exitProvisioning();
       } else {
