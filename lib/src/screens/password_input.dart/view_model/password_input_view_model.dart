@@ -100,10 +100,17 @@ class PasswordInputViewModel extends ChangeNotifier {
       }
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
-      await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
       // Get the fragmentId that was passed in to this hotspot provisioning flow or get it from agent.
-      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;  
-      await _viam.provisioningClient.exitProvisioning();
+      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;
+      // Check if agent version is greater than or equal to 0.20.0
+      // If it is, we can call exitProvisioning after setting network credentials, otherwise just set network credentials and move on.
+      final agentVersion = Version.parse(response.agentVersion);
+      if (agentVersion >= Version(0, 20, 0)) {
+        await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+        await _viam.provisioningClient.exitProvisioning();
+      } else {
+        _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+      }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
       if (!context.mounted) return;

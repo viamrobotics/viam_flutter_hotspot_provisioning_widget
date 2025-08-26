@@ -9,6 +9,7 @@ import 'package:viam_sdk/viam_sdk.dart';
 
 import 'package:permission_handler/permission_handler.dart' as ph;
 
+import 'package:pub_semver/pub_semver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
