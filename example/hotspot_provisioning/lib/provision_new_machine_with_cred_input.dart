@@ -6,6 +6,8 @@ import 'offline_screen.dart';
 import 'online_screen.dart';
 import 'consts.dart';
 
+// Note: This screen is entirely the same as "provision_new_machine.dart" with the only difference being we are passing the `promptForCredentials` flag to the flow, so the user can input the credentials.
+
 class ProvisionNewMachineWithCredInputScreen extends StatefulWidget {
   const ProvisionNewMachineWithCredInputScreen({super.key});
 
@@ -73,8 +75,6 @@ class _ProvisionNewMachineWithCredInputScreenState extends State<ProvisionNewMac
       if (mounted) {
         debugPrint('Starting flow with credential input');
         // result is a robot and a robot status
-
-        // Using the new credential input feature
         final result = await HotspotProvisioningFlow.show(
           context,
           robot: robot,
@@ -83,7 +83,6 @@ class _ProvisionNewMachineWithCredInputScreenState extends State<ProvisionNewMac
           fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
           promptForCredentials: true, // This will show a credential input screen
         );
-
         if (result != null) {
           // HotspotProvisioningFlow completed successfully and the robot is online
           if (result.status == RobotStatus.online) {
