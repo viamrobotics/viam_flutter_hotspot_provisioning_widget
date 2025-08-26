@@ -115,7 +115,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     }
   }
 
-  void onCredentialsSubmitted(String prefix, String password) {
+  void _onCredentialsSubmitted(String prefix, String password) {
     setState(() {
       _userProvidedHotspotPrefix = prefix;
       _userProvidedHotspotPassword = password;
@@ -123,8 +123,9 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
-  String get _effectiveHotspotPrefix => _userProvidedHotspotPrefix ?? widget.hotspotPrefix ?? '';
-  String get _effectiveHotspotPassword => _userProvidedHotspotPassword ?? widget.hotspotPassword ?? '';
+  // If the user accidentally passes in hardcoded credentials, and enters in credentials via the input screen, the user-provided credentials will be used.
+  String get _finalHotspotPrefix => _userProvidedHotspotPrefix ?? widget.hotspotPrefix ?? '';
+  String get _finalHotspotPassword => _userProvidedHotspotPassword ?? widget.hotspotPassword ?? '';
 
   AppBar _buildAppBar(BuildContext context) {
     final passwordInputViewModel = context.watch<PasswordInputViewModel>();
@@ -217,7 +218,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               children: [
                 if (widget.promptForCredentials)
                   HotspotCredentialsInputScreen(
-                    onCredentialsSubmitted: onCredentialsSubmitted,
+                    onCredentialsSubmitted: _onCredentialsSubmitted,
                   ),
                 ConnectHotspotPrefixScreen(
                   robot: widget.robot,
@@ -225,8 +226,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   mainPart: widget.mainPart,
                   onNavigateToNetworkSelection: () =>
                       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
-                  hotspotPassword: _effectiveHotspotPassword,
-                  hotspotPrefix: _effectiveHotspotPrefix,
+                  hotspotPassword: _finalHotspotPassword,
+                  hotspotPrefix: _finalHotspotPrefix,
                 ),
                 NetworkSelectionScreen(
                   viam: widget.viam,
