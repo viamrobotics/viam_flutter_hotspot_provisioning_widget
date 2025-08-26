@@ -49,8 +49,9 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             const Spacer(),
             TextFormField(
               controller: _prefixController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Hotspot Prefix',
+                border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -66,10 +67,10 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             const SizedBox(height: 16),
             TextFormField(
               controller: _passwordController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Hotspot Password',
+                border: OutlineInputBorder(),
               ),
-              obscureText: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a hotspot password';
