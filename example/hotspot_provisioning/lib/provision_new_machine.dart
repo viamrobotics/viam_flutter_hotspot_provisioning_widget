@@ -81,6 +81,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
           fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
           hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
           hotspotPassword: Consts.hotspotPassword,
+          isNewMachine: true, // Override fragment for new machine provisioning
         );
         if (result != null) {
           // HotspotProvisioningFlow completed successfully and the robot is online
