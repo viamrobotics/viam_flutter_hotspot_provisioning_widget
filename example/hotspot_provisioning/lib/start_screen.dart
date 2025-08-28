@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'reconnect_machines_screen.dart';
 import 'provision_new_machine.dart';
-import 'provision_new_machine_with_cred_input.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
   void _goToProvisionNewMachineFlow(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ProvisionNewMachineScreen(),
+      builder: (context) => const ProvisionNewMachineScreen(promptForCredentials: false),
     ));
   }
 
@@ -21,7 +20,7 @@ class StartScreen extends StatelessWidget {
 
   void _goToProvisionNewMachineWithCredInputFlow(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ProvisionNewMachineWithCredInputScreen(),
+      builder: (context) => const ProvisionNewMachineScreen(promptForCredentials: true),
     ));
   }
 
