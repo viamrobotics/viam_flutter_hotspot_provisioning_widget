@@ -49,6 +49,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             const Spacer(),
             TextFormField(
               controller: _prefixController,
+              autocorrect: false,
               decoration: InputDecoration(
                 labelText: 'Hotspot Prefix',
                 border: OutlineInputBorder(),
@@ -67,6 +68,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             const SizedBox(height: 16),
             TextFormField(
               controller: _passwordController,
+              autocorrect: false,
               decoration: InputDecoration(
                 labelText: 'Hotspot Password',
                 border: OutlineInputBorder(),
