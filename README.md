@@ -120,6 +120,7 @@ final result = await HotspotProvisioningFlow.show(
   hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json & must be at least 3 characters long 
   hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
   promptForCredentials: false, // Use hardcoded credentials
+  isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
 );
 
 // Option 2: Prompt user for credentials
@@ -130,6 +131,7 @@ final result = await HotspotProvisioningFlow.show(
   mainPart: mainPart,
   fragmentId: 'your-fragment-id',
   promptForCredentials: true, // This will show a credential input screen
+  isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
 );
 
 // 5. Handle the result
@@ -160,6 +162,7 @@ final result = await HotspotProvisioningFlow.show(
   hotspotPrefix: 'your-prefix',
   hotspotPassword: 'your-password',
   promptForCredentials: false, // Use hardcoded credentials
+  isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
 );
 ```
 
@@ -173,6 +176,7 @@ final result = await HotspotProvisioningFlow.show(
   viam: viam,
   mainPart: mainPart,
   promptForCredentials: true, // This will show a credential input screen
+  isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
 );
 ```
 
@@ -188,7 +192,8 @@ What you need to pass into the widget:
 - `mainPart`: The main robot part
 - `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json. **The hotspot prefix must be at least 3 characters long.** (Optional when `promptForCredentials` is true)
 - `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json. (Optional when `promptForCredentials` is true)
-- `promptForCredentials`: Whether to show a credential input screen for the user to enter hotspot prefix and password. When true, `hotspotPrefix` and `hotspotPassword` are optional.  
+- `promptForCredentials`: Whether to show a credential input screen for the user to enter hotspot prefix and password. When true, `hotspotPrefix` and `hotspotPassword` are optional.
+- `isNewMachine`: Whether this is a new machine being provisioned for the first time. Set to `true` for new machines, `false` for reconnecting existing machines. When `true`, the fragment override will be performed after successful provisioning.  
 
 ### HotspotProvisioningResult
 Contains the result of the provisioning attempt:
