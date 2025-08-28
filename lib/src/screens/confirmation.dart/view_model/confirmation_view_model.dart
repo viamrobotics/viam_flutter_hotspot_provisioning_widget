@@ -29,7 +29,7 @@ class ConfirmationViewModel extends ChangeNotifier {
   RobotStatus _robotStatus = RobotStatus.loading;
   int _secondsLoading = 0;
 
-  static const int provisioningTimeoutSeconds = 90;
+  static const int provisioningTimeoutSeconds = 120;
   static const int provisioningStillWaitingSeconds = 45;
 
   RobotStatus get robotStatus => _robotStatus;
