@@ -88,6 +88,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
             mainPart: mainPart,
             fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
             promptForCredentials: true,
+            isNewMachine: true, // Override fragment for new machine provisioning
           );
         } else {
           result = await HotspotProvisioningFlow.show(
@@ -99,6 +100,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
             hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
             hotspotPassword: Consts.hotspotPassword,
             promptForCredentials: false,
+            isNewMachine: true, // Override fragment for new machine provisioning
           );
         }
         if (result != null) {

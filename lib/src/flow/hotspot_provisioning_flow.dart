@@ -8,6 +8,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final String? hotspotPassword;
   final String? fragmentId;
   final bool promptForCredentials;
+  final bool isNewMachine;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -18,6 +19,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     this.hotspotPassword,
     this.fragmentId,
     this.promptForCredentials = false,
+    required this.isNewMachine,
   });
 
 // Static method to push this flow and get a result
@@ -30,6 +32,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     String? hotspotPassword,
     String? fragmentId,
     bool promptForCredentials = false,
+    required bool isNewMachine,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
       MaterialPageRoute(
@@ -41,6 +44,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
           hotspotPassword: hotspotPassword,
           fragmentId: fragmentId,
           promptForCredentials: promptForCredentials,
+          isNewMachine: isNewMachine,
         ),
       ),
     );
@@ -247,6 +251,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   mainPart: widget.mainPart,
                   onStatusDetermined: onConfirmationStatusDetermined,
                   fragmentId: _determinedFragmentId,
+                  isNewMachine: widget.isNewMachine,
                 )
               ],
             ),

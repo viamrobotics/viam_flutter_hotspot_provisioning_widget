@@ -7,11 +7,13 @@ class ConfirmationViewModel extends ChangeNotifier {
     required void Function(Robot robot, RobotStatus status) onStatusDetermined,
     required String? fragmentId,
     required RobotPart mainPart,
+    required bool isNewMachine,
   })  : _viam = viam,
         _robot = robot,
         _fragmentId = fragmentId,
         _mainPart = mainPart,
-        _onStatusDetermined = onStatusDetermined {
+        _onStatusDetermined = onStatusDetermined,
+        _isNewMachine = isNewMachine {
     _disconnectFromHotspot();
     _startCheckingOnline();
   }
@@ -21,12 +23,13 @@ class ConfirmationViewModel extends ChangeNotifier {
   final String? _fragmentId;
   final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
+  final bool _isNewMachine;
 
   Timer? _timer;
   RobotStatus _robotStatus = RobotStatus.loading;
   int _secondsLoading = 0;
 
-  static const int provisioningTimeoutSeconds = 90;
+  static const int provisioningTimeoutSeconds = 120;
   static const int provisioningStillWaitingSeconds = 45;
 
   RobotStatus get robotStatus => _robotStatus;
@@ -56,7 +59,9 @@ class ConfirmationViewModel extends ChangeNotifier {
     if (_robotStatus == RobotStatus.online) {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
-      _fragmentOverride(_viam, _fragmentId, _mainPart, _robot);
+      if (_isNewMachine) {
+        _performFragmentOverride(_viam, _fragmentId, _mainPart, _robot);
+      }
       // robot provisioning did not complete successfully and is offline
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
@@ -88,7 +93,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     // This is so we can associate the machine with the correct robot when we reconnect.
   }
 
-  Future<void> _fragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
+  Future<void> _performFragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
     if (fragmentId == null || fragmentId.isEmpty) return;
     Map<String, dynamic> config = {
       "fragments": [fragmentId]
