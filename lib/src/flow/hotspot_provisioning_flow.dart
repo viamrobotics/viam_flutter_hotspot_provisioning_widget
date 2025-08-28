@@ -4,20 +4,22 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final Robot robot;
   final Viam viam;
   final RobotPart mainPart;
-  final String hotspotPrefix;
-  final String hotspotPassword;
+  final String? hotspotPrefix;
+  final String? hotspotPassword;
   final String? fragmentId;
   final bool isNewMachine;
+  final bool promptForCredentials;
 
   const HotspotProvisioningFlow({
     super.key,
     required this.robot,
     required this.viam,
     required this.mainPart,
-    required this.hotspotPrefix,
-    required this.hotspotPassword,
+    this.hotspotPrefix,
+    this.hotspotPassword,
     this.fragmentId,
     required this.isNewMachine,
+    this.promptForCredentials = false,
   });
 
 // Static method to push this flow and get a result
@@ -26,9 +28,10 @@ class HotspotProvisioningFlow extends StatefulWidget {
     required Robot robot,
     required Viam viam,
     required RobotPart mainPart,
-    required String hotspotPrefix,
-    required String hotspotPassword,
+    String? hotspotPrefix,
+    String? hotspotPassword,
     String? fragmentId,
+    bool promptForCredentials = false,
     required bool isNewMachine,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
@@ -40,6 +43,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
           hotspotPrefix: hotspotPrefix,
           hotspotPassword: hotspotPassword,
           fragmentId: fragmentId,
+          promptForCredentials: promptForCredentials,
           isNewMachine: isNewMachine,
         ),
       ),
@@ -56,6 +60,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PasswordInputViewModel _passwordInputViewModel;
   int _currentPage = 0;
   String? _determinedFragmentId;
+  String? _userProvidedHotspotPrefix;
+  String? _userProvidedHotspotPassword;
 
   @override
   void initState() {
@@ -113,6 +119,18 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     }
   }
 
+  void _onCredentialsSubmitted(String prefix, String password) {
+    setState(() {
+      _userProvidedHotspotPrefix = prefix;
+      _userProvidedHotspotPassword = password;
+    });
+    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
+
+  // If the user accidentally passes in hardcoded credentials, and enters in credentials via the input screen, the user-provided credentials will be used.
+  String get _finalHotspotPrefix => _userProvidedHotspotPrefix ?? widget.hotspotPrefix ?? '';
+  String get _finalHotspotPassword => _userProvidedHotspotPassword ?? widget.hotspotPassword ?? '';
+
   AppBar _buildAppBar(BuildContext context) {
     final passwordInputViewModel = context.watch<PasswordInputViewModel>();
     final networkSelectionViewModel = context.watch<NetworkSelectionViewModel>();
@@ -121,9 +139,16 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
 
     switch (_currentPage) {
       case 0:
-        title = "Connect to Device Hotspot";
+        if (widget.promptForCredentials) {
+          title = "Enter Hotspot Credentials";
+        } else {
+          title = "Connect to Device Hotspot";
+        }
         break;
       case 1:
+        title = "Connect to Device Hotspot";
+        break;
+      case 2:
         title = "Connect to your vessel's Wi-Fi";
         actions = [
           IconButton(
@@ -132,7 +157,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           )
         ];
         break;
-      case 2:
+      case 3:
         title = 'Connect to Wi-Fi';
         final canSubmit = passwordInputViewModel.areNetworkCredentialsValid;
         actions = [
@@ -156,7 +181,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           ),
         ];
         break;
-      case 3:
+      case 4:
         return AppBar(backgroundColor: Theme.of(context).colorScheme.surface, elevation: 0, automaticallyImplyLeading: false);
     }
 
@@ -195,14 +220,18 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
+                if (widget.promptForCredentials)
+                  HotspotCredentialsInputScreen(
+                    onCredentialsSubmitted: _onCredentialsSubmitted,
+                  ),
                 ConnectHotspotPrefixScreen(
                   robot: widget.robot,
                   viam: widget.viam,
                   mainPart: widget.mainPart,
                   onNavigateToNetworkSelection: () =>
                       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
-                  hotspotPassword: widget.hotspotPassword,
-                  hotspotPrefix: widget.hotspotPrefix,
+                  hotspotPassword: _finalHotspotPassword,
+                  hotspotPrefix: _finalHotspotPrefix,
                 ),
                 NetworkSelectionScreen(
                   viam: widget.viam,

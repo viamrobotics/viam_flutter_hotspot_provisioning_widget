@@ -19,6 +19,7 @@ export 'package:viam_sdk/protos/app/app.dart';
 // views
 part 'src/screens/confirmation.dart/widgets/confirmation_screen.dart';
 part 'src/screens/connect_hotspot_prefix.dart/widgets/connect_hotspot_prefix_screen.dart';
+part 'src/screens/hotspot_credentials_input.dart/widgets/hotspot_credentials_input_screen.dart';
 part 'src/flow/hotspot_provisioning_flow.dart';
 part 'src/screens/network_selection.dart/widgets/network_selection_screen.dart';
 part 'src/screens/password_input.dart/widgets/password_input_screen.dart';

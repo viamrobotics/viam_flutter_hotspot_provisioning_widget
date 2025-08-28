@@ -7,7 +7,12 @@ import 'online_screen.dart';
 import 'consts.dart';
 
 class ProvisionNewMachineScreen extends StatefulWidget {
-  const ProvisionNewMachineScreen({super.key});
+  const ProvisionNewMachineScreen({
+    super.key,
+    this.promptForCredentials = false,
+  });
+
+  final bool promptForCredentials;
 
   @override
   State<ProvisionNewMachineScreen> createState() => _ProvisionNewMachineScreenState();
@@ -71,18 +76,33 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
     try {
       await _createRobot();
       if (mounted) {
-        debugPrint('Starting flow');
+        final flowDescription = widget.promptForCredentials ? ' with credential input' : '';
+        debugPrint('Starting flow$flowDescription');
         // result is a robot and a robot status
-        final result = await HotspotProvisioningFlow.show(
-          context,
-          robot: robot,
-          viam: viam,
-          mainPart: mainPart,
-          fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
-          hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
-          hotspotPassword: Consts.hotspotPassword,
-          isNewMachine: true, // Override fragment for new machine provisioning
-        );
+        HotspotProvisioningResult? result;
+        if (widget.promptForCredentials) {
+          result = await HotspotProvisioningFlow.show(
+            context,
+            robot: robot,
+            viam: viam,
+            mainPart: mainPart,
+            fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
+            promptForCredentials: true,
+            isNewMachine: true, // Override fragment for new machine provisioning
+          );
+        } else {
+          result = await HotspotProvisioningFlow.show(
+            context,
+            robot: robot,
+            viam: viam,
+            mainPart: mainPart,
+            fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
+            hotspotPrefix: Consts.hotspotPrefix, // This must be at least 3 characters long
+            hotspotPassword: Consts.hotspotPassword,
+            promptForCredentials: false,
+            isNewMachine: true, // Override fragment for new machine provisioning
+          );
+        }
         if (result != null) {
           // HotspotProvisioningFlow completed successfully and the robot is online
           if (result.status == RobotStatus.online) {
@@ -112,7 +132,8 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Provision New Machine', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+        title: Text(widget.promptForCredentials ? 'Provision New Machine (With Credential Input)' : 'Provision New Machine',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
       ),
       body: Center(
         child: Column(

@@ -8,13 +8,19 @@ class StartScreen extends StatelessWidget {
 
   void _goToProvisionNewMachineFlow(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ProvisionNewMachineScreen(),
+      builder: (context) => const ProvisionNewMachineScreen(promptForCredentials: false),
     ));
   }
 
   void _goToReconnectMachinesFlow(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const ReconnectRobotsScreen(),
+    ));
+  }
+
+  void _goToProvisionNewMachineWithCredInputFlow(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ProvisionNewMachineScreen(promptForCredentials: true),
     ));
   }
 
@@ -38,6 +44,11 @@ class StartScreen extends StatelessWidget {
             PrimaryButton(
               onPressed: () => _goToReconnectMachinesFlow(context),
               text: 'Reconnect Machine',
+            ),
+            const SizedBox(height: 16),
+            PrimaryButton(
+              onPressed: () => _goToProvisionNewMachineWithCredInputFlow(context),
+              text: 'Provision New Machine with Credentials',
             ),
           ],
         ),
