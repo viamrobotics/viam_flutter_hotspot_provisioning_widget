@@ -7,8 +7,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final String? hotspotPrefix;
   final String? hotspotPassword;
   final String? fragmentId;
-  final bool isNewMachine;
   final bool promptForCredentials;
+  final bool isNewMachine;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -18,8 +18,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     this.hotspotPrefix,
     this.hotspotPassword,
     this.fragmentId,
-    required this.isNewMachine,
     this.promptForCredentials = false,
+    required this.isNewMachine,
   });
 
 // Static method to push this flow and get a result
