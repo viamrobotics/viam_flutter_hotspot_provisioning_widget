@@ -1,3 +1,9 @@
+## 0.0.13
+- [APP-8967] Hotspot widget: check agent version by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/31
+- [APP-9012] Hotspot widget: think through the prefix/password to allow user to setup with any prefix and password by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/32
+- Hotspot: only override fragments if we are provisioning a new machine by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/33
+- update readme by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/34
+
 ## 0.0.12
 - [CONSULT-1376] Hotspot package: update to read fragmentId from agent + update part with it by @jckras in #30
 
