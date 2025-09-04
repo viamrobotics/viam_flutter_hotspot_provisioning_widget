@@ -95,10 +95,11 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                               children: [
                                 Icon(Icons.check_circle, color: Colors.green),
                                 const SizedBox(width: 8.0),
-                                Text(
-                                  "You are connected to the device's hotspot.",
-                                  style: listStyle,
-                                  maxLines: 0,
+                                Expanded(
+                                  child: Text(
+                                    "You are connected to the device's hotspot.",
+                                    style: listStyle,
+                                  ),
                                 ),
                                 Spacer(),
                               ],
