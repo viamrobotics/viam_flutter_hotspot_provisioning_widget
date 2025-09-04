@@ -101,7 +101,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                                     style: listStyle,
                                   ),
                                 ),
-                                Spacer(),
                               ],
                             ),
                           ],
