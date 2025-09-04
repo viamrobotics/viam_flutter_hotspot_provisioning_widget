@@ -27,6 +27,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
 
   void _submitCredentials() {
     if (_formKey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
       setState(() {
         _isSubmitting = true;
       });
