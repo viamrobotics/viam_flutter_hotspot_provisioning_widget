@@ -58,15 +58,27 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
   late final NetworkSelectionViewModel _networkSelectionViewModel;
   late final PasswordInputViewModel _passwordInputViewModel;
+  late final ConnectHotspotPrefixViewModel _connectHotspotPrefixViewModel;
   int _currentPage = 0;
   String? _determinedFragmentId;
-  String? _userProvidedHotspotPrefix;
-  String? _userProvidedHotspotPassword;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+
+    // Initialize the connect hotspot prefix view model
+    _connectHotspotPrefixViewModel = ConnectHotspotPrefixViewModel(
+      viam: widget.viam,
+      context: context,
+      hotspotPrefix: widget.hotspotPrefix ?? '',
+      hotspotPassword: widget.hotspotPassword ?? '',
+      onNavigateToNetworkSelection: () {
+        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      },
+      hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+    );
+
     _networkSelectionViewModel = NetworkSelectionViewModel(viam: widget.viam);
     _passwordInputViewModel = PasswordInputViewModel(
       viam: widget.viam,
@@ -109,6 +121,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _pageController.dispose();
     _networkSelectionViewModel.dispose();
     _passwordInputViewModel.dispose();
+    _connectHotspotPrefixViewModel.dispose();
     super.dispose();
   }
 
@@ -118,18 +131,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       Navigator.of(context).pop(HotspotProvisioningResult(robot: robot, status: status));
     }
   }
-
-  void _onCredentialsSubmitted(String prefix, String password) {
-    setState(() {
-      _userProvidedHotspotPrefix = prefix;
-      _userProvidedHotspotPassword = password;
-    });
-    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  // If the user accidentally passes in hardcoded credentials, and enters in credentials via the input screen, the user-provided credentials will be used.
-  String get _finalHotspotPrefix => _userProvidedHotspotPrefix ?? widget.hotspotPrefix ?? '';
-  String get _finalHotspotPassword => _userProvidedHotspotPassword ?? widget.hotspotPassword ?? '';
 
   AppBar _buildAppBar(BuildContext context) {
     final passwordInputViewModel = context.watch<PasswordInputViewModel>();
@@ -222,16 +223,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               children: [
                 if (widget.promptForCredentials)
                   HotspotCredentialsInputScreen(
-                    onCredentialsSubmitted: _onCredentialsSubmitted,
+                    onCredentialsSubmitted: (prefix, password) {
+                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    },
                   ),
                 ConnectHotspotPrefixScreen(
-                  robot: widget.robot,
-                  viam: widget.viam,
-                  mainPart: widget.mainPart,
-                  onNavigateToNetworkSelection: () =>
-                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
-                  hotspotPassword: _finalHotspotPassword,
-                  hotspotPrefix: _finalHotspotPrefix,
+                  viewModel: _connectHotspotPrefixViewModel,
                 ),
                 NetworkSelectionScreen(
                   viam: widget.viam,
