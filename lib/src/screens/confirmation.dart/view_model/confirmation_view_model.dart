@@ -8,12 +8,16 @@ class ConfirmationViewModel extends ChangeNotifier {
     required String? fragmentId,
     required RobotPart mainPart,
     required bool isNewMachine,
+    required bool replaceHardware,
+    required Map<String, dynamic>? robotConfig,
   })  : _viam = viam,
         _robot = robot,
         _fragmentId = fragmentId,
         _mainPart = mainPart,
         _onStatusDetermined = onStatusDetermined,
-        _isNewMachine = isNewMachine {
+        _isNewMachine = isNewMachine,
+        _replaceHardware = replaceHardware,
+        _robotConfig = robotConfig {
     _disconnectFromHotspot();
     _startCheckingOnline();
   }
@@ -24,6 +28,8 @@ class ConfirmationViewModel extends ChangeNotifier {
   final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
   final bool _isNewMachine;
+  final bool _replaceHardware;
+  final Map<String, dynamic>? _robotConfig;
 
   Timer? _timer;
   RobotStatus _robotStatus = RobotStatus.loading;
@@ -62,6 +68,9 @@ class ConfirmationViewModel extends ChangeNotifier {
       if (_isNewMachine) {
         _performFragmentOverride(_viam, _fragmentId, _mainPart, _robot);
       }
+      if (_replaceHardware && _robotConfig != null) {
+        _applyRobotConfig(_viam, _mainPart, _robotConfig);
+      }
       // robot provisioning did not complete successfully and is offline
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
@@ -99,6 +108,15 @@ class ConfirmationViewModel extends ChangeNotifier {
       "fragments": [fragmentId]
     };
     await viam.appClient.updateRobotPart(robotPart.id, robot.name, config);
+  }
+
+  // Update the new robot's config with the saved config from the old robot
+  Future<void> _applyRobotConfig(Viam viam, RobotPart mainPart, Map<String, dynamic> savedRobotConfig) async {
+    try {
+      await viam.appClient.updateRobotPart(mainPart.id, mainPart.name, savedRobotConfig);
+    } catch (e) {
+      debugPrint('Error applying robotConfig: ${e.toString()}');
+    }
   }
 
   void _getRobotStatus() async {

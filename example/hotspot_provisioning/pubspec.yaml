@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.1
+  viam_sdk: ^0.10.0
   viam_flutter_hotspot_provisioning_widget:
     path: ../../
 
