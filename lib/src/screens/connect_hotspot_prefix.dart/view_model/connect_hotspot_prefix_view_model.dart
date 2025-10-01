@@ -145,7 +145,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
       isWpa3: false,
       saveNetwork: true, // flips joinOnce on iOS to false
     );
-    if (connected == true) {
+    if (connected) {
       debugPrint('Connected to hotspot');
       final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
       if (connectedSSID != null && connectedSSID != '<unknown ssid>') {
