@@ -3,21 +3,11 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 // Currently, we are assuming that we are always provisioning a new machine.
 
 class ConnectHotspotPrefixScreen extends StatefulWidget {
-  final Robot robot;
-  final Viam viam;
-  final RobotPart mainPart;
-  final VoidCallback onNavigateToNetworkSelection;
-  final String hotspotPrefix;
-  final String hotspotPassword;
+  final ConnectHotspotPrefixViewModel viewModel;
 
   const ConnectHotspotPrefixScreen({
     super.key,
-    required this.robot,
-    required this.viam,
-    required this.mainPart,
-    required this.onNavigateToNetworkSelection,
-    required this.hotspotPrefix,
-    required this.hotspotPassword,
+    required this.viewModel,
   });
 
   @override
@@ -25,7 +15,6 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
 }
 
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
-  late final ConnectHotspotPrefixViewModel _viewModel;
   TextStyle get listStyle => TextStyle(
         color: Theme.of(context).colorScheme.onSurface,
         fontSize: 16.0,
@@ -34,28 +23,15 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    _viewModel = ConnectHotspotPrefixViewModel(
-      viam: widget.viam,
-      context: context,
-      hotspotPrefix: widget.hotspotPrefix,
-      hotspotPassword: widget.hotspotPassword,
-      onNavigateToNetworkSelection: widget.onNavigateToNetworkSelection,
-    );
     if (Platform.isAndroid) {
-      _viewModel.getLocationPermission();
+      widget.viewModel.getLocationPermission();
     }
-  }
-
-  @override
-  void dispose() {
-    _viewModel.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: _viewModel,
+      listenable: widget.viewModel,
       builder: (context, _) {
         return Column(
           children: [
@@ -86,7 +62,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                       padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
                       child: Text("3. Press the button below to connect to the device's hotspot.", style: listStyle),
                     ),
-                    if (_viewModel.connectedToHotspot)
+                    if (widget.viewModel.connectedToHotspot)
                       Padding(
                         padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
                         child: Column(
@@ -106,26 +82,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                           ],
                         ),
                       ),
-                    if (_viewModel.wrongPassword)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.error, color: Colors.red),
-                                const SizedBox(width: 8.0),
-                                Expanded(
-                                  child: Text(
-                                    "Having trouble connecting? The password may be incorrect. Please check it or try again.",
-                                    style: listStyle.copyWith(fontSize: 15.0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -136,11 +92,11 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                 Padding(
                   padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 28.0),
                   child: PrimaryButton(
-                    onPressed: _viewModel.isAttemptingConnectionToHotspot || _viewModel.pollingForMachine
+                    onPressed: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine
                         ? null
-                        : () => _viewModel.connectToHotspot(),
-                    text: _viewModel.isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
-                    isLoading: _viewModel.isAttemptingConnectionToHotspot || _viewModel.pollingForMachine,
+                        : () => widget.viewModel.connectToHotspot(),
+                    text: widget.viewModel.isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
+                    isLoading: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine,
                   ),
                 ),
               ],

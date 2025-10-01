@@ -29,6 +29,9 @@ part 'src/screens/connect_hotspot_prefix.dart/view_model/connect_hotspot_prefix_
 part 'src/screens/confirmation.dart/view_model/confirmation_view_model.dart';
 part 'src/utils/hotspot_provisioning_result.dart';
 
+// Repository
+part 'src/data/repositories/hotspot_provisioning_repository.dart';
+
 // widgets
 part 'src/screens/shared_widgets/no_content_widget.dart';
 part 'src/screens/shared_widgets/pill_button.dart';
