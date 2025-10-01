@@ -66,7 +66,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
   late final NetworkSelectionViewModel _networkSelectionViewModel;
   late final PasswordInputViewModel _passwordInputViewModel;
-  late final ConnectHotspotPrefixViewModel _connectHotspotPrefixViewModel;
   int _currentPage = 0;
   String? _determinedFragmentId;
   String? _userProvidedHotspotPrefix;
@@ -119,7 +118,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _pageController.dispose();
     _networkSelectionViewModel.dispose();
     _passwordInputViewModel.dispose();
-    _connectHotspotPrefixViewModel.dispose();
     super.dispose();
   }
 
