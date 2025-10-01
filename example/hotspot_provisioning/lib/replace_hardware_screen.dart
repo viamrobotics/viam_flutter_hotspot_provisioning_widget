@@ -124,7 +124,7 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
         fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
-        isNewMachine: false, // technically this is a new machine, so we should override the fragment?
+        isNewMachine: false,
         replaceHardware: true,
         robotConfig: savedRobotConfig, // pass the config that you want to apply to the new robot
       );

@@ -308,7 +308,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop(); 
+              Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
             child: const Text('Go Back'),

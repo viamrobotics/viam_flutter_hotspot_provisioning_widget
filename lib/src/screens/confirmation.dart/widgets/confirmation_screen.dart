@@ -12,7 +12,7 @@ class ConfirmationScreen extends StatefulWidget {
     this.fragmentId,
     required this.isNewMachine,
     required this.replaceHardware,
-    required this.robotConfig,
+    this.robotConfig,
   });
 
   final Viam viam;

@@ -9,7 +9,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     required RobotPart mainPart,
     required bool isNewMachine,
     required bool replaceHardware,
-    required Map<String, dynamic>? robotConfig,
+    Map<String, dynamic>? robotConfig,
   })  : _viam = viam,
         _robot = robot,
         _fragmentId = fragmentId,
