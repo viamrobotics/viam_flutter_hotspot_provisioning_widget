@@ -61,23 +61,13 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final ConnectHotspotPrefixViewModel _connectHotspotPrefixViewModel;
   int _currentPage = 0;
   String? _determinedFragmentId;
+  String? _userProvidedHotspotPrefix;
+  String? _userProvidedHotspotPassword;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-
-    // Initialize the connect hotspot prefix view model
-    _connectHotspotPrefixViewModel = ConnectHotspotPrefixViewModel(
-      viam: widget.viam,
-      context: context,
-      hotspotPrefix: widget.hotspotPrefix ?? '',
-      hotspotPassword: widget.hotspotPassword ?? '',
-      onNavigateToNetworkSelection: () {
-        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      },
-      hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
-    );
 
     _networkSelectionViewModel = NetworkSelectionViewModel(viam: widget.viam);
     _passwordInputViewModel = PasswordInputViewModel(
@@ -130,6 +120,32 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     if (mounted) {
       Navigator.of(context).pop(HotspotProvisioningResult(robot: robot, status: status));
     }
+  }
+
+  void _onCredentialsSubmitted(String prefix, String password) {
+    setState(() {
+      _userProvidedHotspotPrefix = prefix;
+      _userProvidedHotspotPassword = password;
+    });
+    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
+
+  // If the user enters credentials via the input screen, the user-provided credentials will be used.
+  // Otherwise, use the widget credentials. This ensures we never have empty strings.
+  String get _finalHotspotPrefix {
+    final prefix = _userProvidedHotspotPrefix ?? widget.hotspotPrefix;
+    if (prefix == null || prefix.isEmpty) {
+      throw StateError('Hotspot prefix must be provided either via widget parameters or user input');
+    }
+    return prefix;
+  }
+
+  String get _finalHotspotPassword {
+    final password = _userProvidedHotspotPassword ?? widget.hotspotPassword;
+    if (password == null || password.isEmpty) {
+      throw StateError('Hotspot password must be provided either via widget parameters or user input');
+    }
+    return password;
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -223,12 +239,19 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               children: [
                 if (widget.promptForCredentials)
                   HotspotCredentialsInputScreen(
-                    onCredentialsSubmitted: (prefix, password) {
-                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
+                    onCredentialsSubmitted: _onCredentialsSubmitted,
                   ),
                 ConnectHotspotPrefixScreen(
-                  viewModel: _connectHotspotPrefixViewModel,
+                  viewModel: ConnectHotspotPrefixViewModel(
+                    viam: widget.viam,
+                    context: context,
+                    hotspotPrefix: _finalHotspotPrefix,
+                    hotspotPassword: _finalHotspotPassword,
+                    onNavigateToNetworkSelection: () {
+                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    },
+                    hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                  ),
                 ),
                 NetworkSelectionScreen(
                   viam: widget.viam,
