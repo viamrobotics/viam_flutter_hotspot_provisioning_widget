@@ -9,6 +9,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final String? fragmentId;
   final bool promptForCredentials;
   final bool isNewMachine;
+  final bool replaceHardware;
+  final Map<String, dynamic>? robotConfig; // optional, for replacing hardware
 
   const HotspotProvisioningFlow({
     super.key,
@@ -20,6 +22,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     this.fragmentId,
     this.promptForCredentials = false,
     required this.isNewMachine,
+    required this.replaceHardware,
+    this.robotConfig,
   });
 
 // Static method to push this flow and get a result
@@ -33,6 +37,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     String? fragmentId,
     bool promptForCredentials = false,
     required bool isNewMachine,
+    required bool replaceHardware,
+    Map<String, dynamic>? robotConfig,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
       MaterialPageRoute(
@@ -45,6 +51,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
           fragmentId: fragmentId,
           promptForCredentials: promptForCredentials,
           isNewMachine: isNewMachine,
+          replaceHardware: replaceHardware,
+          robotConfig: robotConfig,
         ),
       ),
     );
@@ -78,7 +86,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       },
       hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
     );
-
     _networkSelectionViewModel = NetworkSelectionViewModel(viam: widget.viam);
     _passwordInputViewModel = PasswordInputViewModel(
       viam: widget.viam,
@@ -249,6 +256,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   onStatusDetermined: onConfirmationStatusDetermined,
                   fragmentId: _determinedFragmentId,
                   isNewMachine: widget.isNewMachine,
+                  replaceHardware: widget.replaceHardware,
+                  robotConfig: widget.robotConfig,
                 )
               ],
             ),

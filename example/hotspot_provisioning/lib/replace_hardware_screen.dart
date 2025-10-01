@@ -6,6 +6,11 @@ import 'consts.dart';
 import 'offline_screen.dart';
 import 'online_screen.dart';
 
+// import 'package:viam_sdk/protos/app/app.dart';
+// import 'package:viam_sdk/protos/app/robot.dart';
+// import 'package:viam_sdk/protos/robot/robot.dart';
+import 'package:viam_sdk/src/utils.dart'; // ignore: implementation_imports
+// import 'package:viam_sdk/viam_sdk.dart';
 enum _RobotStatus { online, offline, awaitingSetup, loading }
 
 class _ListRobot {
@@ -15,14 +20,14 @@ class _ListRobot {
   _ListRobot({required this.robot, required this.locationName});
 }
 
-class ReconnectRobotsScreen extends StatefulWidget {
-  const ReconnectRobotsScreen({super.key});
+class ReplaceHardwareScreen extends StatefulWidget {
+  const ReplaceHardwareScreen({super.key});
 
   @override
-  State<ReconnectRobotsScreen> createState() => _ReconnectRobotsScreenState();
+  State<ReplaceHardwareScreen> createState() => _ReplaceHardwareScreenState();
 }
 
-class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
+class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
   Viam? _viam;
   bool _isLoading = false;
   List<_ListRobot> _robots = [];
@@ -99,20 +104,35 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
     }
   }
 
+
+
+//  so bascially the user needs to provide the new replacement robot and the config from the old robot
+  Future<(Map<String, dynamic>, RobotPart)> getConfig(Robot robot) async {
+    _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
+    final parts = await _viam!.appClient.listRobotParts(robot.id);
+    final mainPart = parts.firstWhere((element) => element.mainPart);
+    return (mainPart.robotConfig.toMap(),mainPart);
+  }
+
+  // This is the flow that will be used to replace the hardware of the existing robot
+  // 1. Get the config from our old robot so we can apply it to the new robot
+  // 2. Create a new robot to be used as the "replacement" robot
   void _goToHotspotProvisioningFlow(BuildContext context, Viam viam, Robot existingRobot) async {
-    final mainPart = (await viam.appClient.listRobotParts(existingRobot.id)).firstWhere((element) => element.mainPart);
+    final (savedRobotConfig, _) = await getConfig(existingRobot);
+    final (replacementRobot, replacementMainPart) = await createNewRobot(existingRobot, viam);
+
     if (context.mounted) {
       final result = await HotspotProvisioningFlow.show(
         context,
-        robot: existingRobot,
+        robot: replacementRobot,
         viam: viam,
-        mainPart: mainPart,
+        mainPart: replacementMainPart,
         fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
-        isNewMachine: false, // Don't override fragment for existing machine reconnection
-        replaceHardware: false,
-        robotConfig: null,
+        isNewMachine: false, // technically this is a new machine, so we should override the fragment?
+        replaceHardware: true,
+        robotConfig: savedRobotConfig, // pass the config that you want to apply to the new robot
       );
 
       if (result != null) {
@@ -130,6 +150,15 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
         debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
       }
     }
+  }
+
+   Future<(Robot, RobotPart)> createNewRobot(Robot existingRobot, Viam viam) async {
+    final replacementRobotname = '${existingRobot.name}-replacement';
+    final replacementRobotId = await viam.appClient.newMachine(replacementRobotname, existingRobot.location);
+    final parts = await viam.appClient.listRobotParts(replacementRobotId);
+    final replacementMainPart = parts.firstWhere((element) => element.mainPart);
+    final replacementRobot = await viam.appClient.getRobot(replacementRobotId);
+    return (replacementRobot, replacementMainPart);
   }
 
   @override

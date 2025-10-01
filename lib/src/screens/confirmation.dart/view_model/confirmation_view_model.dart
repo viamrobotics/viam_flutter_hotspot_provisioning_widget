@@ -8,12 +8,16 @@ class ConfirmationViewModel extends ChangeNotifier {
     required String? fragmentId,
     required RobotPart mainPart,
     required bool isNewMachine,
+    required bool replaceHardware,
+    required Map<String, dynamic>? robotConfig, // can be null if replacing hardware
   })  : _viam = viam,
         _robot = robot,
         _fragmentId = fragmentId,
         _mainPart = mainPart,
         _onStatusDetermined = onStatusDetermined,
-        _isNewMachine = isNewMachine {
+        _isNewMachine = isNewMachine,
+        _replaceHardware = replaceHardware,
+        _robotConfig = robotConfig {
     _disconnectFromHotspot();
     _startCheckingOnline();
   }
@@ -24,6 +28,8 @@ class ConfirmationViewModel extends ChangeNotifier {
   final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
   final bool _isNewMachine;
+  final bool _replaceHardware;
+  final Map<String, dynamic>? _robotConfig;
 
   Timer? _timer;
   RobotStatus _robotStatus = RobotStatus.loading;
@@ -62,6 +68,11 @@ class ConfirmationViewModel extends ChangeNotifier {
       if (_isNewMachine) {
         _performFragmentOverride(_viam, _fragmentId, _mainPart, _robot);
       }
+      if (_replaceHardware && _robotConfig != null) {
+        // apply robot config to replacement robot
+        _applyRobotConfig(_viam, _mainPart, _robotConfig);
+      }
+
       // robot provisioning did not complete successfully and is offline
     } else if (_robotStatus == RobotStatus.offline) {
       _onStatusDetermined.call(_robot, RobotStatus.offline);
@@ -93,6 +104,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     // This is so we can associate the machine with the correct robot when we reconnect.
   }
 
+// ~> reads robot config from old bot ~> passes it to provisioning flow  ~> u go through normal provisioning and call updateRobotPart with the json you read at the very end, right when u do the fragment override
   Future<void> _performFragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {
     if (fragmentId == null || fragmentId.isEmpty) return;
     Map<String, dynamic> config = {
@@ -123,6 +135,15 @@ class ConfirmationViewModel extends ChangeNotifier {
       return RobotStatus.online;
     }
     return RobotStatus.loading;
+  }
+
+  Future<void> _applyRobotConfig(Viam viam, RobotPart mainPart, Map<String, dynamic> savedRobotConfig) async {
+    try {
+      // Update the new robot's config with the saved config from the old robot
+      await viam.appClient.updateRobotPart(mainPart.id, mainPart.name, savedRobotConfig);
+    } catch (e) {
+      debugPrint('Error applying robotConfig: ${e.toString()}');
+    }
   }
 
   @override
