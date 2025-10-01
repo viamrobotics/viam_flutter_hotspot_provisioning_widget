@@ -135,7 +135,10 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   String get _finalHotspotPrefix {
     final prefix = _userProvidedHotspotPrefix ?? widget.hotspotPrefix;
     if (prefix == null || prefix.isEmpty) {
-      throw StateError('Hotspot prefix must be provided either via widget parameters or user input');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showCredentialsError();
+      });
+      return '';
     }
     return prefix;
   }
@@ -143,7 +146,10 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   String get _finalHotspotPassword {
     final password = _userProvidedHotspotPassword ?? widget.hotspotPassword;
     if (password == null || password.isEmpty) {
-      throw StateError('Hotspot password must be provided either via widget parameters or user input');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showCredentialsError();
+      });
+      return '';
     }
     return password;
   }
@@ -241,18 +247,19 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   HotspotCredentialsInputScreen(
                     onCredentialsSubmitted: _onCredentialsSubmitted,
                   ),
-                ConnectHotspotPrefixScreen(
-                  viewModel: ConnectHotspotPrefixViewModel(
-                    viam: widget.viam,
-                    context: context,
-                    hotspotPrefix: _finalHotspotPrefix,
-                    hotspotPassword: _finalHotspotPassword,
-                    onNavigateToNetworkSelection: () {
-                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                if (!widget.promptForCredentials || (_userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null))
+                  ConnectHotspotPrefixScreen(
+                    viewModel: ConnectHotspotPrefixViewModel(
+                      viam: widget.viam,
+                      context: context,
+                      hotspotPrefix: _finalHotspotPrefix,
+                      hotspotPassword: _finalHotspotPassword,
+                      onNavigateToNetworkSelection: () {
+                        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      },
+                      hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                    ),
                   ),
-                ),
                 NetworkSelectionScreen(
                   viam: widget.viam,
                   onSelectNetwork: (network) {
@@ -278,6 +285,26 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           ),
         );
       }),
+    );
+  }
+
+  void _showCredentialsError() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Missing Credentials'),
+        content: const Text('Hotspot prefix and password must be provided to continue with the provisioning flow.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close dialog
+              Navigator.of(context).pop(); // Exit the flow and go back to home
+              Navigator.of(context).pop(); // Exit the flow and go back to home
+            },
+            child: const Text('Go Back'),
+          ),
+        ],
+      ),
     );
   }
 }
