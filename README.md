@@ -189,6 +189,36 @@ final result = await HotspotProvisioningFlow.show(
 ```
 
 When `promptForCredentials` is `true`, the `hotspotPrefix` and `hotspotPassword` parameters are optional and will be ignored.
+
+## Hardware Replacement
+
+When replacing hardware, you can preserve the robot's configuration by setting `replaceHardware: true` and passing the saved robot configuration to `robotConfig`.
+
+**Important**: To replace hardware, you need to:
+1. Create a new robot instance for the replacement hardware
+2. Save the configuration from the old robot's main part
+3. Apply the saved configuration to the new robot during provisioning
+
+```dart
+// Get the saved robot configuration from the old robot
+final savedRobotConfig = oldRobotPart.robotConfig.toMap();
+
+// Apply the saved configuration to the new robot
+final result = await HotspotProvisioningFlow.show(
+  context,
+  robot: newRobot, // Pass in the new replacement robot
+  viam: viam,
+  mainPart: newMainPart, // Pass in the new replacement mainPart
+  fragmentId: 'your-fragment-id',
+  hotspotPrefix: 'your-hotspot-prefix',
+  hotspotPassword: 'your-hotspot-password',
+  promptForCredentials: false,
+  isNewMachine: false,
+  replaceHardware: true, // Enable hardware replacement mode
+  robotConfig: savedRobotConfig, // Pass the saved configuration
+);
+```
+
 ## HotspotProvisioningFlow Widget
 The main widget that handles the entire provisioning flow.
 

@@ -118,15 +118,15 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
     if (context.mounted) {
       final result = await HotspotProvisioningFlow.show(
         context,
-        robot: replacementRobot,
+        robot: replacementRobot, // Be sure to pass in a new robot that will be used as the replacement robot
         viam: viam,
-        mainPart: replacementMainPart,
+        mainPart: replacementMainPart, // Be sure to pass in the main part of the new robot
         fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
         isNewMachine: false,
         replaceHardware: true,
-        robotConfig: savedRobotConfig, // pass the config that you want to apply to the new robot
+        robotConfig: savedRobotConfig, // Be sure to pass in the config from the old robot that you want to apply to the new robot
       );
 
       if (result != null) {
