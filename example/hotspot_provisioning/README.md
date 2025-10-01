@@ -8,11 +8,11 @@ This example project demonstrates how to use the Viam Flutter Hotspot Provisioni
     - These values should match the prefix and password that were set in the viam-defaults.json. 
     - See the [Machine Setup section](../../README.md#machine-setup) for more info on the viam-defaults.json.
 2. Run the example app by running `flutter run`
-3. Choose "Provision New Machine" or "Reconnect Machine"
+3. Choose "Provision New Machine", "Reconnect Machine", or "Replace Hardware"
 4. Follow the on-screen instructions
 
 ## Use Cases
-The app showcases two main use cases:
+The app showcases three main use cases:
 
 ### 1. Provision a new machine
 This flow demonstrates how to connect a **new robot** to the Viam platform for the first time. The process:
@@ -29,10 +29,18 @@ This flow demonstrates how to **reconnect an existing robot** to a new wifi netw
 - Uses the same hotspot provisioning flow but with an existing robot instance
 <img src="../../screenshots/reconnect_demo.gif" width="250" alt="Re-provisioning Flow">
 
+### 3. Replace hardware
+This flow demonstrates how to **replace hardware** while preserving the robot's configuration. The process:
+- Saves the robot configuration from the old hardware
+- Creates a new robot instance for the replacement hardware
+- Applies the saved configuration to the new robot during provisioning
+- Ensures the new hardware has the same settings as the old hardware
+
 ## How It Works
 
-Both flows utilize the same underlying `HotspotProvisioningFlow` widget, which:
+All three flows utilize the same underlying `HotspotProvisioningFlow` widget, which:
 1. Connects to the robot's hotspot network
 2. Configures the robot's network settings  
 3. Establishes a connection to the Viam platform
-4. Returns the connection status
+4. Applies saved robot configuration (when replacing hardware)
+5. Returns the connection status
