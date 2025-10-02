@@ -149,7 +149,7 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
           }
           break;
         case RobotStatus.loading:
-          // we will never get here as the flow will timeout and the robot will be offline
+          // we will never get here as the flow will timeout and the statuse will be returned asoffline
           debugPrint('Robot status still loading.');
           break;
       }
