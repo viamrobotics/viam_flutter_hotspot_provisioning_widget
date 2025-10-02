@@ -3,14 +3,17 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 enum RobotStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
-  const ConfirmationScreen(
-      {super.key,
-      required this.robot,
-      required this.viam,
-      required this.mainPart,
-      required this.onStatusDetermined,
-      this.fragmentId,
-      required this.isNewMachine});
+  const ConfirmationScreen({
+    super.key,
+    required this.robot,
+    required this.viam,
+    required this.mainPart,
+    required this.onStatusDetermined,
+    this.fragmentId,
+    required this.isNewMachine,
+    required this.replaceHardware,
+    this.robotConfig,
+  });
 
   final Viam viam;
   final Robot robot;
@@ -18,6 +21,8 @@ class ConfirmationScreen extends StatefulWidget {
   final String? fragmentId;
   final void Function(Robot robot, RobotStatus status) onStatusDetermined;
   final bool isNewMachine;
+  final bool replaceHardware;
+  final Map<String, dynamic>? robotConfig;
 
   @override
   State<ConfirmationScreen> createState() => _ConfirmationScreenState();
@@ -36,6 +41,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       fragmentId: widget.fragmentId,
       mainPart: widget.mainPart,
       isNewMachine: widget.isNewMachine,
+      replaceHardware: widget.replaceHardware,
+      robotConfig: widget.robotConfig,
     );
   }
 

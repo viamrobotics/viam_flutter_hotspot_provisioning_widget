@@ -5,6 +5,7 @@ import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_pr
 import 'consts.dart';
 import 'offline_screen.dart';
 import 'online_screen.dart';
+import 'package:viam_sdk/src/utils.dart'; // ignore: implementation_imports
 
 enum _RobotStatus { online, offline, awaitingSetup, loading }
 
@@ -15,14 +16,14 @@ class _ListRobot {
   _ListRobot({required this.robot, required this.locationName});
 }
 
-class ReconnectRobotsScreen extends StatefulWidget {
-  const ReconnectRobotsScreen({super.key});
+class ReplaceHardwareScreen extends StatefulWidget {
+  const ReplaceHardwareScreen({super.key});
 
   @override
-  State<ReconnectRobotsScreen> createState() => _ReconnectRobotsScreenState();
+  State<ReplaceHardwareScreen> createState() => _ReplaceHardwareScreenState();
 }
 
-class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
+class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
   Viam? _viam;
   bool _isLoading = false;
   List<_ListRobot> _robots = [];
@@ -99,37 +100,69 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
     }
   }
 
+  // Provide the new replacement robot and the config from the old robot.
+  Future<(Map<String, dynamic>, RobotPart)> getConfig(Robot robot) async {
+    _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
+    final parts = await _viam!.appClient.listRobotParts(robot.id);
+    final mainPart = parts.firstWhere((element) => element.mainPart);
+    return (mainPart.robotConfig.toMap(), mainPart);
+  }
+
+  // This is the flow that will be used to replace the hardware of the existing robot
+  // 1. Get the config from our old robot so we can apply it to the new robot
+  // 2. Create a new robot to be used as the "replacement" robot
   void _goToHotspotProvisioningFlow(BuildContext context, Viam viam, Robot existingRobot) async {
-    final mainPart = (await viam.appClient.listRobotParts(existingRobot.id)).firstWhere((element) => element.mainPart);
+    final (savedRobotConfig, _) = await getConfig(existingRobot);
+    final (replacementRobot, replacementMainPart) = await createNewRobot(existingRobot, viam);
+
     if (context.mounted) {
       final result = await HotspotProvisioningFlow.show(
         context,
-        robot: existingRobot,
+        robot: replacementRobot, // Be sure to pass in a new robot that will be used as the replacement robot
         viam: viam,
-        mainPart: mainPart,
+        mainPart: replacementMainPart, // Be sure to pass in the main part of the new robot
         fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
-        isNewMachine: false, // Don't override fragment for existing machine reconnection
-        replaceHardware: false,
-        robotConfig: null,
+        isNewMachine: false,
+        replaceHardware: true,
+        robotConfig: savedRobotConfig, // Be sure to pass in the config from the old robot that you want to apply to the new robot
       );
 
-      if (result != null) {
-        if (result.status == RobotStatus.online) {
-          if (mounted) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
-          }
-        } else {
-          if (mounted) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
-          }
-        }
-      } else {
+      if (result == null) {
         debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
+        return;
+      }
+      switch (result.status) {
+        case RobotStatus.online:
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())),
+            );
+          }
+          break;
+        case RobotStatus.offline:
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())),
+            );
+          }
+          break;
+        case RobotStatus.loading:
+          // we will never get here as the flow will timeout and the statuse will be returned asoffline
+          debugPrint('Robot status still loading.');
+          break;
       }
     }
+  }
+
+  Future<(Robot, RobotPart)> createNewRobot(Robot existingRobot, Viam viam) async {
+    final replacementRobotname = '${existingRobot.name}-replacement';
+    final replacementRobotId = await viam.appClient.newMachine(replacementRobotname, existingRobot.location);
+    final parts = await viam.appClient.listRobotParts(replacementRobotId);
+    final replacementMainPart = parts.firstWhere((element) => element.mainPart);
+    final replacementRobot = await viam.appClient.getRobot(replacementRobotId);
+    return (replacementRobot, replacementMainPart);
   }
 
   @override

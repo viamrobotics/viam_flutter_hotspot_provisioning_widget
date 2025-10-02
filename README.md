@@ -121,6 +121,8 @@ final result = await HotspotProvisioningFlow.show(
   hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
   promptForCredentials: false, // Use hardcoded credentials
   isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
+  replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
+  robotConfig: null, // Optional, pass saved robot config when replaceHardware is true
 );
 
 // Option 2: Prompt user for credentials
@@ -132,6 +134,8 @@ final result = await HotspotProvisioningFlow.show(
   fragmentId: 'your-fragment-id',
   promptForCredentials: true, // This will show a credential input screen
   isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
+  replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
+  robotConfig: null, // Optional, pass saved robot config when replaceHardware is true
 );
 
 // 5. Handle the result
@@ -163,6 +167,8 @@ final result = await HotspotProvisioningFlow.show(
   hotspotPassword: 'your-password',
   promptForCredentials: false, // Use hardcoded credentials
   isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
+  replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
+  robotConfig: null, // Optional, pass saved robot config when replaceHardware is true
 );
 ```
 
@@ -177,10 +183,42 @@ final result = await HotspotProvisioningFlow.show(
   mainPart: mainPart,
   promptForCredentials: true, // This will show a credential input screen
   isNewMachine: true, // Set to true for new machines, false for reconnecting existing machines
+  replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
+  robotConfig: null, // Optional, pass saved robot config when replaceHardware is true
 );
 ```
 
 When `promptForCredentials` is `true`, the `hotspotPrefix` and `hotspotPassword` parameters are optional and will be ignored.
+
+## Hardware Replacement
+
+When replacing hardware, you can preserve the robot's configuration by setting `replaceHardware: true` and passing the saved robot configuration to `robotConfig`.
+
+**Important**: To replace hardware, you need to:
+1. Create a new robot instance for the replacement hardware
+2. Save the configuration from the old robot's main part
+3. Apply the saved configuration to the new robot during provisioning
+
+```dart
+// Get the saved robot configuration from the old robot
+final savedRobotConfig = oldRobotPart.robotConfig.toMap();
+
+// Apply the saved configuration to the new robot
+final result = await HotspotProvisioningFlow.show(
+  context,
+  robot: newRobot, // Pass in the new replacement robot
+  viam: viam,
+  mainPart: newMainPart, // Pass in the new replacement mainPart
+  fragmentId: 'your-fragment-id',
+  hotspotPrefix: 'your-hotspot-prefix',
+  hotspotPassword: 'your-hotspot-password',
+  promptForCredentials: false,
+  isNewMachine: false,
+  replaceHardware: true, // Enable hardware replacement mode
+  robotConfig: savedRobotConfig, // Pass the saved configuration
+);
+```
+
 ## HotspotProvisioningFlow Widget
 The main widget that handles the entire provisioning flow.
 
@@ -193,7 +231,9 @@ What you need to pass into the widget:
 - `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json. **The hotspot prefix must be at least 3 characters long.** (Optional when `promptForCredentials` is true)
 - `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json. (Optional when `promptForCredentials` is true)
 - `promptForCredentials`: Whether to show a credential input screen for the user to enter hotspot prefix and password. When true, `hotspotPrefix` and `hotspotPassword` are optional.
-- `isNewMachine`: Whether this is a new machine being provisioned for the first time. Set to `true` for new machines, `false` for reconnecting existing machines. When `true`, the fragment override will be performed after successful provisioning.  
+- `isNewMachine`: Whether this is a new machine being provisioned for the first time. Set to `true` for new machines, `false` for reconnecting existing machines. When `true`, the fragment override will be performed after successful provisioning.
+- `replaceHardware`: Whether you are replacing hardware and want to apply a saved robot configuration. Set to `true` when replacing hardware, `false` otherwise.
+- `robotConfig`: Optional saved robot configuration to apply when `replaceHardware` is `true`. Pass the configuration from the old robot that you want to apply to the new robot. Can be omitted when `replaceHardware` is `false`.  
 
 ### HotspotProvisioningResult
 Contains the result of the provisioning attempt:

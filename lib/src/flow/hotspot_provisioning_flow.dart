@@ -9,6 +9,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final String? fragmentId;
   final bool promptForCredentials;
   final bool isNewMachine;
+  final bool replaceHardware;
+  final Map<String, dynamic>? robotConfig;
 
   const HotspotProvisioningFlow({
     super.key,
@@ -20,6 +22,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     this.fragmentId,
     this.promptForCredentials = false,
     required this.isNewMachine,
+    required this.replaceHardware,
+    this.robotConfig, // optional, for replacing hardware
   });
 
 // Static method to push this flow and get a result
@@ -33,6 +37,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
     String? fragmentId,
     bool promptForCredentials = false,
     required bool isNewMachine,
+    required bool replaceHardware,
+    Map<String, dynamic>? robotConfig,
   }) {
     return Navigator.of(context).push<HotspotProvisioningResult?>(
       MaterialPageRoute(
@@ -45,6 +51,8 @@ class HotspotProvisioningFlow extends StatefulWidget {
           fragmentId: fragmentId,
           promptForCredentials: promptForCredentials,
           isNewMachine: isNewMachine,
+          replaceHardware: replaceHardware,
+          robotConfig: robotConfig,
         ),
       ),
     );
@@ -58,7 +66,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
   late final NetworkSelectionViewModel _networkSelectionViewModel;
   late final PasswordInputViewModel _passwordInputViewModel;
-  late final ConnectHotspotPrefixViewModel _connectHotspotPrefixViewModel;
   int _currentPage = 0;
   String? _determinedFragmentId;
   String? _userProvidedHotspotPrefix;
@@ -111,7 +118,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _pageController.dispose();
     _networkSelectionViewModel.dispose();
     _passwordInputViewModel.dispose();
-    _connectHotspotPrefixViewModel.dispose();
     super.dispose();
   }
 
@@ -279,6 +285,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   onStatusDetermined: onConfirmationStatusDetermined,
                   fragmentId: _determinedFragmentId,
                   isNewMachine: widget.isNewMachine,
+                  replaceHardware: widget.replaceHardware,
+                  robotConfig: widget.robotConfig,
                 )
               ],
             ),
@@ -298,7 +306,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop(); 
+              Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
             child: const Text('Go Back'),
