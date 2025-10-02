@@ -168,52 +168,85 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
 
     switch (_currentPage) {
       case 0:
-        if (widget.promptForCredentials) {
-          title = "Enter Hotspot Credentials";
-        } else {
-          title = "Connect to Device Hotspot";
-        }
+        title = "Connect to Device Hotspot";
+        break;
+      case 1:
+        title = "Connect to your vessel's Wi-Fi";
+        actions = _buildRefreshAction(context, networkSelectionViewModel);
+        break;
+      case 2:
+        title = 'Connect to Wi-Fi';
+        actions = _buildDoneAction(context, passwordInputViewModel);
+        break;
+      case 3:
+        return _buildConnectingAppBar(context);
+    }
+
+    return _buildStandardAppBar(context, title, actions);
+  }
+
+  AppBar _buildAppBarWithPromptForCredentials(BuildContext context) {
+    final passwordInputViewModel = context.watch<PasswordInputViewModel>();
+    final networkSelectionViewModel = context.watch<NetworkSelectionViewModel>();
+    String title = "";
+    List<Widget> actions = [];
+
+    switch (_currentPage) {
+      case 0:
+        title = "Enter Hotspot Credentials";
         break;
       case 1:
         title = "Connect to Device Hotspot";
         break;
       case 2:
         title = "Connect to your vessel's Wi-Fi";
-        actions = [
-          IconButton(
-            icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.onSurface, size: 24.0),
-            onPressed: () => networkSelectionViewModel.getNetworks(refresh: true),
-          )
-        ];
+        actions = _buildRefreshAction(context, networkSelectionViewModel);
         break;
       case 3:
         title = 'Connect to Wi-Fi';
-        final canSubmit = passwordInputViewModel.areNetworkCredentialsValid;
-        actions = [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: GestureDetector(
-                onTap: canSubmit ? () => passwordInputViewModel.submitPassword(context) : null,
-                child: passwordInputViewModel.loading
-                    ? const CupertinoActivityIndicator()
-                    : Text(
-                        "Done",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                          color: canSubmit ? const Color(0xFF0EB4CE) : Colors.grey,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        ];
+        actions = _buildDoneAction(context, passwordInputViewModel);
         break;
       case 4:
-        return AppBar(backgroundColor: Theme.of(context).colorScheme.surface, elevation: 0, automaticallyImplyLeading: false);
+        return _buildConnectingAppBar(context);
     }
 
+    return _buildStandardAppBar(context, title, actions);
+  }
+
+  List<Widget> _buildRefreshAction(BuildContext context, NetworkSelectionViewModel networkSelectionViewModel) {
+    return [
+      IconButton(
+        icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.onSurface, size: 24.0),
+        onPressed: () => networkSelectionViewModel.getNetworks(refresh: true),
+      )
+    ];
+  }
+
+  List<Widget> _buildDoneAction(BuildContext context, PasswordInputViewModel passwordInputViewModel) {
+    final canSubmit = passwordInputViewModel.areNetworkCredentialsValid;
+    return [
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: GestureDetector(
+            onTap: canSubmit ? () => passwordInputViewModel.submitPassword(context) : null,
+            child: passwordInputViewModel.loading
+                ? const CupertinoActivityIndicator()
+                : Text(
+                    "Done",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                      color: canSubmit ? const Color(0xFF0EB4CE) : Colors.grey,
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  AppBar _buildStandardAppBar(BuildContext context, String title, List<Widget> actions) {
     return AppBar(
       title: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18.0, fontWeight: FontWeight.w500)),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -233,6 +266,10 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     );
   }
 
+  AppBar _buildConnectingAppBar(BuildContext context) {
+    return AppBar(backgroundColor: Theme.of(context).colorScheme.surface, elevation: 0, automaticallyImplyLeading: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -243,7 +280,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       child: Builder(builder: (context) {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          appBar: _buildAppBar(context),
+          appBar: widget.promptForCredentials ? _buildAppBarWithPromptForCredentials(context) : _buildAppBar(context),
           body: SafeArea(
             child: PageView(
               controller: _pageController,
