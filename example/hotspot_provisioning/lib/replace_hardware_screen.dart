@@ -100,7 +100,7 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
     }
   }
 
-//  so bascially the user needs to provide the new replacement robot and the config from the old robot
+  // Provide the new replacement robot and the config from the old robot.
   Future<(Map<String, dynamic>, RobotPart)> getConfig(Robot robot) async {
     _viam = await Viam.withApiKey(Consts.apiKeyId, Consts.apiKey);
     final parts = await _viam!.appClient.listRobotParts(robot.id);
@@ -129,19 +129,29 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
         robotConfig: savedRobotConfig, // Be sure to pass in the config from the old robot that you want to apply to the new robot
       );
 
-      if (result != null) {
-        if (result.status == RobotStatus.online) {
-          if (mounted) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
-          }
-        } else {
-          if (mounted) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
-          }
-        }
-      } else {
+      if (result == null) {
         debugPrint('No result from HotspotProvisioningFlow. The flow may have been cancelled.');
+        return;
+      }
+      switch (result.status) {
+        case RobotStatus.online:
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())),
+            );
+          }
+          break;
+        case RobotStatus.offline:
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())),
+            );
+          }
+          break;
+        case RobotStatus.loading:
+          // we will never get here as the flow will timeout and the robot will be offline
+          debugPrint('Robot status still loading.');
+          break;
       }
     }
   }
