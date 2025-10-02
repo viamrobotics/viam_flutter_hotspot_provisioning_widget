@@ -24,7 +24,7 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _ssidController = TextEditingController();
-  bool _obscureText = true;
+  bool _obscureText = false;
   bool _loading = false;
   NetworkInfo? _network;
 
