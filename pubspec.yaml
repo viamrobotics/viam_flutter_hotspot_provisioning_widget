@@ -1,6 +1,6 @@
 name: viam_flutter_hotspot_provisioning_widget
 description: "A Viam Flutter Hotspot Provisioning Widget."
-version: 0.0.14
+version: 0.0.15
 repository: https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget
 homepage: https://www.viam.com/
 
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
    plugin_wifi_connect: ^2.0.1
    viam_sdk: ^0.10.0
-   permission_handler: ^12.0.0+1
+   permission_handler: ^12.0.0
    flutter_platform_widgets: ^7.0.1
    provider: ^6.1.5
    pub_semver: ^2.2.0
