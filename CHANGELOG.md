@@ -1,3 +1,8 @@
+## 0.0.14
+- Change name from isNewMachine to overrideFragment by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/40 
+-[APP-9642] Hotspot provisioning widget supports "replace hardware by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/39
+- [APP-9666] Hotspot provisioning widget improvements by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/37
+
 ## 0.0.13
 - [APP-8967] Hotspot widget: check agent version by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/31
 - [APP-9012] Hotspot widget: think through the prefix/password to allow user to setup with any prefix and password by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/32
