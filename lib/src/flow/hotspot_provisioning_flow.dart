@@ -169,15 +169,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     switch (_currentPage) {
       case 0:
         title = "Connect to Device Hotspot";
-        break;
       case 1:
         title = "Connect to your vessel's Wi-Fi";
         actions = _buildRefreshAction(context, networkSelectionViewModel);
-        break;
       case 2:
         title = 'Connect to Wi-Fi';
         actions = _buildDoneAction(context, passwordInputViewModel);
-        break;
       case 3:
         return _buildConnectingAppBar(context);
     }
@@ -194,18 +191,14 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     switch (_currentPage) {
       case 0:
         title = "Enter Hotspot Credentials";
-        break;
       case 1:
         title = "Connect to Device Hotspot";
-        break;
       case 2:
         title = "Connect to your vessel's Wi-Fi";
         actions = _buildRefreshAction(context, networkSelectionViewModel);
-        break;
       case 3:
         title = 'Connect to Wi-Fi';
         actions = _buildDoneAction(context, passwordInputViewModel);
-        break;
       case 4:
         return _buildConnectingAppBar(context);
     }
