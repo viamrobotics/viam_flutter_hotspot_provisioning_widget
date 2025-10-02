@@ -4,12 +4,14 @@ class NetworkSelectionScreen extends StatefulWidget {
   final void Function(NetworkInfo) onSelectNetwork;
   final VoidCallback onManualEntry;
   final Viam viam;
+  final NetworkSelectionViewModel viewModel;
 
   const NetworkSelectionScreen({
     super.key,
     required this.onSelectNetwork,
     required this.onManualEntry,
     required this.viam,
+    required this.viewModel,
   });
 
   @override
@@ -23,23 +25,23 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
     // Initialize after the frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final viewModel = context.read<NetworkSelectionViewModel>();
-        viewModel.initialize();
+        widget.viewModel.initialize();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NetworkSelectionViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.loadingNetworks) {
+    return ListenableBuilder(
+      listenable: widget.viewModel,
+      builder: (context, child) {
+        if (widget.viewModel.loadingNetworks) {
           return const NoContentWidget(
             titleString: "Scanning...",
             bodyString: "Looking for visible networks...",
           );
         }
-        if (viewModel.machineVisibleNetworks.isEmpty) {
+        if (widget.viewModel.machineVisibleNetworks.isEmpty) {
           return NoContentWidget(
               icon: const Icon(Icons.error, color: Colors.red),
               buttons: [
@@ -58,7 +60,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   ),
                 ),
                 FilledButton(
-                  onPressed: viewModel.loadingNetworks ? null : () => viewModel.getNetworks(refresh: true),
+                  onPressed: widget.viewModel.loadingNetworks ? null : () => widget.viewModel.getNetworks(refresh: true),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -95,20 +97,20 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   color: Theme.of(context).colorScheme.surface,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: viewModel.machineVisibleNetworks.length,
+                    itemCount: widget.viewModel.machineVisibleNetworks.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: () => widget.onSelectNetwork(viewModel.machineVisibleNetworks[index]),
+                        onTap: () => widget.onSelectNetwork(widget.viewModel.machineVisibleNetworks[index]),
                         child: ProvisioningListItem(
-                          textString: viewModel.machineVisibleNetworks[index].ssid,
+                          textString: widget.viewModel.machineVisibleNetworks[index].ssid,
                           leading: Icon(
-                            viewModel.signalToIcon(viewModel.machineVisibleNetworks[index].signal),
+                            widget.viewModel.signalToIcon(widget.viewModel.machineVisibleNetworks[index].signal),
                             size: 24.0,
                             color: Colors.grey,
                           ),
                           add: false,
                           trailing: Icon(
-                            viewModel.securityToIcon(viewModel.machineVisibleNetworks[index].security),
+                            widget.viewModel.securityToIcon(widget.viewModel.machineVisibleNetworks[index].security),
                             size: 20.0,
                             color: Colors.grey,
                           ),

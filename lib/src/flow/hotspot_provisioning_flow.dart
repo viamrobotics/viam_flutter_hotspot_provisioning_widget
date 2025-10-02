@@ -304,6 +304,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                     ),
                   ),
                 NetworkSelectionScreen(
+                  viewModel: _networkSelectionViewModel,
                   viam: widget.viam,
                   onSelectNetwork: (network) {
                     _passwordInputViewModel.network = network;
