@@ -4,12 +4,14 @@ class NetworkSelectionScreen extends StatefulWidget {
   final void Function(NetworkInfo) onSelectNetwork;
   final VoidCallback onManualEntry;
   final Viam viam;
+  final NetworkSelectionViewModel viewModel;
 
   const NetworkSelectionScreen({
     super.key,
     required this.onSelectNetwork,
     required this.onManualEntry,
     required this.viam,
+    required this.viewModel,
   });
 
   @override
@@ -17,42 +19,29 @@ class NetworkSelectionScreen extends StatefulWidget {
 }
 
 class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
-  NetworkSelectionViewModel? _viewModel;
-
   @override
   void initState() {
     super.initState();
-    _viewModel = NetworkSelectionViewModel(viam: widget.viam);
     // Initialize after the frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _viewModel?.initialize();
+        widget.viewModel.initialize();
       }
     });
   }
 
   @override
-  void dispose() {
-    _viewModel?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (_viewModel == null) {
-      return const SizedBox.shrink(); // or some loading indicator
-    }
-
     return ListenableBuilder(
-      listenable: _viewModel!,
-      builder: (context, _) {
-        if (_viewModel!.loadingNetworks) {
+      listenable: widget.viewModel,
+      builder: (context, child) {
+        if (widget.viewModel.loadingNetworks) {
           return const NoContentWidget(
             titleString: "Scanning...",
             bodyString: "Looking for visible networks...",
           );
         }
-        if (_viewModel!.machineVisibleNetworks.isEmpty) {
+        if (widget.viewModel.machineVisibleNetworks.isEmpty) {
           return NoContentWidget(
               icon: const Icon(Icons.error, color: Colors.red),
               buttons: [
@@ -71,7 +60,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   ),
                 ),
                 FilledButton(
-                  onPressed: _viewModel!.loadingNetworks ? null : () => _viewModel!.getNetworks(refresh: true),
+                  onPressed: widget.viewModel.loadingNetworks ? null : () => widget.viewModel.getNetworks(refresh: true),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -108,20 +97,20 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   color: Theme.of(context).colorScheme.surface,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: _viewModel!.machineVisibleNetworks.length,
+                    itemCount: widget.viewModel.machineVisibleNetworks.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: () => widget.onSelectNetwork(_viewModel!.machineVisibleNetworks[index]),
+                        onTap: () => widget.onSelectNetwork(widget.viewModel.machineVisibleNetworks[index]),
                         child: ProvisioningListItem(
-                          textString: _viewModel!.machineVisibleNetworks[index].ssid,
+                          textString: widget.viewModel.machineVisibleNetworks[index].ssid,
                           leading: Icon(
-                            _viewModel!.signalToIcon(_viewModel!.machineVisibleNetworks[index].signal),
+                            widget.viewModel.signalToIcon(widget.viewModel.machineVisibleNetworks[index].signal),
                             size: 24.0,
                             color: Colors.grey,
                           ),
                           add: false,
                           trailing: Icon(
-                            _viewModel!.securityToIcon(_viewModel!.machineVisibleNetworks[index].security),
+                            widget.viewModel.securityToIcon(widget.viewModel.machineVisibleNetworks[index].security),
                             size: 20.0,
                             color: Colors.grey,
                           ),
