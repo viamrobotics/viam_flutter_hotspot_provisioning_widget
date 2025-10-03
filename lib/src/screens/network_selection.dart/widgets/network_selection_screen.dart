@@ -125,6 +125,13 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                 child: Center(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                      elevation: 0,
+                    ),
                     onPressed: () {
                       showDialog(
                         context: context,

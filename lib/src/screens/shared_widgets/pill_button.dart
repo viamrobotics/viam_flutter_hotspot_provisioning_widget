@@ -19,7 +19,6 @@ class PillButton extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-        backgroundColor: WidgetStatePropertyAll(enabled == null || !enabled! ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary),
       ),
       onPressed: onPressed,
       child: Row(
