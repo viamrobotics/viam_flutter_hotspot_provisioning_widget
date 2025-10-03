@@ -43,7 +43,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
         }
         if (widget.viewModel.machineVisibleNetworks.isEmpty) {
           return NoContentWidget(
-              icon:  Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+              icon: Icon(Icons.error, color: Theme.of(context).colorScheme.error),
               buttons: [
                 FilledButton(
                   onPressed: () {
@@ -125,14 +125,6 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                 child: Center(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                      elevation: 0,
-                    ),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -143,7 +135,6 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                     },
                     child: Text(
                       "My network isn't showing up",
-                      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
