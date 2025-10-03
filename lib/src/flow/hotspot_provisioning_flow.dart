@@ -230,7 +230,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                     style: TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,
-                      color: canSubmit ? const Color(0xFF0EB4CE) : Colors.grey,
+                      color: canSubmit ? Theme.of(context).colorScheme.primary : Theme.of(context).disabledColor,
                     ),
                   ),
           ),
