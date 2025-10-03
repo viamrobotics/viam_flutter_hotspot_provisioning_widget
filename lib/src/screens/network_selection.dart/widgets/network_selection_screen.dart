@@ -43,7 +43,7 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
         }
         if (widget.viewModel.machineVisibleNetworks.isEmpty) {
           return NoContentWidget(
-              icon: const Icon(Icons.error, color: Colors.red),
+              icon:  Icon(Icons.error, color: Theme.of(context).colorScheme.error),
               buttons: [
                 FilledButton(
                   onPressed: () {
@@ -106,13 +106,13 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                           leading: Icon(
                             widget.viewModel.signalToIcon(widget.viewModel.machineVisibleNetworks[index].signal),
                             size: 24.0,
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           add: false,
                           trailing: Icon(
                             widget.viewModel.securityToIcon(widget.viewModel.machineVisibleNetworks[index].security),
                             size: 20.0,
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       );

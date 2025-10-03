@@ -17,14 +17,14 @@ class ProvisioningListItem extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           border: Border.all(
             width: 1.0,
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.outline,
           ),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
           child: ListTile(
             minLeadingWidth: 16.0,
-            leading: !add ? leading : Icon(Icons.add, size: 24.0, color: Color(0xFFD9D9D9)),
+            leading: !add ? leading : Icon(Icons.add, size: 24.0, color: Theme.of(context).colorScheme.onSurface),
             title: Text(
               textString,
               style: TextStyle(

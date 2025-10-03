@@ -29,7 +29,7 @@ class PrimaryButton extends StatelessWidget {
               text,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                color: onPressed != null ? Theme.of(context).colorScheme.onPrimary : Colors.grey.shade500,
+                color: onPressed != null ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).disabledColor,
               ),
             ),
     );
