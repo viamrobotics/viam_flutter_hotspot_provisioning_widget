@@ -1,3 +1,5 @@
+## 0.0.17
+- Follow up to "Update colors to be non-hardcoded" by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/48
 ## 0.0.16
 - Update colors to be non-hardcoded by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/46
 - [APP-9720] [Hotspot prov widget] remove the "done" button on the setting up device screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/44
