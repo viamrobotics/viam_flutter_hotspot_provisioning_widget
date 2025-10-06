@@ -110,7 +110,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
         fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
         hotspotPrefix: Consts.hotspotPrefix,
         hotspotPassword: Consts.hotspotPassword,
-        isNewMachine: false, // Don't override fragment for existing machine reconnection
+        overrideFragment: false, // Don't override fragment for existing machine reconnection
         replaceHardware: false,
         robotConfig: null,
       );

@@ -148,7 +148,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     if (connected) {
       debugPrint('Connected to hotspot');
       final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
-      if (connectedSSID != null && connectedSSID != '<unknown ssid>') {
+      if (connectedSSID != null && connectedSSID != '<unknown ssid>' && connectedSSID.startsWith(hotspotPrefix)) {
         _setConnectedToHotspot(true);
         _findProvisionedMachine();
       } else {

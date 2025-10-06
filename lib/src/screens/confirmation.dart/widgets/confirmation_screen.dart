@@ -10,7 +10,7 @@ class ConfirmationScreen extends StatefulWidget {
     required this.mainPart,
     required this.onStatusDetermined,
     this.fragmentId,
-    required this.isNewMachine,
+    required this.overrideFragment,
     required this.replaceHardware,
     this.robotConfig,
   });
@@ -20,7 +20,7 @@ class ConfirmationScreen extends StatefulWidget {
   final RobotPart mainPart;
   final String? fragmentId;
   final void Function(Robot robot, RobotStatus status) onStatusDetermined;
-  final bool isNewMachine;
+  final bool overrideFragment;
   final bool replaceHardware;
   final Map<String, dynamic>? robotConfig;
 
@@ -40,7 +40,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       onStatusDetermined: widget.onStatusDetermined,
       fragmentId: widget.fragmentId,
       mainPart: widget.mainPart,
-      isNewMachine: widget.isNewMachine,
+      overrideFragment: widget.overrideFragment,
       replaceHardware: widget.replaceHardware,
       robotConfig: widget.robotConfig,
     );

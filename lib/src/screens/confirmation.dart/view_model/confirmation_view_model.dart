@@ -7,7 +7,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     required void Function(Robot robot, RobotStatus status) onStatusDetermined,
     required String? fragmentId,
     required RobotPart mainPart,
-    required bool isNewMachine,
+    required bool overrideFragment,
     required bool replaceHardware,
     Map<String, dynamic>? robotConfig,
   })  : _viam = viam,
@@ -15,7 +15,7 @@ class ConfirmationViewModel extends ChangeNotifier {
         _fragmentId = fragmentId,
         _mainPart = mainPart,
         _onStatusDetermined = onStatusDetermined,
-        _isNewMachine = isNewMachine,
+        _overrideFragment = overrideFragment,
         _replaceHardware = replaceHardware,
         _robotConfig = robotConfig {
     _disconnectFromHotspot();
@@ -27,7 +27,7 @@ class ConfirmationViewModel extends ChangeNotifier {
   final String? _fragmentId;
   final RobotPart _mainPart;
   final void Function(Robot robot, RobotStatus status) _onStatusDetermined;
-  final bool _isNewMachine;
+  final bool _overrideFragment;
   final bool _replaceHardware;
   final Map<String, dynamic>? _robotConfig;
 
@@ -65,7 +65,7 @@ class ConfirmationViewModel extends ChangeNotifier {
     if (_robotStatus == RobotStatus.online) {
       _onStatusDetermined.call(_robot, RobotStatus.online);
       _timer?.cancel();
-      if (_isNewMachine) {
+      if (_overrideFragment) {
         _performFragmentOverride(_viam, _fragmentId, _mainPart, _robot);
       }
       if (_replaceHardware && _robotConfig != null) {
