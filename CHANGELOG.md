@@ -1,4 +1,5 @@
 ## 0.0.17
+- [Hotspot prov widget] update flutter to 3.35.5 by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/49
 - Follow up to "Update colors to be non-hardcoded" by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/48
 ## 0.0.16
 - Update colors to be non-hardcoded by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/46
