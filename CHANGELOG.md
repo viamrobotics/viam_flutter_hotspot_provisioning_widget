@@ -1,4 +1,5 @@
 ## 0.0.18
+- Minor improvements by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/51
 
 ## 0.0.17
 - [Hotspot prov widget] update flutter to 3.35.5 by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/49
