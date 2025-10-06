@@ -7,19 +7,6 @@ A Flutter package for provisioning Viam robots using hotspot connections. This w
 ## Installation
 `flutter pub add viam_flutter_hotspot_provisioning_widget`
 
-### Development: Flutter version
-
-While developing, use the Flutter version defined in the repository variable `FLUTTER_VERSION`.
-
-To find it in GitHub:
-1. Go to the repository's "Settings" tab.
-2. In the left sidebar, under "Security", click "Secrets and variables" > "Actions".
-3. Click the "Variables" tab to see `FLUTTER_VERSION`.
-
-Using [fvm.app](https://fvm.app/) makes it easy to pin a specific version.
-
-Note: Building on the latest Flutter may work, but can lead to version mismatches being committed to `pubspec.yaml` and `pubspec.lock`, and to CI failures due to the mismatch.
-
 ## Prerequisites
 
 ### Machine Setup
