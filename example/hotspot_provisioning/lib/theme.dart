@@ -11,7 +11,7 @@ final lightTheme = ThemeData(
         surface: Colors.white,
       ),
   cardColor: Colors.white,
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: Colors.white,
     elevation: 0,
     shape: Border.all(
@@ -58,7 +58,7 @@ final darkTheme = ThemeData(
     onError: Colors.white,
   ),
   cardColor: Colors.white12,
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: Colors.white12,
     elevation: 0,
     shape: Border.all(
