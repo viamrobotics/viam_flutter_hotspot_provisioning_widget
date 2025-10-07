@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:viam_example_app/replace_hardware_screen.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'reconnect_machines_screen.dart';
 import 'provision_new_machine.dart';
+import 'replace_hardware_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -25,7 +25,7 @@ class StartScreen extends StatelessWidget {
     ));
   }
 
-   void _goToReplaceHardwareFlow(BuildContext context) {
+  void _goToReplaceHardwareFlow(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const ReplaceHardwareScreen(),
     ));
