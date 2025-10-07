@@ -60,7 +60,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
-        if (_viewModel.machineStatus == MachineStatus.loading && _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
+        if (_viewModel.machineStatus == MachineStatus.loading &&
+            _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
           return RobotLoadingWidget(
             secondsLoading: _viewModel.secondsLoading,
             provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,
