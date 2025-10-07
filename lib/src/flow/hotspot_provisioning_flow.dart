@@ -8,7 +8,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
   final String? hotspotPassword;
   final String? fragmentId;
   final bool promptForCredentials;
-  final bool isNewMachine;
+  final bool overrideFragment;
   final bool replaceHardware;
   final Map<String, dynamic>? robotConfig;
 
@@ -21,7 +21,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     this.hotspotPassword,
     this.fragmentId,
     this.promptForCredentials = false,
-    required this.isNewMachine,
+    required this.overrideFragment,
     required this.replaceHardware,
     this.robotConfig, // optional, for replacing hardware
   });
@@ -36,7 +36,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
     String? hotspotPassword,
     String? fragmentId,
     bool promptForCredentials = false,
-    required bool isNewMachine,
+    required bool overrideFragment,
     required bool replaceHardware,
     Map<String, dynamic>? robotConfig,
   }) {
@@ -50,7 +50,7 @@ class HotspotProvisioningFlow extends StatefulWidget {
           hotspotPassword: hotspotPassword,
           fragmentId: fragmentId,
           promptForCredentials: promptForCredentials,
-          isNewMachine: isNewMachine,
+          overrideFragment: overrideFragment,
           replaceHardware: replaceHardware,
           robotConfig: robotConfig,
         ),
@@ -230,7 +230,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                     style: TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,
-                      color: canSubmit ? const Color(0xFF0EB4CE) : Colors.grey,
+                      color: canSubmit ? Theme.of(context).colorScheme.primary : Theme.of(context).disabledColor,
                     ),
                   ),
           ),
@@ -315,7 +315,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                   mainPart: widget.mainPart,
                   onStatusDetermined: onConfirmationStatusDetermined,
                   fragmentId: _determinedFragmentId,
-                  isNewMachine: widget.isNewMachine,
+                  overrideFragment: widget.overrideFragment,
                   replaceHardware: widget.replaceHardware,
                   robotConfig: widget.robotConfig,
                 )

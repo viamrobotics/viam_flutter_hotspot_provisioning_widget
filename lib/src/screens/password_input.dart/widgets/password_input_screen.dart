@@ -76,9 +76,9 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                 autocorrect: false,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-                  border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+                  border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
                   suffixIcon: IconButton(
                     icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
                         color: Theme.of(context).colorScheme.onSurface),
@@ -122,9 +122,9 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
             decoration: InputDecoration(
               labelStyle: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onSurface),
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0)),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+              border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
             ),
           ),
         ),

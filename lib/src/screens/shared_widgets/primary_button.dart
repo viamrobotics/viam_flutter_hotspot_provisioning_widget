@@ -16,22 +16,13 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: (isLoading || onPressed == null) ? null : onPressed,
-      style: OutlinedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
       child: isLoading
           ? SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator.adaptive(
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
+              child: CircularProgressIndicator.adaptive(),
             )
-          : Text(
-              text,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: onPressed != null ? Theme.of(context).colorScheme.onPrimary : Colors.grey.shade500,
-              ),
-            ),
+          : Text(text),
     );
   }
 }

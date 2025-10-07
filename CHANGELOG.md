@@ -1,5 +1,17 @@
+## 0.0.18
+- Minor improvements by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/51
+
+## 0.0.17
+- [Hotspot prov widget] update flutter to 3.35.5 by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/49
+- Follow up to "Update colors to be non-hardcoded" by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/48
+
+## 0.0.16
+- Update colors to be non-hardcoded by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/46
+- [APP-9720] [Hotspot prov widget] remove the "done" button on the setting up device screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/44
+
 ## 0.0.15
 - Change version of permission_handler to released version  
+
 ## 0.0.14
 - Change name from isNewMachine to overrideFragment by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/40 
 -[APP-9642] Hotspot provisioning widget supports "replace hardware by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/39
