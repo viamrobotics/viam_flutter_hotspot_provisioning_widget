@@ -6,7 +6,7 @@ import 'consts.dart';
 import 'offline_screen.dart';
 import 'online_screen.dart';
 
-enum _RobotStatus { online, offline, awaitingSetup, loading }
+enum _MachineStatus { online, offline, awaitingSetup, loading }
 
 class _ListRobot {
   final Robot robot;
@@ -26,7 +26,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
   Viam? _viam;
   bool _isLoading = false;
   List<_ListRobot> _robots = [];
-  final Map<String, _RobotStatus> _robotStatuses = {};
+  final Map<String, _MachineStatus> _machineStatuses = {};
   Timer? _statusTimer;
 
   @override
@@ -54,7 +54,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
         newList.addAll(locationRobots.map((e) => _ListRobot(robot: e, locationName: location.name)));
       }
       for (final robot in newList) {
-        _robotStatuses[robot.robot.id] = robot.robot.status;
+        _machineStatuses[robot.robot.id] = robot.robot.status;
       }
       setState(() {
         _robots = newList;
@@ -71,21 +71,21 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
 
   Future<void> _startStatusTimer() async {
     _statusTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      _updateRobotStatuses();
+      _updateMachineStatuses();
     });
   }
 
-  Future<void> _updateRobotStatuses() async {
+  Future<void> _updateMachineStatuses() async {
     debugPrint('Updating robot statuses');
     try {
       final statusFutures = _robots.map((robot) async {
         try {
           final reloadRobot = await _viam!.appClient.getRobot(robot.robot.id);
           final newStatus = reloadRobot.status;
-          if (newStatus != _robotStatuses[reloadRobot.id]) {
-            debugPrint('New status for robot ${reloadRobot.name} from ${_robotStatuses[reloadRobot.id]} to $newStatus');
+          if (newStatus != _machineStatuses[reloadRobot.id]) {
+            debugPrint('New status for robot ${reloadRobot.name} from ${_machineStatuses[reloadRobot.id]} to $newStatus');
             setState(() {
-              _robotStatuses[reloadRobot.id] = newStatus;
+              _machineStatuses[reloadRobot.id] = newStatus;
             });
           }
         } catch (e) {
@@ -116,7 +116,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
       );
 
       if (result != null) {
-        if (result.status == RobotStatus.online) {
+        if (result.status == MachineStatus.online) {
           if (mounted) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
           }
@@ -147,7 +147,7 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
                 title: Text(_robots[index].robot.name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 subtitle:
                     Text('location: ${_robots[index].locationName}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-                trailing: _robotStatuses[_robots[index].robot.id]?.statusIcon,
+                trailing: _machineStatuses[_robots[index].robot.id]?.statusIcon,
                 onTap: () => _goToHotspotProvisioningFlow(context, _viam!, _robots[index].robot),
               ),
             ),
@@ -155,30 +155,30 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
   }
 }
 
-extension _RobotStatusCalculation on Robot {
-  _RobotStatus get status {
+extension _MachineStatusCalculation on Robot {
+  _MachineStatus get status {
     final seconds = lastAccess.seconds.toInt();
     final actual = DateTime.now().microsecondsSinceEpoch / Duration.microsecondsPerSecond;
     if ((actual - seconds) < 60) {
-      return _RobotStatus.online;
+      return _MachineStatus.online;
     }
 
-    if (!lastAccess.hasNanos() && !lastAccess.hasSeconds()) return _RobotStatus.awaitingSetup;
-    if ((actual - seconds) > 60) return _RobotStatus.offline;
-    return _RobotStatus.loading;
+    if (!lastAccess.hasNanos() && !lastAccess.hasSeconds()) return _MachineStatus.awaitingSetup;
+    if ((actual - seconds) > 60) return _MachineStatus.offline;
+    return _MachineStatus.loading;
   }
 }
 
-extension _RobotStatusIcon on _RobotStatus {
+extension _MachineStatusIcon on _MachineStatus {
   Icon get statusIcon {
     switch (this) {
-      case _RobotStatus.online:
+      case _MachineStatus.online:
         return const Icon(Icons.wifi_tethering, color: Colors.green);
-      case _RobotStatus.offline:
+      case _MachineStatus.offline:
         return const Icon(Icons.wifi_tethering, color: Colors.red);
-      case _RobotStatus.awaitingSetup:
+      case _MachineStatus.awaitingSetup:
         return const Icon(Icons.wifi_tethering, color: Colors.blue);
-      case _RobotStatus.loading:
+      case _MachineStatus.loading:
         return const Icon(Icons.hourglass_empty, color: Colors.black);
     }
   }

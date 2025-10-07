@@ -1,6 +1,6 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
-enum RobotStatus { online, offline, loading }
+enum MachineStatus { online, offline, loading }
 
 class ConfirmationScreen extends StatefulWidget {
   const ConfirmationScreen({
@@ -19,7 +19,7 @@ class ConfirmationScreen extends StatefulWidget {
   final Robot robot;
   final RobotPart mainPart;
   final String? fragmentId;
-  final void Function(Robot robot, RobotStatus status) onStatusDetermined;
+  final void Function(Robot robot, MachineStatus status) onStatusDetermined;
   final bool overrideFragment;
   final bool replaceHardware;
   final Map<String, dynamic>? robotConfig;
@@ -60,7 +60,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
-        if (_viewModel.robotStatus == RobotStatus.loading && _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
+        if (_viewModel.machineStatus == MachineStatus.loading &&
+            _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
           return RobotLoadingWidget(
             secondsLoading: _viewModel.secondsLoading,
             provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,

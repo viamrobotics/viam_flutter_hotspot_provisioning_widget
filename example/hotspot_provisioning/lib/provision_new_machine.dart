@@ -109,7 +109,7 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
         }
         if (result != null) {
           // HotspotProvisioningFlow completed successfully and the robot is online
-          if (result.status == RobotStatus.online) {
+          if (result.status == MachineStatus.online) {
             if (mounted) {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));

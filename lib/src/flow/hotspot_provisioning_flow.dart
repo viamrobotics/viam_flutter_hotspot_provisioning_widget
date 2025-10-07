@@ -122,7 +122,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   }
 
   // when the confirmation screen determines the status, we want to pop this flow and return the result to the caller of HotspotProvisioningFlow.show()
-  void onConfirmationStatusDetermined(Robot robot, RobotStatus status) {
+  void onConfirmationStatusDetermined(Robot robot, MachineStatus status) {
     if (mounted) {
       Navigator.of(context).pop(HotspotProvisioningResult(robot: robot, status: status));
     }
