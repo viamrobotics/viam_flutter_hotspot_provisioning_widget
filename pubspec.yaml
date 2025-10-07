@@ -3,7 +3,6 @@ description: "A Viam Flutter Hotspot Provisioning Widget."
 version: 0.0.18
 repository: https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget
 homepage: https://www.viam.com/
-publish_to: none
 
 environment:
   sdk: ">=3.6.1 <4.0.0"
@@ -18,8 +17,6 @@ dependencies:
   flutter_platform_widgets: ^7.0.1
   provider: ^6.1.5
   pub_semver: ^2.2.0
-  viam_example_app:
-    path: example/hotspot_provisioning
 
 dev_dependencies:
   flutter_test:

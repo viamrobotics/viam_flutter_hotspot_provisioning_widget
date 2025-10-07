@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:viam_example_app/theme.dart';
+import 'theme.dart';
 import 'start_screen.dart';
 
 void main() {
