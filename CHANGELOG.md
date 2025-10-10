@@ -1,3 +1,6 @@
+## 0.0.20 
+- Hotspot provisioning on android: connectedSSID.startsWith(hotspotPrefix) was failing by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/55
+
 ## 0.0.19
 - change name from robot to machine by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/54
 
