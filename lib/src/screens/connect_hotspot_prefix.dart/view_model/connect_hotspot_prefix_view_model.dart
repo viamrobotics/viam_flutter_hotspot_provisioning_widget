@@ -129,7 +129,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
 
     final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
     // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
-    if (connectedSSID != null && connectedSSID.replaceAll('"', '').startsWith(hotspotPrefix) && _connectedToHotspot) {
+    if (connectedSSID != null && connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix) && _connectedToHotspot) {
       debugPrint('Already connected to $hotspotPrefix hotspot');
       _findProvisionedMachine();
       return;
@@ -145,7 +145,9 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     );
     if (connected) {
       final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
-      if (connectedSSID != null && connectedSSID != '<unknown ssid>' && connectedSSID.replaceAll('"', '').startsWith(hotspotPrefix)) {
+      if (connectedSSID != null &&
+          connectedSSID != '<unknown ssid>' &&
+          connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix)) {
         _setConnectedToHotspot(true);
         _findProvisionedMachine();
       } else {
