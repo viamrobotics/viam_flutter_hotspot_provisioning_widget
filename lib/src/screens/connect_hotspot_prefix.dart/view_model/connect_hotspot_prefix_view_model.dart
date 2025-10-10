@@ -125,13 +125,11 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   }
 
   void connectToHotspot() async {
-    debugPrint('connectToHotspot called');
     _setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
-    debugPrint('Current SSID: $connectedSSID');
     // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
-    if (connectedSSID != null && connectedSSID.startsWith(hotspotPrefix) && _connectedToHotspot) {
+    if (connectedSSID != null && connectedSSID.replaceAll('"', '').startsWith(hotspotPrefix) && _connectedToHotspot) {
       debugPrint('Already connected to $hotspotPrefix hotspot');
       _findProvisionedMachine();
       return;
@@ -146,9 +144,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
       saveNetwork: true, // flips joinOnce on iOS to false
     );
     if (connected) {
-      debugPrint('Connected to hotspot');
       final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
-      if (connectedSSID != null && connectedSSID != '<unknown ssid>' && connectedSSID.startsWith(hotspotPrefix)) {
+      if (connectedSSID != null && connectedSSID != '<unknown ssid>' && connectedSSID.replaceAll('"', '').startsWith(hotspotPrefix)) {
         _setConnectedToHotspot(true);
         _findProvisionedMachine();
       } else {
