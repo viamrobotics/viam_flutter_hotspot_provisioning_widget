@@ -1,7 +1,8 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputScreen extends StatefulWidget {
-  const PasswordInputScreen({super.key});
+  final VoidCallback onBack;
+  const PasswordInputScreen({super.key, required this.onBack});
 
   @override
   State<PasswordInputScreen> createState() => _PasswordInputScreenState();
@@ -24,76 +25,111 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<PasswordInputViewModel>();
     final bool isPublicNetwork = viewModel.network != null && viewModel.isPublicNetwork(viewModel.network!);
+    final canSubmit = viewModel.areNetworkCredentialsValid;
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (viewModel.network != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Wi-Fi network: ",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+          title: Text("Connect to Wi-Fi",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18.0, fontWeight: FontWeight.w500)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, size: 24, color: Theme.of(context).colorScheme.onSurface),
+            onPressed: widget.onBack,
+          ),
+          actions: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: GestureDetector(
+                  onTap: canSubmit ? () => viewModel.submitPassword(context) : null,
+                  child: viewModel.loading
+                      ? const CupertinoActivityIndicator()
+                      : Text(
+                          "Done",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: canSubmit ? Theme.of(context).colorScheme.primary : Theme.of(context).disabledColor,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ]),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (viewModel.network != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Wi-Fi network: ",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      Text(
+                        viewModel.network!.ssid,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    viewModel.network!.ssid,
+                )
+              else
+                _manuallyEnterSSIDInput(context),
+              if (!isPublicNetwork) ...[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
+                  child: Text(
+                    "Password",
                     style: TextStyle(
-                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                ],
-              ),
-            )
-          else
-            _manuallyEnterSSIDInput(context),
-          if (!isPublicNetwork) ...[
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
-              child: Text(
-                "Password",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: TextField(
-                obscureText: viewModel.obscureText,
-                controller: viewModel.passwordController,
-                autocorrect: false,
-                decoration: InputDecoration(
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                  border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                  suffixIcon: IconButton(
-                    icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: Theme.of(context).colorScheme.onSurface),
-                    onPressed: () => viewModel.toggleObscureText(),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    obscureText: viewModel.obscureText,
+                    controller: viewModel.passwordController,
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+                      border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+                      suffixIcon: IconButton(
+                        icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
+                            color: Theme.of(context).colorScheme.onSurface),
+                        onPressed: () => viewModel.toggleObscureText(),
+                      ),
+                    ),
+                    onSubmitted: (String value) {
+                      if (viewModel.areNetworkCredentialsValid) {
+                        viewModel.submitPassword(context);
+                      }
+                    },
                   ),
                 ),
-                onSubmitted: (String value) {
-                  if (viewModel.areNetworkCredentialsValid) {
-                    viewModel.submitPassword(context);
-                  }
-                },
-              ),
-            ),
-          ],
-        ],
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
