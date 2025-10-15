@@ -161,7 +161,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   }
 
   
-  void _onPreviousPage() {
+  void _goToPreviousPage() {
     FocusScope.of(context).unfocus();
     if (_pageController.page == 0) {
       Navigator.of(context).pop();
@@ -184,11 +184,11 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           if (widget.promptForCredentials)
             HotspotCredentialsInputScreen(
               onCredentialsSubmitted: _onCredentialsSubmitted,
-              onBack: _onPreviousPage,
+              onBack: _goToPreviousPage,
             ),
           if (!widget.promptForCredentials || (_userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null))
             ConnectHotspotPrefixScreen(
-              onBack: _onPreviousPage,
+              onBack: _goToPreviousPage,
               viewModel: ConnectHotspotPrefixViewModel(
                 viam: widget.viam,
                 context: context,
@@ -201,7 +201,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               ),
             ),
           NetworkSelectionScreen(
-            onBack: _onPreviousPage,
+            onBack: _goToPreviousPage,
             viewModel: _networkSelectionViewModel,
             viam: widget.viam,
             onSelectNetwork: (network) {
@@ -213,7 +213,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             },
           ),
-          PasswordInputScreen(onBack: _onPreviousPage),
+          PasswordInputScreen(onBack: _goToPreviousPage),
           ConfirmationScreen(
             robot: widget.robot,
             viam: widget.viam,
