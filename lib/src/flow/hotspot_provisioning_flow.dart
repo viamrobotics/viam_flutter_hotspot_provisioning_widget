@@ -160,7 +160,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     return password;
   }
 
-  
   void _goToPreviousPage() {
     FocusScope.of(context).unfocus();
     if (_pageController.page == 0) {
