@@ -275,43 +275,43 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: widget.promptForCredentials ? _buildAppBarWithPromptForCredentials(context) : _buildAppBar(context),
           body: SafeArea(
-            child: PopScope(
-              canPop: false,
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  if (widget.promptForCredentials)
-                    HotspotCredentialsInputScreen(
-                      onCredentialsSubmitted: _onCredentialsSubmitted,
-                    ),
-                  if (!widget.promptForCredentials || (_userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null))
-                    ConnectHotspotPrefixScreen(
-                      viewModel: ConnectHotspotPrefixViewModel(
-                        viam: widget.viam,
-                        context: context,
-                        hotspotPrefix: _finalHotspotPrefix,
-                        hotspotPassword: _finalHotspotPassword,
-                        onNavigateToNetworkSelection: () {
-                          _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                        },
-                        hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
-                      ),
-                    ),
-                  NetworkSelectionScreen(
-                    viewModel: _networkSelectionViewModel,
-                    viam: widget.viam,
-                    onSelectNetwork: (network) {
-                      _passwordInputViewModel.network = network;
-                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    onManualEntry: () {
-                      _passwordInputViewModel.network = null;
-                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                if (widget.promptForCredentials)
+                  HotspotCredentialsInputScreen(
+                    onCredentialsSubmitted: _onCredentialsSubmitted,
                   ),
-                  const PasswordInputScreen(),
-                  ConfirmationScreen(
+                if (!widget.promptForCredentials || (_userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null))
+                  ConnectHotspotPrefixScreen(
+                    viewModel: ConnectHotspotPrefixViewModel(
+                      viam: widget.viam,
+                      context: context,
+                      hotspotPrefix: _finalHotspotPrefix,
+                      hotspotPassword: _finalHotspotPassword,
+                      onNavigateToNetworkSelection: () {
+                        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      },
+                      hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                    ),
+                  ),
+                NetworkSelectionScreen(
+                  viewModel: _networkSelectionViewModel,
+                  viam: widget.viam,
+                  onSelectNetwork: (network) {
+                    _passwordInputViewModel.network = network;
+                    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  },
+                  onManualEntry: () {
+                    _passwordInputViewModel.network = null;
+                    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  },
+                ),
+                const PasswordInputScreen(),
+                PopScope(
+                  canPop: false,
+                  child: ConfirmationScreen(
                     robot: widget.robot,
                     viam: widget.viam,
                     mainPart: widget.mainPart,
@@ -320,9 +320,9 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                     overrideFragment: widget.overrideFragment,
                     replaceHardware: widget.replaceHardware,
                     robotConfig: widget.robotConfig,
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
         );
