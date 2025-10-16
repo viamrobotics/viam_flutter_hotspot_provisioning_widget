@@ -1,7 +1,5 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
-// Currently, we are assuming that we are always provisioning a new machine.
-
 class ConnectHotspotPrefixScreen extends StatefulWidget {
   final ConnectHotspotPrefixViewModel viewModel;
   final VoidCallback onBack;
