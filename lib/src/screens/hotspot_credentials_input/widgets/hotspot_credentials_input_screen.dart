@@ -1,12 +1,12 @@
 part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class HotspotCredentialsInputScreen extends StatefulWidget {
-  final Function(String prefix, String password) onCredentialsSubmitted;
+  final HotspotCredentialsInputViewModel viewModel;
   final VoidCallback onBack;
 
   const HotspotCredentialsInputScreen({
     super.key,
-    required this.onCredentialsSubmitted,
+    required this.viewModel,
     required this.onBack,
   });
 
@@ -18,7 +18,6 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
   final _prefixController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -30,11 +29,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
   void _submitCredentials() {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
-      setState(() {
-        _isSubmitting = true;
-      });
-
-      widget.onCredentialsSubmitted(
+      widget.viewModel.submitCredentials(
         _prefixController.text.trim(),
         _passwordController.text,
       );
@@ -66,7 +61,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                 TextFormField(
                   controller: _prefixController,
                   autocorrect: false,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Hotspot Prefix',
                     border: OutlineInputBorder(),
                   ),
@@ -85,7 +80,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                 TextFormField(
                   controller: _passwordController,
                   autocorrect: false,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Hotspot Password',
                     border: OutlineInputBorder(),
                   ),
@@ -99,12 +94,17 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                   onFieldSubmitted: (_) => _submitCredentials(),
                 ),
                 const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    onPressed: _isSubmitting ? null : _submitCredentials,
-                    text: _isSubmitting ? 'Connecting...' : 'Continue',
-                  ),
+                ListenableBuilder(
+                  listenable: widget.viewModel,
+                  builder: (context, _) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
+                        onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
+                        text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
+                      ),
+                    );
+                  },
                 ),
                 const Spacer(),
               ],
