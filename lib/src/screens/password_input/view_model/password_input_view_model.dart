@@ -144,6 +144,5 @@ class PasswordInputViewModel extends ChangeNotifier {
       ssid: ssid,
       psk: psk,
     );
-    // TOOD: include provisioning attempts like we have in gost??
   }
 }
