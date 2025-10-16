@@ -36,33 +36,6 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
     }
   }
 
-  Widget _buildWarningBanner() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(bottom: 16.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.onSecondaryContainer),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Initial credentials were provided but will be overridden by the values you enter here.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,15 +57,11 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             key: _formKey,
             child: Column(
               children: [
-                if (widget.viewModel.hasConfiguredCredentials) _buildWarningBanner(),
+                if (widget.viewModel.hasConfiguredCredentials) const CredentialsWarningBanner(),
                 const Spacer(),
-                TextFormField(
+                CredentialsTextField(
                   controller: _prefixController,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Hotspot Prefix',
-                    border: OutlineInputBorder(),
-                  ),
+                  label: 'Hotspot Prefix',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a hotspot prefix';
@@ -105,13 +74,9 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
+                CredentialsTextField(
                   controller: _passwordController,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    labelText: 'Hotspot Password',
-                    border: OutlineInputBorder(),
-                  ),
+                  label: 'Hotspot Password',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a hotspot password';
@@ -122,17 +87,9 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                   onFieldSubmitted: (_) => _submitCredentials(),
                 ),
                 const SizedBox(height: 32),
-                ListenableBuilder(
-                  listenable: widget.viewModel,
-                  builder: (context, _) {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
-                        text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
-                      ),
-                    );
-                  },
+                CredentialsSubmitButton(
+                  viewModel: widget.viewModel,
+                  onPressed: _submitCredentials,
                 ),
                 const Spacer(),
               ],
