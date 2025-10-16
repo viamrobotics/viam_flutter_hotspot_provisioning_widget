@@ -64,60 +64,27 @@ class HotspotProvisioningFlow extends StatefulWidget {
 
 class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
-  late final NetworkSelectionViewModel _networkSelectionViewModel;
-  late final PasswordInputViewModel _passwordInputViewModel;
-  int _currentPage = 0;
-  String? _determinedFragmentId;
-  String? _userProvidedHotspotPrefix;
-  String? _userProvidedHotspotPassword;
+  late final HotspotProvisioningFlowViewModel _viewModel; 
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-
-    _networkSelectionViewModel = NetworkSelectionViewModel(viam: widget.viam);
-    _passwordInputViewModel = PasswordInputViewModel(
+    _viewModel = HotspotProvisioningFlowViewModel(
       viam: widget.viam,
       mainPart: widget.mainPart,
+      configuredHotspotPrefix: widget.hotspotPrefix,
+      configuredHotspotPassword: widget.hotspotPassword,
       fragmentId: widget.fragmentId,
-      onPasswordSubmitted: (fragmentId) {
-        setState(() {
-          _determinedFragmentId = fragmentId;
-        });
-        _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      },
-      showErrorDialog: (context, {required title, String? error}) => showAdaptiveDialog(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          title: Text(title),
-          content: error == null ? null : Text(error),
-          actions: [
-            PlatformDialogAction(
-              onPressed: Navigator.of(context).pop,
-              child: const Text('OK'),
-            )
-          ],
-        ),
-      ),
+      pageController: _pageController,
     );
-
-    _pageController.addListener(() {
-      if (!mounted) return;
-      final newPage = _pageController.page!.round();
-      if (newPage != _currentPage) {
-        setState(() {
-          _currentPage = newPage;
-        });
-      }
-    });
   }
+
 
   @override
   void dispose() {
     _pageController.dispose();
-    _networkSelectionViewModel.dispose();
-    _passwordInputViewModel.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
@@ -126,38 +93,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     if (mounted) {
       Navigator.of(context).pop(HotspotProvisioningResult(robot: robot, status: status));
     }
-  }
-
-  void _onCredentialsSubmitted(String prefix, String password) {
-    setState(() {
-      _userProvidedHotspotPrefix = prefix;
-      _userProvidedHotspotPassword = password;
-    });
-    _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  // If the user enters credentials via the input screen, the user-provided credentials will be used.
-  // Otherwise, use the widget credentials. This ensures we never have empty strings.
-  String get _finalHotspotPrefix {
-    final prefix = _userProvidedHotspotPrefix ?? widget.hotspotPrefix;
-    if (prefix == null || prefix.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showCredentialsError();
-      });
-      return '';
-    }
-    return prefix;
-  }
-
-  String get _finalHotspotPassword {
-    final password = _userProvidedHotspotPassword ?? widget.hotspotPassword;
-    if (password == null || password.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showCredentialsError();
-      });
-      return '';
-    }
-    return password;
   }
 
   void _goToPreviousPage() {
@@ -173,77 +108,54 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: _networkSelectionViewModel),
-        ChangeNotifierProvider.value(value: _passwordInputViewModel),
+        ChangeNotifierProvider.value(value: _viewModel),
+        ChangeNotifierProvider.value(value: _viewModel.networkSelectionViewModel),
+        ChangeNotifierProvider.value(value: _viewModel.passwordInputViewModel),
       ],
-      child: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          if (widget.promptForCredentials)
-            HotspotCredentialsInputScreen(
-              onCredentialsSubmitted: _onCredentialsSubmitted,
-              onBack: _goToPreviousPage,
-            ),
-          if (!widget.promptForCredentials || (_userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null))
-            ConnectHotspotPrefixScreen(
-              onBack: _goToPreviousPage,
-              viewModel: ConnectHotspotPrefixViewModel(
+      child: Consumer<HotspotProvisioningFlowViewModel>(
+        builder: (context, viewModel, _) {
+          return PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              if (widget.promptForCredentials) 
+                HotspotCredentialsInputScreen(
+                  onCredentialsSubmitted: viewModel.onCredentialsSubmitted,
+                  onBack: _goToPreviousPage,
+                ),
+              if (!widget.promptForCredentials || viewModel.hasUserProvidedCredentials)
+                ConnectHotspotPrefixScreen(
+                  onBack: _goToPreviousPage,
+                  viewModel: ConnectHotspotPrefixViewModel(
+                    viam: widget.viam,
+                    context: context,
+                    hotspotPrefix: viewModel.finalHotspotPrefix,
+                    hotspotPassword: viewModel.finalHotspotPassword,
+                    onNavigateToNetworkSelection: viewModel.navigateToNextPage,
+                    hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                  ),
+                ),
+              NetworkSelectionScreen(
+                onBack: _goToPreviousPage,
+                viewModel: viewModel.networkSelectionViewModel,
                 viam: widget.viam,
-                context: context,
-                hotspotPrefix: _finalHotspotPrefix,
-                hotspotPassword: _finalHotspotPassword,
-                onNavigateToNetworkSelection: () {
-                  _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                },
-                hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                onSelectNetwork: viewModel.onNetworkSelected,
+                onManualEntry: () => viewModel.onNetworkSelected(null),
               ),
-            ),
-          NetworkSelectionScreen(
-            onBack: _goToPreviousPage,
-            viewModel: _networkSelectionViewModel,
-            viam: widget.viam,
-            onSelectNetwork: (network) {
-              _passwordInputViewModel.network = network;
-              _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-            },
-            onManualEntry: () {
-              _passwordInputViewModel.network = null;
-              _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-            },
-          ),
-          PasswordInputScreen(onBack: _goToPreviousPage),
-          ConfirmationScreen(
-            robot: widget.robot,
-            viam: widget.viam,
-            mainPart: widget.mainPart,
-            onStatusDetermined: onConfirmationStatusDetermined,
-            fragmentId: _determinedFragmentId,
-            overrideFragment: widget.overrideFragment,
-            replaceHardware: widget.replaceHardware,
-            robotConfig: widget.robotConfig,
-          )
-        ],
-      ),
-    );
-  }
-
-  void _showCredentialsError() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Missing Credentials'),
-        content: const Text('Hotspot prefix and password must be provided to continue with the provisioning flow.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Go Back'),
-          ),
-        ],
+              PasswordInputScreen(onBack: _goToPreviousPage),
+              ConfirmationScreen(
+                robot: widget.robot,
+                viam: widget.viam,
+                mainPart: widget.mainPart,
+                onStatusDetermined: onConfirmationStatusDetermined,
+                fragmentId: viewModel.determinedFragmentId,
+                overrideFragment: widget.overrideFragment,
+                replaceHardware: widget.replaceHardware,
+                robotConfig: widget.robotConfig,
+              )
+            ],
+          );
+        },
       ),
     );
   }
