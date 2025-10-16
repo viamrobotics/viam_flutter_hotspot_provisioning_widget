@@ -13,8 +13,8 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   late final PasswordInputViewModel passwordInputViewModel;
 
   String? _determinedFragmentId;
-  String? _userProvidedHotspotPrefix;
-  String? _userProvidedHotspotPassword;
+  String? _userHotspotPrefix;
+  String? _userHotspotPassword;
 
   HotspotProvisioningFlowViewModel({
     required this.viam,
@@ -25,6 +25,8 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     required this.pageController,
   }) {
     hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
+      configuredHotspotPrefix: configuredHotspotPrefix,
+      configuredHotspotPassword: configuredHotspotPassword,
       onCredentialsSubmitted: onCredentialsSubmitted,
     );
     networkSelectionViewModel = NetworkSelectionViewModel(viam: viam);
@@ -39,14 +41,14 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
 
   String? get determinedFragmentId => _determinedFragmentId;
 
-  String get finalHotspotPrefix => _userProvidedHotspotPrefix ?? configuredHotspotPrefix ?? '';
-  String get finalHotspotPassword => _userProvidedHotspotPassword ?? configuredHotspotPassword ?? '';
-
-  bool get hasUserProvidedCredentials => _userProvidedHotspotPrefix != null && _userProvidedHotspotPassword != null;
+  // Custom credentials take precedence over configured ones
+  // If neither exist, returns empty string and ConnectHotspotPrefixScreen will validate and show error
+  String get hotspotPrefix => _userHotspotPrefix ?? configuredHotspotPrefix ?? '';
+  String get hotspotPassword => _userHotspotPassword ?? configuredHotspotPassword ?? '';
 
   void onCredentialsSubmitted(String prefix, String password) {
-    _userProvidedHotspotPrefix = prefix;
-    _userProvidedHotspotPassword = password;
+    _userHotspotPrefix = prefix;
+    _userHotspotPassword = password;
     notifyListeners();
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
