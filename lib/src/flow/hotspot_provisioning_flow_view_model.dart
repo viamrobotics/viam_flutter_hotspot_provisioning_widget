@@ -1,4 +1,5 @@
 part of '../../viam_flutter_hotspot_provisioning_widget.dart';
+
 class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   final Viam viam;
   final RobotPart mainPart;
