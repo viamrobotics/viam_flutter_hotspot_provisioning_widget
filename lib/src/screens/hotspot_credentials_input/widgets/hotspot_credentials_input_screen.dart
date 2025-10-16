@@ -36,61 +36,6 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
     }
   }
 
-  Widget _buildPrefixField() {
-    return TextFormField(
-      controller: _prefixController,
-      autocorrect: false,
-      decoration: const InputDecoration(
-        labelText: 'Hotspot Prefix',
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Please enter a hotspot prefix';
-        }
-        if (value.trim().length < 3) {
-          return 'Hotspot prefix must be at least 3 characters long';
-        }
-        return null;
-      },
-      textInputAction: TextInputAction.next,
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return TextFormField(
-      controller: _passwordController,
-      autocorrect: false,
-      decoration: const InputDecoration(
-        labelText: 'Hotspot Password',
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a hotspot password';
-        }
-        return null;
-      },
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (_) => _submitCredentials(),
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return ListenableBuilder(
-      listenable: widget.viewModel,
-      builder: (context, _) {
-        return SizedBox(
-          width: double.infinity,
-          child: PrimaryButton(
-            onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
-            text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,11 +58,54 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             child: Column(
               children: [
                 const Spacer(),
-                _buildPrefixField(),
+                TextFormField(
+                  controller: _prefixController,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Hotspot Prefix',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a hotspot prefix';
+                    }
+                    if (value.trim().length < 3) {
+                      return 'Hotspot prefix must be at least 3 characters long';
+                    }
+                    return null;
+                  },
+                  textInputAction: TextInputAction.next,
+                ),
                 const SizedBox(height: 16),
-                _buildPasswordField(),
+                TextFormField(
+                  controller: _passwordController,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Hotspot Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a hotspot password';
+                    }
+                    return null;
+                  },
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _submitCredentials(),
+                ),
                 const SizedBox(height: 32),
-                _buildSubmitButton(),
+                ListenableBuilder(
+                  listenable: widget.viewModel,
+                  builder: (context, _) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
+                        onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
+                        text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
+                      ),
+                    );
+                  },
+                ),
                 const Spacer(),
               ],
             ),
