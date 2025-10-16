@@ -29,6 +29,9 @@ part 'src/utils/hotspot_provisioning_result.dart';
 part 'src/screens/hotspot_credentials_input/widgets/credentials_warning_banner.dart';
 part 'src/screens/hotspot_credentials_input/widgets/submit_button.dart';
 part 'src/screens/hotspot_credentials_input/widgets/credentials_text_field.dart';
+part 'src/screens/connect_hotspot_prefix/widgets/instruction_item.dart';
+part 'src/screens/connect_hotspot_prefix/widgets/connection_success_banner.dart';
+part 'src/screens/connect_hotspot_prefix/widgets/connect_button_section.dart';
 
 // view models
 part 'src/flow/hotspot_provisioning_flow_view_model.dart';

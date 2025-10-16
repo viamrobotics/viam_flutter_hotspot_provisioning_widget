@@ -15,11 +15,6 @@ class ConnectHotspotPrefixScreen extends StatefulWidget {
 }
 
 class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen> {
-  TextStyle get listStyle => TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
-        fontSize: 16.0,
-      );
-
   @override
   void initState() {
     super.initState();
@@ -63,38 +58,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                          child: Text("1. Turn on the device you are trying to connect to.", style: listStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                          child: Text("2. Make sure you are nearby the device.", style: listStyle),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                          child: Text("3. Press the button below to connect to the device's hotspot.", style: listStyle),
-                        ),
-                        if (widget.viewModel.connectedToHotspot)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 14.0, bottom: 20.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.check_circle, color: Colors.green),
-                                    const SizedBox(width: 8.0),
-                                    Expanded(
-                                      child: Text(
-                                        "You are connected to the device's hotspot.",
-                                        style: listStyle,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                        const InstructionItem(text: "1. Turn on the device you are trying to connect to."),
+                        const InstructionItem(text: "2. Make sure you are nearby the device."),
+                        const InstructionItem(text: "3. Press the button below to connect to the device's hotspot."),
+                        if (widget.viewModel.connectedToHotspot) const ConnectionSuccessBanner(),
                       ],
                     ),
                   ),
@@ -102,15 +69,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 28.0),
-                      child: PrimaryButton(
-                        onPressed: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine
-                            ? null
-                            : () => widget.viewModel.connectToHotspot(),
-                        text: widget.viewModel.isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
-                        isLoading: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine,
-                      ),
+                    ConnectButtonSection(
+                      isLoading: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine,
+                      isRetrying: widget.viewModel.isRetryingHotspot,
+                      onPressed: () => widget.viewModel.connectToHotspot(),
                     ),
                   ],
                 ),
