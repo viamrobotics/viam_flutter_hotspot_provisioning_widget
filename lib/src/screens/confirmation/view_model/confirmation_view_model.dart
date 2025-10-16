@@ -98,8 +98,6 @@ class ConfirmationViewModel extends ChangeNotifier {
     await Future.delayed(const Duration(seconds: 5));
     final disconnected = await PluginWifiConnect.disconnect();
     debugPrint('disconnected from hotspot: $disconnected');
-    // TODO (APP-8749): Associate a unique ID from machine with (maybe hotspot ssid) w/ robot as part of the machine already exists flow.
-    // This is so we can associate the machine with the correct robot when we reconnect.
   }
 
   Future<void> _performFragmentOverride(Viam viam, String? fragmentId, RobotPart robotPart, Robot robot) async {

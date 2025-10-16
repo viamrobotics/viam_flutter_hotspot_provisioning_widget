@@ -1,7 +1,7 @@
 part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class CredentialsWarningBanner extends StatelessWidget {
-  const CredentialsWarningBanner();
+  const CredentialsWarningBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

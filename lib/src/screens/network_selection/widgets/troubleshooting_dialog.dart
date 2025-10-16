@@ -31,7 +31,7 @@ class TroubleshootingDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "If your boat's Wi-Fi network isn't showing up in this list, turn your Specter AI device off and back on again.\n\n"
+              "If your devices's Wi-Fi network isn't showing up in this list, turn your device off and back on again.\n\n"
               "If you've tried this and it still isn't appearing, you can connect by manually entering your network info.",
               style: TextStyle(
                 fontSize: 15,
