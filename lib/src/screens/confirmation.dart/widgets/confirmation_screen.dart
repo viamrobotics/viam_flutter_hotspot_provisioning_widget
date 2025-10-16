@@ -57,19 +57,32 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 // This way the user can decide what to do when the robot is online or offline.
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: _viewModel,
-      builder: (context, _) {
-        if (_viewModel.machineStatus == MachineStatus.loading &&
-            _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
-          return RobotLoadingWidget(
-            secondsLoading: _viewModel.secondsLoading,
-            provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,
-          );
-        }
-        // If status is online/offline/timed out, the callback should have already fired and this screen is about to be popped.
-        return const SizedBox.shrink();
-      },
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+        ),
+        body: SafeArea(
+          child: ListenableBuilder(
+            listenable: _viewModel,
+            builder: (context, _) {
+              if (_viewModel.machineStatus == MachineStatus.loading &&
+                  _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
+                return RobotLoadingWidget(
+                  secondsLoading: _viewModel.secondsLoading,
+                  provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,
+                );
+              }
+              // If status is online/offline/timed out, the callback should have already fired and this screen is about to be popped.
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
