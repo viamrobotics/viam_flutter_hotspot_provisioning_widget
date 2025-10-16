@@ -8,6 +8,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   final String? fragmentId;
   final PageController pageController;
 
+  late final HotspotCredentialsInputViewModel hotspotCredentialsInputViewModel;
   late final NetworkSelectionViewModel networkSelectionViewModel;
   late final PasswordInputViewModel passwordInputViewModel;
 
@@ -23,6 +24,9 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     this.fragmentId,
     required this.pageController,
   }) {
+    hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
+      onCredentialsSubmitted: onCredentialsSubmitted,
+    );
     networkSelectionViewModel = NetworkSelectionViewModel(viam: viam);
     passwordInputViewModel = PasswordInputViewModel(
       viam: viam,
@@ -80,6 +84,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    hotspotCredentialsInputViewModel.dispose();
     networkSelectionViewModel.dispose();
     passwordInputViewModel.dispose();
     super.dispose();

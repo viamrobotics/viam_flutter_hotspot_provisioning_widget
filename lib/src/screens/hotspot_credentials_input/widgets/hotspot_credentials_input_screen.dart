@@ -1,12 +1,12 @@
 part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class HotspotCredentialsInputScreen extends StatefulWidget {
-  final Function(String prefix, String password) onCredentialsSubmitted;
+  final HotspotCredentialsInputViewModel viewModel;
   final VoidCallback onBack;
 
   const HotspotCredentialsInputScreen({
     super.key,
-    required this.onCredentialsSubmitted,
+    required this.viewModel,
     required this.onBack,
   });
 
@@ -18,7 +18,6 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
   final _prefixController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -30,15 +29,66 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
   void _submitCredentials() {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
-      setState(() {
-        _isSubmitting = true;
-      });
-
-      widget.onCredentialsSubmitted(
+      widget.viewModel.submitCredentials(
         _prefixController.text.trim(),
         _passwordController.text,
       );
     }
+  }
+
+  Widget _buildPrefixField() {
+    return TextFormField(
+      controller: _prefixController,
+      autocorrect: false,
+      decoration: const InputDecoration(
+        labelText: 'Hotspot Prefix',
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Please enter a hotspot prefix';
+        }
+        if (value.trim().length < 3) {
+          return 'Hotspot prefix must be at least 3 characters long';
+        }
+        return null;
+      },
+      textInputAction: TextInputAction.next,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: _passwordController,
+      autocorrect: false,
+      decoration: const InputDecoration(
+        labelText: 'Hotspot Password',
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter a hotspot password';
+        }
+        return null;
+      },
+      textInputAction: TextInputAction.done,
+      onFieldSubmitted: (_) => _submitCredentials(),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ListenableBuilder(
+      listenable: widget.viewModel,
+      builder: (context, _) {
+        return SizedBox(
+          width: double.infinity,
+          child: PrimaryButton(
+            onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
+            text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -63,49 +113,11 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             child: Column(
               children: [
                 const Spacer(),
-                TextFormField(
-                  controller: _prefixController,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    labelText: 'Hotspot Prefix',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a hotspot prefix';
-                    }
-                    if (value.trim().length < 3) {
-                      return 'Hotspot prefix must be at least 3 characters long';
-                    }
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
+                _buildPrefixField(),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    labelText: 'Hotspot Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a hotspot password';
-                    }
-                    return null;
-                  },
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (_) => _submitCredentials(),
-                ),
+                _buildPasswordField(),
                 const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    onPressed: _isSubmitting ? null : _submitCredentials,
-                    text: _isSubmitting ? 'Connecting...' : 'Continue',
-                  ),
-                ),
+                _buildSubmitButton(),
                 const Spacer(),
               ],
             ),

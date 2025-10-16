@@ -108,6 +108,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _viewModel),
+        ChangeNotifierProvider.value(value: _viewModel.hotspotCredentialsInputViewModel),
         ChangeNotifierProvider.value(value: _viewModel.networkSelectionViewModel),
         ChangeNotifierProvider.value(value: _viewModel.passwordInputViewModel),
       ],
@@ -118,7 +119,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
           children: [
             if (widget.promptForCredentials)
               HotspotCredentialsInputScreen(
-                onCredentialsSubmitted: viewModel.onCredentialsSubmitted,
+                viewModel: viewModel.hotspotCredentialsInputViewModel,
                 onBack: _goToPreviousPage,
               ),
             if (!widget.promptForCredentials || viewModel.hasUserProvidedCredentials)

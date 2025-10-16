@@ -31,6 +31,7 @@ part 'src/screens/network_selection/view_model/network_selection_view_model.dart
 part 'src/screens/password_input/view_model/password_input_view_model.dart';
 part 'src/screens/connect_hotspot_prefix/view_model/connect_hotspot_prefix_view_model.dart';
 part 'src/screens/confirmation/view_model/confirmation_view_model.dart';
+part 'src/screens/hotspot_credentials_input/view_model/hotspot_credentials_input_view_model.dart';
 
 // Repository
 part 'src/data/repositories/hotspot_provisioning_repository.dart';
