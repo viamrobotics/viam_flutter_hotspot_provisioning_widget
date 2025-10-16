@@ -85,8 +85,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
           actions: <Widget>[
             OutlinedButton(
               child: const Text('Continue'),
-              // TODO (APP-8749): If we are provisioning a new machine (not reconnecting) we need to delete the robot and take the user back to the home screen.
-              // This is because we cannot proceed if they do not have location permissions on for Android.
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -124,7 +122,30 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     });
   }
 
+  void _showCredentialError() {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Missing Credentials'),
+        content: const Text(
+          'Hotspot credentials are required but were not provided. '
+          'Please ensure hotspotPrefix and hotspotPassword are set when calling this flow with promptForCredentials set to false.',
+        ),
+        actions: [
+          PlatformDialogAction(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('OK'),
+          )
+        ],
+      ),
+    );
+  }
+
   void connectToHotspot() async {
+    if (hotspotPrefix.isEmpty || hotspotPassword.isEmpty) {
+      _showCredentialError();
+      return;
+    }
     _setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();

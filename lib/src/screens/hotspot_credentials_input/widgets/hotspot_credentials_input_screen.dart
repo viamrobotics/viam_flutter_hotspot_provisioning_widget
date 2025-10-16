@@ -57,14 +57,11 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             key: _formKey,
             child: Column(
               children: [
+                if (widget.viewModel.hasConfiguredCredentials) const CredentialsWarningBanner(),
                 const Spacer(),
-                TextFormField(
+                CredentialsTextField(
                   controller: _prefixController,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Hotspot Prefix',
-                    border: OutlineInputBorder(),
-                  ),
+                  label: 'Hotspot Prefix',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a hotspot prefix';
@@ -77,13 +74,9 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
+                CredentialsTextField(
                   controller: _passwordController,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Hotspot Password',
-                    border: OutlineInputBorder(),
-                  ),
+                  label: 'Hotspot Password',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a hotspot password';
@@ -94,17 +87,9 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
                   onFieldSubmitted: (_) => _submitCredentials(),
                 ),
                 const SizedBox(height: 32),
-                ListenableBuilder(
-                  listenable: widget.viewModel,
-                  builder: (context, _) {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        onPressed: widget.viewModel.isSubmitting ? null : _submitCredentials,
-                        text: widget.viewModel.isSubmitting ? 'Connecting...' : 'Continue',
-                      ),
-                    );
-                  },
+                CredentialsSubmitButton(
+                  viewModel: widget.viewModel,
+                  onPressed: _submitCredentials,
                 ),
                 const Spacer(),
               ],

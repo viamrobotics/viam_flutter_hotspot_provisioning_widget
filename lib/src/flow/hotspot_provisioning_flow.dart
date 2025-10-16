@@ -122,20 +122,19 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                 viewModel: viewModel.hotspotCredentialsInputViewModel,
                 onBack: _goToPreviousPage,
               ),
-            if (!widget.promptForCredentials || viewModel.hasUserProvidedCredentials)
-              ConnectHotspotPrefixScreen(
-                onBack: _goToPreviousPage,
-                viewModel: ConnectHotspotPrefixViewModel(
-                  viam: widget.viam,
-                  context: context,
-                  hotspotPrefix: viewModel.finalHotspotPrefix,
-                  hotspotPassword: viewModel.finalHotspotPassword,
-                  onNavigateToNetworkSelection: () {
-                    viewModel.navigateToNextPage();
-                  },
-                  hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
-                ),
+            ConnectHotspotPrefixScreen(
+              onBack: _goToPreviousPage,
+              viewModel: ConnectHotspotPrefixViewModel(
+                viam: widget.viam,
+                context: context,
+                hotspotPrefix: viewModel.hotspotPrefix,
+                hotspotPassword: viewModel.hotspotPassword,
+                onNavigateToNetworkSelection: () {
+                  viewModel.navigateToNextPage();
+                },
+                hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
               ),
+            ),
             NetworkSelectionScreen(
               onBack: _goToPreviousPage,
               viewModel: viewModel.networkSelectionViewModel,

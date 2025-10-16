@@ -25,6 +25,11 @@ part 'src/screens/network_selection/widgets/network_selection_screen.dart';
 part 'src/screens/password_input/widgets/password_input_screen.dart';
 part 'src/utils/hotspot_provisioning_result.dart';
 
+// widgets
+part 'src/screens/hotspot_credentials_input/widgets/credentials_warning_banner.dart';
+part 'src/screens/hotspot_credentials_input/widgets/submit_button.dart';
+part 'src/screens/hotspot_credentials_input/widgets/credentials_text_field.dart';
+
 // view models
 part 'src/flow/hotspot_provisioning_flow_view_model.dart';
 part 'src/screens/network_selection/view_model/network_selection_view_model.dart';
