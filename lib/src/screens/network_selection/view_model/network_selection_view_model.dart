@@ -36,10 +36,6 @@ class NetworkSelectionViewModel extends ChangeNotifier {
     return Icons.lock;
   }
 
-  Future<void> initialize() async {
-    await getNetworks();
-  }
-
   Future<void> getNetworks({bool refresh = false}) async {
     _setLoadingNetworks(true);
 
