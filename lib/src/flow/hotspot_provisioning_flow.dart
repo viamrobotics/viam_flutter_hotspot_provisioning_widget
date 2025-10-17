@@ -145,7 +145,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                 viewModel.onNetworkSelected(null);
               },
             ),
-            PasswordInputScreen(onBack: _goToPreviousPage),
+            PasswordInputScreen(viewModel: viewModel.passwordInputViewModel, onBack: _goToPreviousPage),
             ConfirmationScreen(
               robot: widget.robot,
               viam: widget.viam,
