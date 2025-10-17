@@ -5,56 +5,31 @@ enum MachineStatus { online, offline, loading }
 class ConfirmationScreen extends StatefulWidget {
   const ConfirmationScreen({
     super.key,
-    required this.robot,
-    required this.viam,
-    required this.mainPart,
+    required this.viewModel,
     required this.onStatusDetermined,
-    this.fragmentId,
-    required this.overrideFragment,
-    required this.replaceHardware,
-    this.robotConfig,
   });
 
-  final Viam viam;
-  final Robot robot;
-  final RobotPart mainPart;
-  final String? fragmentId;
+  final ConfirmationViewModel viewModel;
   final void Function(Robot robot, MachineStatus status) onStatusDetermined;
-  final bool overrideFragment;
-  final bool replaceHardware;
-  final Map<String, dynamic>? robotConfig;
 
   @override
   State<ConfirmationScreen> createState() => _ConfirmationScreenState();
 }
 
 class _ConfirmationScreenState extends State<ConfirmationScreen> {
-  late final ConfirmationViewModel _viewModel;
-
   @override
   void initState() {
     super.initState();
-    _viewModel = ConfirmationViewModel(
-      viam: widget.viam,
-      robot: widget.robot,
-      onStatusDetermined: widget.onStatusDetermined,
-      fragmentId: widget.fragmentId,
-      mainPart: widget.mainPart,
-      overrideFragment: widget.overrideFragment,
-      replaceHardware: widget.replaceHardware,
-      robotConfig: widget.robotConfig,
-    );
+    widget.viewModel.disconnectFromHotspot();
+    widget.viewModel.startCheckingOnline();
   }
 
   @override
   void dispose() {
-    _viewModel.dispose();
+    widget.viewModel.dispose();
     super.dispose();
   }
 
-// The only UI we need to show is the loading screen.
-// Once the robot is online or offline, the callback will be triggered, and the parent (HotspotProvisioningFlow) will pop this screen.
-// This way the user can decide what to do when the robot is online or offline.
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -67,17 +42,33 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           automaticallyImplyLeading: false,
         ),
         body: SafeArea(
-          child: ListenableBuilder(
-            listenable: _viewModel,
-            builder: (context, _) {
-              if (_viewModel.machineStatus == MachineStatus.loading &&
-                  _viewModel.secondsLoading < ConfirmationViewModel.provisioningTimeoutSeconds) {
-                return RobotLoadingWidget(
-                  secondsLoading: _viewModel.secondsLoading,
-                  provisioningStillWaitingSeconds: ConfirmationViewModel.provisioningStillWaitingSeconds,
-                );
+          child: StreamBuilder<MachineStatus>(
+            stream: widget.viewModel.machineStatusStream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return RobotLoadingWidget(secondsLoading: widget.viewModel.secondsLoading);
               }
-              // If status is online/offline/timed out, the callback should have already fired and this screen is about to be popped.
+              final status = snapshot.data!;
+              switch (status) {
+                case MachineStatus.loading:
+                  return RobotLoadingWidget(secondsLoading: widget.viewModel.secondsLoading);
+                case MachineStatus.online:
+                  if (widget.viewModel.overrideFragment) {
+                    widget.viewModel.performFragmentOverride();
+                  }
+                  if (widget.viewModel.replaceHardware) {
+                    widget.viewModel.applyRobotConfig();
+                  }
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    widget.onStatusDetermined(widget.viewModel.robot, status);
+                  });
+                  break;
+                case MachineStatus.offline:
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    widget.onStatusDetermined(widget.viewModel.robot, status);
+                  });
+                  break;
+              }
               return const SizedBox.shrink();
             },
           ),

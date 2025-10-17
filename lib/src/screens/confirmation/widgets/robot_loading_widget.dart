@@ -2,13 +2,13 @@ part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class RobotLoadingWidget extends StatelessWidget {
   final int secondsLoading;
-  final int provisioningStillWaitingSeconds;
 
   const RobotLoadingWidget({
     super.key,
     required this.secondsLoading,
-    required this.provisioningStillWaitingSeconds,
   });
+
+  static const int provisioningStillWaitingSeconds = 45;
 
   @override
   Widget build(BuildContext context) {

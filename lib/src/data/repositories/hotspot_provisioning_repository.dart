@@ -77,4 +77,17 @@ class HotspotProvisioningRepository {
   }) async {
     await viam.appClient.updateRobotPart(partId, robotName, config);
   }
+
+  Future<Robot> getRobot(String robotId) async {
+    return await viam.appClient.getRobot(robotId);
+  }
+
+  Future<MachineStatus> calculateMachineStatus(Robot robot) async {
+    final seconds = robot.lastAccess.seconds.toInt();
+    final actual = DateTime.now().microsecondsSinceEpoch / Duration.microsecondsPerSecond;
+    if ((actual - seconds) < 10) {
+      return MachineStatus.online;
+    }
+    return MachineStatus.loading;
+  }
 }

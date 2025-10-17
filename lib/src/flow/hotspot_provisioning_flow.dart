@@ -147,15 +147,17 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             ),
             PasswordInputScreen(viewModel: viewModel.passwordInputViewModel, onBack: _goToPreviousPage),
             ConfirmationScreen(
-              robot: widget.robot,
-              viam: widget.viam,
-              mainPart: widget.mainPart,
+              viewModel: ConfirmationViewModel(
+                repository: HotspotProvisioningRepository(viam: widget.viam),
+                robot: widget.robot,
+                mainPart: widget.mainPart,
+                fragmentId: viewModel.determinedFragmentId,
+                overrideFragment: widget.overrideFragment,
+                replaceHardware: widget.replaceHardware,
+                robotConfig: widget.robotConfig,
+              ),
               onStatusDetermined: _onConfirmationStatusDetermined,
-              fragmentId: viewModel.determinedFragmentId,
-              overrideFragment: widget.overrideFragment,
-              replaceHardware: widget.replaceHardware,
-              robotConfig: widget.robotConfig,
-            )
+            ),
           ],
         );
       }),
