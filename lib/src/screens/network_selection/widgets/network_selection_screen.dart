@@ -3,7 +3,6 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 class NetworkSelectionScreen extends StatefulWidget {
   final void Function(NetworkInfo) onSelectNetwork;
   final VoidCallback onManualEntry;
-  final Viam viam;
   final NetworkSelectionViewModel viewModel;
   final VoidCallback onBack;
 
@@ -11,7 +10,6 @@ class NetworkSelectionScreen extends StatefulWidget {
     super.key,
     required this.onSelectNetwork,
     required this.onManualEntry,
-    required this.viam,
     required this.viewModel,
     required this.onBack,
   });

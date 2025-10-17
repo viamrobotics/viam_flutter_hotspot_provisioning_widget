@@ -138,7 +138,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             NetworkSelectionScreen(
               onBack: _goToPreviousPage,
               viewModel: viewModel.networkSelectionViewModel,
-              viam: widget.viam,
               onSelectNetwork: (network) {
                 viewModel.onNetworkSelected(network);
               },
