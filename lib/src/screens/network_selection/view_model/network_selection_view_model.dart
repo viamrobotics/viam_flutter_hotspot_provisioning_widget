@@ -13,16 +13,6 @@ class NetworkSelectionViewModel extends ChangeNotifier {
   bool get loadingNetworks => _loadingNetworks;
   List<NetworkInfo> get machineVisibleNetworks => _machineVisibleNetworks;
 
-  void _setLoadingNetworks(bool value) {
-    _loadingNetworks = value;
-    notifyListeners();
-  }
-
-  void _setMachineVisibleNetworks(List<NetworkInfo> networks) {
-    _machineVisibleNetworks = networks;
-    notifyListeners();
-  }
-
   IconData signalToIcon(int signal) {
     if (signal <= 40) return Icons.wifi_1_bar;
     if (40 <= signal && signal <= 70) return Icons.wifi_2_bar;
@@ -51,5 +41,15 @@ class NetworkSelectionViewModel extends ChangeNotifier {
     }
 
     _setLoadingNetworks(false);
+  }
+
+  void _setLoadingNetworks(bool value) {
+    _loadingNetworks = value;
+    notifyListeners();
+  }
+
+  void _setMachineVisibleNetworks(List<NetworkInfo> networks) {
+    _machineVisibleNetworks = networks;
+    notifyListeners();
   }
 }
