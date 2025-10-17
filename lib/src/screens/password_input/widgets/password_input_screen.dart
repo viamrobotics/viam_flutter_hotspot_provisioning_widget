@@ -147,7 +147,6 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
   }
 
   Widget _manuallyEnterSSIDInput(BuildContext context) {
-    final viewModel = widget.viewModel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -165,7 +164,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: TextField(
-            controller: viewModel.ssidController,
+            controller: widget.viewModel.ssidController,
             autocorrect: false,
             decoration: InputDecoration(
               labelStyle: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onSurface),
