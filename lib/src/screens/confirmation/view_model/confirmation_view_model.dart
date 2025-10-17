@@ -32,7 +32,6 @@ class ConfirmationViewModel {
   int _secondsLoading = 0;
   int get secondsLoading => _secondsLoading;
 
-  // Getters for screen access
   Robot get robot => _robot;
   bool get overrideFragment => _overrideFragment;
   bool get replaceHardware => _replaceHardware;
