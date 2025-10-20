@@ -1,7 +1,6 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class ConnectHotspotPrefixViewModel extends ChangeNotifier {
-  final BuildContext context;
   final String hotspotPrefix;
   final String hotspotPassword;
   final VoidCallback onNavigateToNetworkSelection;
@@ -14,7 +13,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool _pollingForMachine = false;
   bool _connectedToHotspot = false;
   ConnectHotspotPrefixViewModel({
-    required this.context,
     required this.hotspotPrefix,
     required this.hotspotPassword,
     required this.onNavigateToNetworkSelection,
@@ -85,30 +83,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     });
   }
 
-  void _showCredentialError() {
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: const Text('Missing Credentials'),
-        content: const Text(
-          'Hotspot credentials are required but were not provided. '
-          'Please ensure hotspotPrefix and hotspotPassword are set when calling this flow with promptForCredentials set to false.',
-        ),
-        actions: [
-          PlatformDialogAction(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('OK'),
-          )
-        ],
-      ),
-    );
-  }
-
+ 
   void connectToHotspot() async {
-    if (hotspotPrefix.isEmpty || hotspotPassword.isEmpty) {
-      _showCredentialError();
-      return;
-    }
     _setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await repository.getCurrentSSID();

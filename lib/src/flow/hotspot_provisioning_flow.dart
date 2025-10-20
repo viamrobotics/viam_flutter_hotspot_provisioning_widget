@@ -125,7 +125,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             ConnectHotspotPrefixScreen(
               onBack: _goToPreviousPage,
               viewModel: ConnectHotspotPrefixViewModel(
-                context: context,
                 hotspotPrefix: viewModel.hotspotPrefix,
                 hotspotPassword: viewModel.hotspotPassword,
                 onNavigateToNetworkSelection: () {
