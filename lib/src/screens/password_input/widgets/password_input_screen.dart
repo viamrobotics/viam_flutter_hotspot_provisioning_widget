@@ -28,9 +28,6 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPublicNetwork = widget.viewModel.network != null && widget.viewModel.isPublicNetwork(widget.viewModel.network!);
-    final canSubmit = widget.viewModel.areNetworkCredentialsValid;
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -43,29 +40,35 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
             onPressed: widget.onBack,
           ),
           actions: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: GestureDetector(
-                  onTap: canSubmit ? () => _handleSubmit(context) : null,
-                  child: widget.viewModel.loading
-                      ? const CupertinoActivityIndicator()
-                      : Text(
-                          "Done",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                            color: canSubmit ? Theme.of(context).colorScheme.primary : Theme.of(context).disabledColor,
-                          ),
-                        ),
-                ),
-              ),
-            ),
+            ListenableBuilder(
+                listenable: widget.viewModel,
+                builder: (context, child) {
+                  final canSubmit = widget.viewModel.areNetworkCredentialsValid;
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: GestureDetector(
+                        onTap: canSubmit ? () => _handleSubmit(context) : null,
+                        child: widget.viewModel.loading
+                            ? const CupertinoActivityIndicator()
+                            : Text(
+                                "Done",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: canSubmit ? Theme.of(context).colorScheme.primary : Theme.of(context).disabledColor,
+                                ),
+                              ),
+                      ),
+                    ),
+                  );
+                }),
           ]),
       body: SafeArea(
         child: ListenableBuilder(
           listenable: widget.viewModel,
           builder: (context, child) {
+            final bool isPublicNetwork = widget.viewModel.network != null && widget.viewModel.isPublicNetwork(widget.viewModel.network!);
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: Column(
