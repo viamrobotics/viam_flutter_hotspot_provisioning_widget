@@ -12,6 +12,7 @@ class PasswordFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,9 +35,9 @@ class PasswordFieldWidget extends StatelessWidget {
             autocorrect: false,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+              enabledBorder: border,
+              focusedBorder: border,
+              border: border,
               suffixIcon: IconButton(
                 icon: Icon(
                   viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
