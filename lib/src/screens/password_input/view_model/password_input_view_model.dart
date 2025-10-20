@@ -1,7 +1,7 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputViewModel extends ChangeNotifier {
-  final Viam _viam;
+  final HotspotProvisioningRepository _repository;
   final RobotPart _mainPart;
   final String? _fragmentId;
   final Function(String? fragmentId) _onPasswordSubmitted;
@@ -12,11 +12,11 @@ class PasswordInputViewModel extends ChangeNotifier {
   NetworkInfo? _network;
 
   PasswordInputViewModel({
-    required Viam viam,
+    required HotspotProvisioningRepository repository,
     required RobotPart mainPart,
     required String? fragmentId,
     required Function(String? fragmentId) onPasswordSubmitted,
-  })  : _viam = viam,
+  })  : _repository = repository,
         _mainPart = mainPart,
         _fragmentId = fragmentId,
         _onPasswordSubmitted = onPasswordSubmitted {
@@ -78,9 +78,12 @@ class PasswordInputViewModel extends ChangeNotifier {
     try {
       // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
       // This is why we are NOT sending them at the same time.
-      final response = await getSmartMachineStatus();
+      final response = await _repository.getSmartMachineStatus();
       if (!response.hasSmartMachineCredentials) {
-        await _setSmartMachineCredentials();
+        await _repository.setSmartMachineCredentials(
+          id: _mainPart.id,
+          secret: _mainPart.secret,
+        );
       }
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
@@ -92,10 +95,18 @@ class PasswordInputViewModel extends ChangeNotifier {
         agentVersion = Version.parse(response.agentVersion);
       }
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
-        await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
-        await _viam.provisioningClient.exitProvisioning();
+        await _repository.setNetworkCredentials(
+          type: NetworkType.wifi,
+          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+          psk: password,
+        );
+        await _repository.exitProvisioning();
       } else {
-        _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+        await _repository.setNetworkCredentials(
+          type: NetworkType.wifi,
+          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+          psk: password,
+        );
       }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
@@ -103,24 +114,5 @@ class PasswordInputViewModel extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
-  }
-
-  Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {
-    return await _viam.provisioningClient.getSmartMachineStatus();
-  }
-
-  Future<void> _setSmartMachineCredentials() async {
-    await _viam.provisioningClient.setSmartMachineCredentials(
-      id: _mainPart.id,
-      secret: _mainPart.secret,
-    );
-  }
-
-  Future<void> _setNetworkCredentials(String ssid, String psk) async {
-    await _viam.provisioningClient.setNetworkCredentials(
-      type: NetworkType.wifi,
-      ssid: ssid,
-      psk: psk,
-    );
   }
 }

@@ -11,6 +11,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   late final HotspotCredentialsInputViewModel hotspotCredentialsInputViewModel;
   late final NetworkSelectionViewModel networkSelectionViewModel;
   late final PasswordInputViewModel passwordInputViewModel;
+  late final HotspotProvisioningRepository _repository;
 
   String? _determinedFragmentId;
   String? _userHotspotPrefix;
@@ -24,6 +25,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     this.fragmentId,
     required this.pageController,
   }) {
+    _repository = HotspotProvisioningRepository(viam: viam);
     hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
       configuredHotspotPrefix: configuredHotspotPrefix,
       configuredHotspotPassword: configuredHotspotPassword,
@@ -31,7 +33,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     );
     networkSelectionViewModel = NetworkSelectionViewModel(viam: viam);
     passwordInputViewModel = PasswordInputViewModel(
-      viam: viam,
+      repository: _repository,
       mainPart: mainPart,
       fragmentId: fragmentId,
       onPasswordSubmitted: onPasswordSubmitted,
