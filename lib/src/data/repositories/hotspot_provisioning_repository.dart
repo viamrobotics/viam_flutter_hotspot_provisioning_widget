@@ -70,6 +70,24 @@ class HotspotProvisioningRepository {
     return await ph.Permission.location.request();
   }
 
+  // Android considers Wi-Fi information to be location information
+  // If we don't have location permission any connected ssid will show as 'unknown ssid'
+  Future<bool> getLocationPermission() async {
+    final status = await ph.Permission.location.request();
+    switch (status) {
+      case ph.PermissionStatus.granted:
+        return true; // safe to continue!
+      case ph.PermissionStatus.denied:
+      case ph.PermissionStatus.permanentlyDenied:
+      case ph.PermissionStatus.restricted:
+        return false; // permission denied
+      case ph.PermissionStatus.limited:
+      case ph.PermissionStatus.provisional:
+        assert(false, 'Statuses on iOS only');
+        return false;
+    }
+  }
+
   Future<void> updateRobotPart({
     required String partId,
     required String robotName,

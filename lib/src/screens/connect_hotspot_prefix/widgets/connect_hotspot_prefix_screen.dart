@@ -24,8 +24,55 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   void initState() {
     super.initState();
     if (Platform.isAndroid) {
-      widget.viewModel.getLocationPermission();
+      _checkLocationPermission();
     }
+  }
+
+  Future<void> _checkLocationPermission() async {
+    final hasPermission = await widget.viewModel.getLocationPermission();
+    if (!hasPermission) {
+      await showLocationPermissionDialog();
+    }
+  }
+
+  Future<void> showLocationPermissionDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Precise Location Permission Required'),
+          content: const Text(
+            'Please enable precise location permissions in your device settings to continue.\n\nWi-Fi information is considered location information on Android.',
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              child: const Text('Continue'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showCredentialErrorDialog() {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Missing Credentials'),
+        content: const Text(
+          'Hotspot credentials are required but were not provided. '
+          'Please ensure hotspotPrefix and hotspotPassword are set when calling this flow with promptForCredentials set to false.',
+        ),
+        actions: [
+          PlatformDialogAction(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('OK'),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -107,7 +154,13 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                       child: PrimaryButton(
                         onPressed: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine
                             ? null
-                            : () => widget.viewModel.connectToHotspot(),
+                            : () {
+                                if (widget.viewModel.hotspotPrefix.isEmpty || widget.viewModel.hotspotPassword.isEmpty) {
+                                  showCredentialErrorDialog();
+                                } else {
+                                  widget.viewModel.connectToHotspot();
+                                }
+                              },
                         text: widget.viewModel.isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
                         isLoading: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine,
                       ),
