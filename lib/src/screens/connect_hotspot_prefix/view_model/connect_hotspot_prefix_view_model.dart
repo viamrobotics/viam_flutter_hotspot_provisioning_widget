@@ -83,7 +83,6 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     });
   }
 
- 
   void connectToHotspot() async {
     _setIsAttemptingConnectionToHotspot(true);
 
