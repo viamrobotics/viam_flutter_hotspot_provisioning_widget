@@ -20,6 +20,7 @@ class PasswordInputViewModel extends ChangeNotifier {
         _mainPart = mainPart,
         _fragmentId = fragmentId,
         _onPasswordSubmitted = onPasswordSubmitted {
+    // Set up text field listeners
     _passwordController.addListener(notifyListeners);
     _ssidController.addListener(notifyListeners);
   }
