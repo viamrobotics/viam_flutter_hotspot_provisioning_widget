@@ -12,6 +12,7 @@ class SSIDFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0));
     // If we have a network, display it
     if (network != null) {
       return Padding(
@@ -61,9 +62,9 @@ class SSIDFieldWidget extends StatelessWidget {
             decoration: InputDecoration(
               labelStyle: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onSurface),
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
+              enabledBorder: border,
+              focusedBorder: border,
+              border: border,
             ),
           ),
         ),

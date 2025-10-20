@@ -20,6 +20,7 @@ class PasswordInputViewModel extends ChangeNotifier {
         _mainPart = mainPart,
         _fragmentId = fragmentId,
         _onPasswordSubmitted = onPasswordSubmitted {
+    // Set up text field listeners
     _passwordController.addListener(notifyListeners);
     _ssidController.addListener(notifyListeners);
   }
@@ -94,19 +95,13 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (response.agentVersion.isNotEmpty) {
         agentVersion = Version.parse(response.agentVersion);
       }
+      await _repository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+        psk: password,
+      );
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
-        await _repository.setNetworkCredentials(
-          type: NetworkType.wifi,
-          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
-          psk: password,
-        );
         await _repository.exitProvisioning();
-      } else {
-        await _repository.setNetworkCredentials(
-          type: NetworkType.wifi,
-          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
-          psk: password,
-        );
       }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
