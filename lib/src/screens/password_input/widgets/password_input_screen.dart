@@ -28,9 +28,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = widget.viewModel;
-    final bool isPublicNetwork = viewModel.network != null && viewModel.isPublicNetwork(viewModel.network!);
-    final canSubmit = viewModel.areNetworkCredentialsValid;
+    final bool isPublicNetwork = widget.viewModel.network != null && widget.viewModel.isPublicNetwork(widget.viewModel.network!);
+    final canSubmit = widget.viewModel.areNetworkCredentialsValid;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -48,8 +47,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: GestureDetector(
-                  onTap: canSubmit ? () => viewModel.submitPassword(context) : null,
-                  child: viewModel.loading
+                  onTap: canSubmit ? () => widget.viewModel.submitPassword(context) : null,
+                  child: widget.viewModel.loading
                       ? const CupertinoActivityIndicator()
                       : Text(
                           "Done",
@@ -65,7 +64,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
           ]),
       body: SafeArea(
         child: ListenableBuilder(
-          listenable: viewModel,
+          listenable: widget.viewModel,
           builder: (context, child) {
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
@@ -73,7 +72,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (viewModel.network != null)
+                  if (widget.viewModel.network != null)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
                       child: Row(
@@ -86,7 +85,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                             ),
                           ),
                           Text(
-                            viewModel.network!.ssid,
+                            widget.viewModel.network!.ssid,
                             style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
@@ -113,8 +112,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextField(
-                        obscureText: viewModel.obscureText,
-                        controller: viewModel.passwordController,
+                        obscureText: widget.viewModel.obscureText,
+                        controller: widget.viewModel.passwordController,
                         autocorrect: false,
                         decoration: InputDecoration(
                           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -124,14 +123,14 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                               OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
                           border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
                           suffixIcon: IconButton(
-                            icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
+                            icon: Icon(widget.viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
                                 color: Theme.of(context).colorScheme.onSurface),
-                            onPressed: () => viewModel.toggleObscureText(),
+                            onPressed: () => widget.viewModel.toggleObscureText(),
                           ),
                         ),
                         onSubmitted: (String value) {
-                          if (viewModel.areNetworkCredentialsValid) {
-                            viewModel.submitPassword(context);
+                          if (widget.viewModel.areNetworkCredentialsValid) {
+                            widget.viewModel.submitPassword(context);
                           }
                         },
                       ),
