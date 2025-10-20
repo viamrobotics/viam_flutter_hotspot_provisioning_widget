@@ -5,13 +5,13 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   final String hotspotPassword;
   final VoidCallback onNavigateToNetworkSelection;
   final HotspotProvisioningRepository repository;
-
   bool _isAttemptingConnectionToHotspot = false;
   bool _isRetryingHotspot = false;
   Timer? _pollingTimer;
   bool _foundValidSmartMachineStatus = false;
   bool _pollingForMachine = false;
   bool _connectedToHotspot = false;
+
   ConnectHotspotPrefixViewModel({
     required this.hotspotPrefix,
     required this.hotspotPassword,
