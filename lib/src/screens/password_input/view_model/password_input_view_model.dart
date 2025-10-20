@@ -1,38 +1,40 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputViewModel extends ChangeNotifier {
-  PasswordInputViewModel({
-    required Viam viam,
-    required RobotPart mainPart,
-    required String? fragmentId,
-    required Function(String? fragmentId) onPasswordSubmitted,
-    required Function(BuildContext, {required String title, String? error}) showErrorDialog,
-  })  : _viam = viam,
-        _mainPart = mainPart,
-        _fragmentId = fragmentId,
-        _onPasswordSubmitted = onPasswordSubmitted,
-        _showErrorDialog = showErrorDialog {
-    _passwordController.addListener(_notifyListeners);
-    _ssidController.addListener(_notifyListeners);
-  }
-
-  final Viam _viam;
+  final HotspotProvisioningRepository _repository;
   final RobotPart _mainPart;
   final String? _fragmentId;
   final Function(String? fragmentId) _onPasswordSubmitted;
-  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
-
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _ssidController = TextEditingController();
   bool _obscureText = false;
   bool _loading = false;
   NetworkInfo? _network;
 
+  PasswordInputViewModel({
+    required HotspotProvisioningRepository repository,
+    required RobotPart mainPart,
+    required String? fragmentId,
+    required Function(String? fragmentId) onPasswordSubmitted,
+  })  : _repository = repository,
+        _mainPart = mainPart,
+        _fragmentId = fragmentId,
+        _onPasswordSubmitted = onPasswordSubmitted {
+    // Set up text field listeners
+    _passwordController.addListener(notifyListeners);
+    _ssidController.addListener(notifyListeners);
+  }
+
   TextEditingController get passwordController => _passwordController;
   TextEditingController get ssidController => _ssidController;
   bool get obscureText => _obscureText;
   bool get loading => _loading;
   NetworkInfo? get network => _network;
+
+  set network(NetworkInfo? value) {
+    _network = value;
+    notifyListeners();
+  }
 
   bool get areNetworkCredentialsValid {
     if (_network != null) {
@@ -43,13 +45,17 @@ class PasswordInputViewModel extends ChangeNotifier {
     return _ssidController.text.isNotEmpty;
   }
 
-  void _notifyListeners() {
+  void toggleObscureText() {
+    _obscureText = !_obscureText;
     notifyListeners();
   }
 
-  void _setObscureText(bool value) {
-    _obscureText = value;
-    notifyListeners();
+  void clearPassword() {
+    _passwordController.clear();
+  }
+
+  bool isPublicNetwork(NetworkInfo network) {
+    return network.security == '-';
   }
 
   void _setLoading(bool value) {
@@ -57,47 +63,28 @@ class PasswordInputViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setNetwork(NetworkInfo? value) {
-    _network = value;
-    notifyListeners();
-  }
-
-  void toggleObscureText() {
-    _setObscureText(!_obscureText);
-  }
-
-  void clearPassword() {
-    _passwordController.clear();
-  }
-
-  set network(NetworkInfo? network) {
-    _setNetwork(network);
-  }
-
-  bool isPublicNetwork(NetworkInfo network) {
-    return network.security == '-';
-  }
-
   @override
   void dispose() {
-    _passwordController.removeListener(_notifyListeners);
-    _ssidController.removeListener(_notifyListeners);
+    _passwordController.removeListener(notifyListeners);
+    _ssidController.removeListener(notifyListeners);
     _passwordController.dispose();
     _ssidController.dispose();
     super.dispose();
   }
 
-  Future<void> submitPassword(BuildContext context) async {
+  Future<void> submitPassword() async {
     Version? agentVersion;
-    FocusScope.of(context).unfocus();
     _setLoading(true);
 
     try {
       // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
       // This is why we are NOT sending them at the same time.
-      final response = await getSmartMachineStatus();
+      final response = await _repository.getSmartMachineStatus();
       if (!response.hasSmartMachineCredentials) {
-        await _setSmartMachineCredentials();
+        await _repository.setSmartMachineCredentials(
+          id: _mainPart.id,
+          secret: _mainPart.secret,
+        );
       }
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
@@ -108,41 +95,19 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (response.agentVersion.isNotEmpty) {
         agentVersion = Version.parse(response.agentVersion);
       }
+      await _repository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+        psk: password,
+      );
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
-        await _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
-        await _viam.provisioningClient.exitProvisioning();
-      } else {
-        _setNetworkCredentials(_network?.ssid.trim() ?? _ssidController.text.trim(), password);
+        await _repository.exitProvisioning();
       }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
-      if (!context.mounted) return;
-      _showErrorDialog(
-        context,
-        title: 'Failed to connect to Wi-Fi',
-        error: 'Please try again.',
-      );
+      rethrow; // Let the view handle the error
+    } finally {
+      _setLoading(false);
     }
-
-    _setLoading(false);
-  }
-
-  Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {
-    return await _viam.provisioningClient.getSmartMachineStatus();
-  }
-
-  Future<void> _setSmartMachineCredentials() async {
-    await _viam.provisioningClient.setSmartMachineCredentials(
-      id: _mainPart.id,
-      secret: _mainPart.secret,
-    );
-  }
-
-  Future<void> _setNetworkCredentials(String ssid, String psk) async {
-    await _viam.provisioningClient.setNetworkCredentials(
-      type: NetworkType.wifi,
-      ssid: ssid,
-      psk: psk,
-    );
   }
 }

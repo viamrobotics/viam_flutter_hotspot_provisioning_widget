@@ -28,9 +28,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = widget.viewModel;
-    final bool isPublicNetwork = viewModel.network != null && viewModel.isPublicNetwork(viewModel.network!);
-    final canSubmit = viewModel.areNetworkCredentialsValid;
+    final bool isPublicNetwork = widget.viewModel.network != null && widget.viewModel.isPublicNetwork(widget.viewModel.network!);
+    final canSubmit = widget.viewModel.areNetworkCredentialsValid;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -48,8 +47,8 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: GestureDetector(
-                  onTap: canSubmit ? () => viewModel.submitPassword(context) : null,
-                  child: viewModel.loading
+                  onTap: canSubmit ? () => _handleSubmit(context) : null,
+                  child: widget.viewModel.loading
                       ? const CupertinoActivityIndicator()
                       : Text(
                           "Done",
@@ -65,7 +64,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
           ]),
       body: SafeArea(
         child: ListenableBuilder(
-          listenable: viewModel,
+          listenable: widget.viewModel,
           builder: (context, child) {
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
@@ -73,70 +72,15 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (viewModel.network != null)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 18.0, 0.0, 8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Wi-Fi network: ",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                          Text(
-                            viewModel.network!.ssid,
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    _manuallyEnterSSIDInput(context),
-                  if (!isPublicNetwork) ...[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
-                      child: Text(
-                        "Password",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
+                  SSIDFieldWidget(
+                    viewModel: widget.viewModel,
+                    network: widget.viewModel.network,
+                  ),
+                  if (!isPublicNetwork)
+                    PasswordFieldWidget(
+                      viewModel: widget.viewModel,
+                      onSubmit: () => _handleSubmit(context),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextField(
-                        obscureText: viewModel.obscureText,
-                        controller: viewModel.passwordController,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          enabledBorder:
-                              OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                          focusedBorder:
-                              OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                          border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-                          suffixIcon: IconButton(
-                            icon: Icon(viewModel.obscureText ? Icons.visibility_off : Icons.visibility,
-                                color: Theme.of(context).colorScheme.onSurface),
-                            onPressed: () => viewModel.toggleObscureText(),
-                          ),
-                        ),
-                        onSubmitted: (String value) {
-                          if (viewModel.areNetworkCredentialsValid) {
-                            viewModel.submitPassword(context);
-                          }
-                        },
-                      ),
-                    ),
-                  ],
                 ],
               ),
             );
@@ -146,36 +90,35 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     );
   }
 
-  Widget _manuallyEnterSSIDInput(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 12.0),
-          child: Text(
-            "Wi-Fi network name",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: TextField(
-            controller: widget.viewModel.ssidController,
-            autocorrect: false,
-            decoration: InputDecoration(
-              labelStyle: TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onSurface),
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: 3.0)),
-            ),
-          ),
-        ),
-      ],
+  Future<void> _handleSubmit(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    try {
+      await widget.viewModel.submitPassword();
+    } catch (e) {
+      if (context.mounted) {
+        _showErrorDialog(
+          context,
+          'Failed to connect to Wi-Fi',
+          'Please try again.',
+        );
+      }
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String title, String? message) {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: Text(title),
+        content: message == null ? null : Text(message),
+        actions: [
+          PlatformDialogAction(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('OK'),
+          )
+        ],
+      ),
     );
   }
 }

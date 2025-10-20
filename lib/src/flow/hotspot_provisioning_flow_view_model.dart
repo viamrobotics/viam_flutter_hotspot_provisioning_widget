@@ -11,6 +11,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   late final HotspotCredentialsInputViewModel hotspotCredentialsInputViewModel;
   late final NetworkSelectionViewModel networkSelectionViewModel;
   late final PasswordInputViewModel passwordInputViewModel;
+  late final HotspotProvisioningRepository _repository;
 
   String? _determinedFragmentId;
   String? _userHotspotPrefix;
@@ -24,18 +25,18 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     this.fragmentId,
     required this.pageController,
   }) {
+    _repository = HotspotProvisioningRepository(viam: viam);
     hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
       configuredHotspotPrefix: configuredHotspotPrefix,
       configuredHotspotPassword: configuredHotspotPassword,
       onCredentialsSubmitted: onCredentialsSubmitted,
     );
-    networkSelectionViewModel = NetworkSelectionViewModel(viam: viam);
+    networkSelectionViewModel = NetworkSelectionViewModel(repository: _repository);
     passwordInputViewModel = PasswordInputViewModel(
-      viam: viam,
+      repository: _repository,
       mainPart: mainPart,
       fragmentId: fragmentId,
       onPasswordSubmitted: onPasswordSubmitted,
-      showErrorDialog: _showErrorDialog,
     );
   }
 
@@ -66,22 +67,6 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
 
   void navigateToNextPage() {
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  void _showErrorDialog(BuildContext context, {required String title, String? error}) {
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: Text(title),
-        content: error == null ? null : Text(error),
-        actions: [
-          PlatformDialogAction(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('OK'),
-          )
-        ],
-      ),
-    );
   }
 
   @override

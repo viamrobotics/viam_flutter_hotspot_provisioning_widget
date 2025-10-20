@@ -23,6 +23,8 @@ part 'src/screens/hotspot_credentials_input/widgets/hotspot_credentials_input_sc
 part 'src/flow/hotspot_provisioning_flow.dart';
 part 'src/screens/network_selection/widgets/network_selection_screen.dart';
 part 'src/screens/password_input/widgets/password_input_screen.dart';
+part 'src/screens/password_input/widgets/ssid_field_widget.dart';
+part 'src/screens/password_input/widgets/password_field_widget.dart';
 part 'src/utils/hotspot_provisioning_result.dart';
 
 // widgets
