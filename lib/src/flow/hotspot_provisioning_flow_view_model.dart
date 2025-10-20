@@ -31,7 +31,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
       configuredHotspotPassword: configuredHotspotPassword,
       onCredentialsSubmitted: onCredentialsSubmitted,
     );
-    networkSelectionViewModel = NetworkSelectionViewModel(viam: viam);
+    networkSelectionViewModel = NetworkSelectionViewModel(repository: _repository);
     passwordInputViewModel = PasswordInputViewModel(
       repository: _repository,
       mainPart: mainPart,

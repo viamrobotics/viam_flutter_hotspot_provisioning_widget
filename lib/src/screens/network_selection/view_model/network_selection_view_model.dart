@@ -2,10 +2,10 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NetworkSelectionViewModel extends ChangeNotifier {
   NetworkSelectionViewModel({
-    required Viam viam,
-  }) : _viam = viam;
+    required HotspotProvisioningRepository repository,
+  }) : _repository = repository;
 
-  final Viam _viam;
+  final HotspotProvisioningRepository _repository;
 
   bool _loadingNetworks = false;
   List<NetworkInfo> _machineVisibleNetworks = [];
@@ -33,7 +33,7 @@ class NetworkSelectionViewModel extends ChangeNotifier {
       if (refresh) {
         await Future.delayed(const Duration(milliseconds: 500));
       }
-      final networks = await _viam.provisioningClient.getNetworkList();
+      final networks = await _repository.getNetworkList();
       final sortedNetworks = networks.toList()..sort((b, a) => a.signal.compareTo(b.signal));
       _setMachineVisibleNetworks(sortedNetworks);
     } catch (e) {
