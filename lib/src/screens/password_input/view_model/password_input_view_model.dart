@@ -12,8 +12,8 @@ class PasswordInputViewModel extends ChangeNotifier {
         _fragmentId = fragmentId,
         _onPasswordSubmitted = onPasswordSubmitted,
         _showErrorDialog = showErrorDialog {
-    _passwordController.addListener(_notifyListeners);
-    _ssidController.addListener(_notifyListeners);
+    _passwordController.addListener(notifyListeners);
+    _ssidController.addListener(notifyListeners);
   }
 
   final Viam _viam;
@@ -43,15 +43,6 @@ class PasswordInputViewModel extends ChangeNotifier {
     return _ssidController.text.isNotEmpty;
   }
 
-  void _notifyListeners() {
-    notifyListeners();
-  }
-
-  void _setObscureText(bool value) {
-    _obscureText = value;
-    notifyListeners();
-  }
-
   void _setLoading(bool value) {
     _loading = value;
     notifyListeners();
@@ -63,7 +54,8 @@ class PasswordInputViewModel extends ChangeNotifier {
   }
 
   void toggleObscureText() {
-    _setObscureText(!_obscureText);
+    _obscureText = !_obscureText;
+    notifyListeners();
   }
 
   void clearPassword() {
@@ -80,8 +72,8 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _passwordController.removeListener(_notifyListeners);
-    _ssidController.removeListener(_notifyListeners);
+    _passwordController.removeListener(notifyListeners);
+    _ssidController.removeListener(notifyListeners);
     _passwordController.dispose();
     _ssidController.dispose();
     super.dispose();
