@@ -5,7 +5,6 @@ class PasswordInputViewModel extends ChangeNotifier {
   final RobotPart _mainPart;
   final String? _fragmentId;
   final Function(String? fragmentId) _onPasswordSubmitted;
-  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _ssidController = TextEditingController();
   bool _obscureText = false;
@@ -17,12 +16,10 @@ class PasswordInputViewModel extends ChangeNotifier {
     required RobotPart mainPart,
     required String? fragmentId,
     required Function(String? fragmentId) onPasswordSubmitted,
-    required Function(BuildContext, {required String title, String? error}) showErrorDialog,
   })  : _viam = viam,
         _mainPart = mainPart,
         _fragmentId = fragmentId,
-        _onPasswordSubmitted = onPasswordSubmitted,
-        _showErrorDialog = showErrorDialog {
+        _onPasswordSubmitted = onPasswordSubmitted {
     _passwordController.addListener(notifyListeners);
     _ssidController.addListener(notifyListeners);
   }
@@ -74,9 +71,8 @@ class PasswordInputViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> submitPassword(BuildContext context) async {
+  Future<void> submitPassword() async {
     Version? agentVersion;
-    FocusScope.of(context).unfocus();
     _setLoading(true);
 
     try {
@@ -103,15 +99,10 @@ class PasswordInputViewModel extends ChangeNotifier {
       }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
-      if (!context.mounted) return;
-      _showErrorDialog(
-        context,
-        title: 'Failed to connect to Wi-Fi',
-        error: 'Please try again.',
-      );
+      rethrow; // Let the view handle the error
+    } finally {
+      _setLoading(false);
     }
-
-    _setLoading(false);
   }
 
   Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {

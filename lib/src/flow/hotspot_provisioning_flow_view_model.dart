@@ -35,7 +35,6 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
       mainPart: mainPart,
       fragmentId: fragmentId,
       onPasswordSubmitted: onPasswordSubmitted,
-      showErrorDialog: _showErrorDialog,
     );
   }
 
@@ -66,22 +65,6 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
 
   void navigateToNextPage() {
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  void _showErrorDialog(BuildContext context, {required String title, String? error}) {
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: Text(title),
-        content: error == null ? null : Text(error),
-        actions: [
-          PlatformDialogAction(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('OK'),
-          )
-        ],
-      ),
-    );
   }
 
   @override

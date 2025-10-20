@@ -47,7 +47,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: GestureDetector(
-                  onTap: canSubmit ? () => widget.viewModel.submitPassword(context) : null,
+                  onTap: canSubmit ? () => _handleSubmit(context) : null,
                   child: widget.viewModel.loading
                       ? const CupertinoActivityIndicator()
                       : Text(
@@ -130,7 +130,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                         ),
                         onSubmitted: (String value) {
                           if (widget.viewModel.areNetworkCredentialsValid) {
-                            widget.viewModel.submitPassword(context);
+                            _handleSubmit(context);
                           }
                         },
                       ),
@@ -175,6 +175,38 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    try {
+      await widget.viewModel.submitPassword();
+    } catch (e) {
+      if (context.mounted) {
+        _showErrorDialog(
+          context,
+          'Failed to connect to Wi-Fi',
+          'Please try again.',
+        );
+      }
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String title, String? message) {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: Text(title),
+        content: message == null ? null : Text(message),
+        actions: [
+          PlatformDialogAction(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('OK'),
+          )
+        ],
+      ),
     );
   }
 }
