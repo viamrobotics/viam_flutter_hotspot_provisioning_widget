@@ -1,6 +1,17 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class PasswordInputViewModel extends ChangeNotifier {
+  final Viam _viam;
+  final RobotPart _mainPart;
+  final String? _fragmentId;
+  final Function(String? fragmentId) _onPasswordSubmitted;
+  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _ssidController = TextEditingController();
+  bool _obscureText = false;
+  bool _loading = false;
+  NetworkInfo? _network;
+
   PasswordInputViewModel({
     required Viam viam,
     required RobotPart mainPart,
@@ -16,23 +27,16 @@ class PasswordInputViewModel extends ChangeNotifier {
     _ssidController.addListener(notifyListeners);
   }
 
-  final Viam _viam;
-  final RobotPart _mainPart;
-  final String? _fragmentId;
-  final Function(String? fragmentId) _onPasswordSubmitted;
-  final Function(BuildContext, {required String title, String? error}) _showErrorDialog;
-
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _ssidController = TextEditingController();
-  bool _obscureText = false;
-  bool _loading = false;
-  NetworkInfo? _network;
-
   TextEditingController get passwordController => _passwordController;
   TextEditingController get ssidController => _ssidController;
   bool get obscureText => _obscureText;
   bool get loading => _loading;
   NetworkInfo? get network => _network;
+
+  set network(NetworkInfo? value) {
+    _network = value;
+    notifyListeners();
+  }
 
   bool get areNetworkCredentialsValid {
     if (_network != null) {
@@ -41,16 +45,6 @@ class PasswordInputViewModel extends ChangeNotifier {
       return isPublicNetwork(_network!) || _passwordController.text.isNotEmpty;
     }
     return _ssidController.text.isNotEmpty;
-  }
-
-  void _setLoading(bool value) {
-    _loading = value;
-    notifyListeners();
-  }
-
-  void _setNetwork(NetworkInfo? value) {
-    _network = value;
-    notifyListeners();
   }
 
   void toggleObscureText() {
@@ -62,12 +56,13 @@ class PasswordInputViewModel extends ChangeNotifier {
     _passwordController.clear();
   }
 
-  set network(NetworkInfo? network) {
-    _setNetwork(network);
-  }
-
   bool isPublicNetwork(NetworkInfo network) {
     return network.security == '-';
+  }
+
+  void _setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
   }
 
   @override
