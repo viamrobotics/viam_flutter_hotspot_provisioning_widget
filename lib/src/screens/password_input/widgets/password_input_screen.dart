@@ -72,12 +72,12 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SSIDInputWidget(
+                  SSIDFieldWidget(
                     viewModel: widget.viewModel,
                     network: widget.viewModel.network,
                   ),
                   if (!isPublicNetwork)
-                    PasswordInputWidget(
+                    PasswordFieldWidget(
                       viewModel: widget.viewModel,
                       onSubmit: () => _handleSubmit(context),
                     ),
