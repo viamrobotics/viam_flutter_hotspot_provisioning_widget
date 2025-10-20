@@ -1,21 +1,11 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class ConnectHotspotPrefixViewModel extends ChangeNotifier {
-  ConnectHotspotPrefixViewModel({
-    required this.viam,
-    required this.context,
-    required this.hotspotPrefix,
-    required this.hotspotPassword,
-    required this.onNavigateToNetworkSelection,
-    required this.hotspotProvisioningRepository,
-  });
-
-  final Viam viam;
   final BuildContext context;
   final String hotspotPrefix;
   final String hotspotPassword;
   final VoidCallback onNavigateToNetworkSelection;
-  final HotspotProvisioningRepository hotspotProvisioningRepository;
+  final HotspotProvisioningRepository repository;
 
   bool _isAttemptingConnectionToHotspot = false;
   bool _isRetryingHotspot = false;
@@ -23,6 +13,13 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool _foundValidSmartMachineStatus = false;
   bool _pollingForMachine = false;
   bool _connectedToHotspot = false;
+  ConnectHotspotPrefixViewModel({
+    required this.context,
+    required this.hotspotPrefix,
+    required this.hotspotPassword,
+    required this.onNavigateToNetworkSelection,
+    required this.repository,
+  });
 
   bool get isAttemptingConnectionToHotspot => _isAttemptingConnectionToHotspot;
   bool get isRetryingHotspot => _isRetryingHotspot;
@@ -55,42 +52,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Android considers Wi-Fi information to be location information
-  // If we don't have location permission any connected ssid will show as 'unown ssid'
-  Future<void> getLocationPermission() async {
-    final status = await ph.Permission.location.request();
-    switch (status) {
-      case ph.PermissionStatus.granted:
-        break; // safe to continue!
-      case ph.PermissionStatus.denied:
-      case ph.PermissionStatus.permanentlyDenied:
-      case ph.PermissionStatus.restricted:
-        await _showLocationPermissionDialog();
-      case ph.PermissionStatus.limited:
-      case ph.PermissionStatus.provisional:
-        assert(false, 'Statuses on iOS only');
-    }
-  }
-
-  Future<void> _showLocationPermissionDialog() async {
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Precise Location Permission Required'),
-          content: const Text(
-            'Please enable precise location permissions in your device settings to continue.\n\nWi-Fi information is considered location information on Android.',
-          ),
-          actions: <Widget>[
-            OutlinedButton(
-              child: const Text('Continue'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
+  Future<bool> getLocationPermission() async {
+    return await repository.getLocationPermission();
   }
 
 // This function should only ever be called after we are connected to the hotspot
@@ -108,7 +71,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
         _pollingTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
           try {
             debugPrint('checking smart machine status');
-            final response = await hotspotProvisioningRepository.getSmartMachineStatus();
+            final response = await repository.getSmartMachineStatus();
             debugPrint('provisioningInfo: ${response.provisioningInfo}');
             _pollingTimer?.cancel();
             _setFoundValidSmartMachineStatus(true);
@@ -148,7 +111,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     }
     _setIsAttemptingConnectionToHotspot(true);
 
-    final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
+    final connectedSSID = await repository.getCurrentSSID();
     // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
     if (connectedSSID != null && connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix) && _connectedToHotspot) {
       debugPrint('Already connected to $hotspotPrefix hotspot');
@@ -157,7 +120,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     }
     // If we are not connected to the hotspot, we need to connect to it.
     debugPrint('Connecting to $hotspotPrefix-#### hotspot');
-    final connected = await hotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+    final connected = await repository.connectToSecureNetworkByPrefix(
       prefix: hotspotPrefix,
       password: hotspotPassword,
       isWep: false,
@@ -165,7 +128,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
       saveNetwork: true, // flips joinOnce on iOS to false
     );
     if (connected) {
-      final connectedSSID = await hotspotProvisioningRepository.getCurrentSSID();
+      final connectedSSID = await repository.getCurrentSSID();
       if (connectedSSID != null &&
           connectedSSID != '<unknown ssid>' &&
           connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix)) {

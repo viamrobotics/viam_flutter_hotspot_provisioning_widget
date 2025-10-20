@@ -125,14 +125,13 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             ConnectHotspotPrefixScreen(
               onBack: _goToPreviousPage,
               viewModel: ConnectHotspotPrefixViewModel(
-                viam: widget.viam,
                 context: context,
                 hotspotPrefix: viewModel.hotspotPrefix,
                 hotspotPassword: viewModel.hotspotPassword,
                 onNavigateToNetworkSelection: () {
                   viewModel.navigateToNextPage();
                 },
-                hotspotProvisioningRepository: HotspotProvisioningRepository(viam: widget.viam),
+                repository: HotspotProvisioningRepository(viam: widget.viam),
               ),
             ),
             NetworkSelectionScreen(

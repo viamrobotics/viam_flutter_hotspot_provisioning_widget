@@ -24,8 +24,36 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   void initState() {
     super.initState();
     if (Platform.isAndroid) {
-      widget.viewModel.getLocationPermission();
+      _checkLocationPermission();
     }
+  }
+
+  Future<void> _checkLocationPermission() async {
+    final hasPermission = await widget.viewModel.getLocationPermission();
+    if (!hasPermission) {
+      await _showLocationPermissionDialog();
+    }
+  }
+
+  Future<void> _showLocationPermissionDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Precise Location Permission Required'),
+          content: const Text(
+            'Please enable precise location permissions in your device settings to continue.\n\nWi-Fi information is considered location information on Android.',
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              child: const Text('Continue'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
