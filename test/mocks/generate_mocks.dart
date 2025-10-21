@@ -7,5 +7,7 @@ import 'package:viam_sdk/src/app/app.dart';
   Viam,
   ProvisioningClient,
   AppClient,
+  PluginWifiConnectService,
+  PermissionService,
 ])
 void main() {}

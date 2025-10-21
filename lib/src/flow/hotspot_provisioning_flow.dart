@@ -65,11 +65,15 @@ class HotspotProvisioningFlow extends StatefulWidget {
 class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
   late final HotspotProvisioningFlowViewModel _viewModel;
+  late final PluginWifiConnectService _wifiService;
+  late final PermissionService _permissionService;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _wifiService = PluginWifiConnectService();
+    _permissionService = PermissionService();
     _viewModel = HotspotProvisioningFlowViewModel(
       viam: widget.viam,
       mainPart: widget.mainPart,
@@ -77,6 +81,8 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       configuredHotspotPassword: widget.hotspotPassword,
       fragmentId: widget.fragmentId,
       pageController: _pageController,
+      wifiService: _wifiService,
+      permissionService: _permissionService,
     );
   }
 
@@ -130,7 +136,11 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                 onNavigateToNetworkSelection: () {
                   viewModel.navigateToNextPage();
                 },
-                repository: HotspotProvisioningRepository(viam: widget.viam),
+                repository: HotspotProvisioningRepository(
+                  viam: widget.viam,
+                  pluginWifiConnectService: _wifiService,
+                  permissionService: _permissionService,
+                ),
               ),
             ),
             NetworkSelectionScreen(
@@ -146,7 +156,11 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             PasswordInputScreen(viewModel: viewModel.passwordInputViewModel, onBack: _goToPreviousPage),
             ConfirmationScreen(
               viewModel: ConfirmationViewModel(
-                repository: HotspotProvisioningRepository(viam: widget.viam),
+                repository: HotspotProvisioningRepository(
+                  viam: widget.viam,
+                  pluginWifiConnectService: _wifiService,
+                  permissionService: _permissionService,
+                ),
                 robot: widget.robot,
                 mainPart: widget.mainPart,
                 fragmentId: viewModel.determinedFragmentId,

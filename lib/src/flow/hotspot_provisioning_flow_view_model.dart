@@ -24,8 +24,14 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     this.configuredHotspotPassword,
     this.fragmentId,
     required this.pageController,
+    required PluginWifiConnectService wifiService,
+    required PermissionService permissionService,
   }) {
-    _repository = HotspotProvisioningRepository(viam: viam);
+    _repository = HotspotProvisioningRepository(
+      viam: viam,
+      pluginWifiConnectService: wifiService,
+      permissionService: permissionService,
+    );
     hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
       configuredHotspotPrefix: configuredHotspotPrefix,
       configuredHotspotPassword: configuredHotspotPassword,
