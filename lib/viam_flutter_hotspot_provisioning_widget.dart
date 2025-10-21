@@ -44,7 +44,7 @@ part 'src/screens/confirmation/view_model/confirmation_view_model.dart';
 part 'src/screens/hotspot_credentials_input/view_model/hotspot_credentials_input_view_model.dart';
 
 // Repository
-part 'src/data/repositories/hotspot_provisioning_repository.dart';
+part 'src/data/hotspot_provisioning_repository.dart';
 
 // widgets
 part 'src/screens/shared_widgets/no_content_widget.dart';
