@@ -17,11 +17,15 @@ dependencies:
   flutter_platform_widgets: ^7.0.1
   provider: ^6.1.5
   pub_semver: ^2.2.0
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  test: ^1.26.2
+  mockito: ^5.5.0
+  build_runner: ^2.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
