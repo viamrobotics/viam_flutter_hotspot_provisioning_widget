@@ -1207,6 +1207,11 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
     String? partId, {
     String? filter,
     String? pageToken,
+    Iterable<String>? levels,
+    int? limit,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? source,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1215,6 +1220,11 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           {
             #filter: filter,
             #pageToken: pageToken,
+            #levels: levels,
+            #limit: limit,
+            #startTime: startTime,
+            #endTime: endTime,
+            #source: source,
           },
         ),
         returnValue: _i7.Future<_i3.GetRobotPartLogsResponse>.value(
@@ -1226,6 +1236,11 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             {
               #filter: filter,
               #pageToken: pageToken,
+              #levels: levels,
+              #limit: limit,
+              #startTime: startTime,
+              #endTime: endTime,
+              #source: source,
             },
           ),
         )),
