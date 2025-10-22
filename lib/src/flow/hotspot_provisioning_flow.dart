@@ -65,14 +65,14 @@ class HotspotProvisioningFlow extends StatefulWidget {
 class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final PageController _pageController;
   late final HotspotProvisioningFlowViewModel _viewModel;
-  late final PluginWifiConnectService _wifiService;
+  late final PluginWifiConnectService _pluginWifiConnectService;
   late final PermissionService _permissionService;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-    _wifiService = PluginWifiConnectService();
+    _pluginWifiConnectService = PluginWifiConnectService();
     _permissionService = PermissionService();
     _viewModel = HotspotProvisioningFlowViewModel(
       viam: widget.viam,
@@ -81,7 +81,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       configuredHotspotPassword: widget.hotspotPassword,
       fragmentId: widget.fragmentId,
       pageController: _pageController,
-      wifiService: _wifiService,
+      pluginWifiConnectService: _pluginWifiConnectService,
       permissionService: _permissionService,
     );
   }
@@ -138,7 +138,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
                 },
                 repository: HotspotProvisioningRepository(
                   viam: widget.viam,
-                  pluginWifiConnectService: _wifiService,
+                  pluginWifiConnectService: _pluginWifiConnectService,
                   permissionService: _permissionService,
                 ),
               ),
@@ -158,7 +158,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               viewModel: ConfirmationViewModel(
                 repository: HotspotProvisioningRepository(
                   viam: widget.viam,
-                  pluginWifiConnectService: _wifiService,
+                  pluginWifiConnectService: _pluginWifiConnectService,
                   permissionService: _permissionService,
                 ),
                 robot: widget.robot,
