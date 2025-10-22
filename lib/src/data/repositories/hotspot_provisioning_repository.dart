@@ -2,8 +2,14 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class HotspotProvisioningRepository {
   final Viam viam;
+  final PluginWifiConnectService pluginWifiConnectService;
+  final PermissionService permissionService;
 
-  HotspotProvisioningRepository({required this.viam});
+  HotspotProvisioningRepository({
+    required this.viam,
+    required this.pluginWifiConnectService,
+    required this.permissionService,
+  });
 
   Future<GetSmartMachineStatusResponse> getSmartMachineStatus() async {
     return await viam.provisioningClient.getSmartMachineStatus();
@@ -41,7 +47,7 @@ class HotspotProvisioningRepository {
   }
 
   Future<String?> getCurrentSSID() async {
-    return await PluginWifiConnect.ssid;
+    return await pluginWifiConnectService.getCurrentSSID();
   }
 
   Future<bool> connectToSecureNetworkByPrefix({
@@ -51,41 +57,27 @@ class HotspotProvisioningRepository {
     required bool isWpa3,
     required bool saveNetwork,
   }) async {
-    final result = await PluginWifiConnect.connectToSecureNetworkByPrefix(
-      prefix,
-      password,
+    return await pluginWifiConnectService.connectToSecureNetworkByPrefix(
+      prefix: prefix,
+      password: password,
       isWep: isWep,
       isWpa3: isWpa3,
       saveNetwork: saveNetwork,
     );
-    return result ?? false;
   }
 
   Future<bool> disconnect() async {
-    final result = await PluginWifiConnect.disconnect();
-    return result ?? false;
+    return await pluginWifiConnectService.disconnect();
   }
 
   Future<ph.PermissionStatus> requestLocationPermission() async {
-    return await ph.Permission.location.request();
+    return await permissionService.requestLocationPermission();
   }
 
   // Android considers Wi-Fi information to be location information
   // If we don't have location permission any connected ssid will show as 'unknown ssid'
   Future<bool> getLocationPermission() async {
-    final status = await ph.Permission.location.request();
-    switch (status) {
-      case ph.PermissionStatus.granted:
-        return true; // safe to continue!
-      case ph.PermissionStatus.denied:
-      case ph.PermissionStatus.permanentlyDenied:
-      case ph.PermissionStatus.restricted:
-        return false; // permission denied
-      case ph.PermissionStatus.limited:
-      case ph.PermissionStatus.provisional:
-        assert(false, 'Statuses on iOS only');
-        return false;
-    }
+    return await permissionService.getLocationPermission();
   }
 
   Future<void> updateRobotPart({

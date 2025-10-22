@@ -11,6 +11,8 @@ void main() {
   late MockViam mockViam;
   late MockProvisioningClient mockProvisioningClient;
   late MockAppClient mockAppClient;
+  late MockPluginWifiConnectService mockPluginWifiConnectService;
+  late MockPermissionService mockPermissionService;
 
   final mockRobotPart = RobotPart(
     id: 'test-part-id',
@@ -31,7 +33,10 @@ void main() {
     mockViam = MockViam();
     mockProvisioningClient = MockProvisioningClient();
     mockAppClient = MockAppClient();
-    hotspotProvisioningRepository = HotspotProvisioningRepository(viam: mockViam);
+    mockPluginWifiConnectService = MockPluginWifiConnectService();
+    mockPermissionService = MockPermissionService();
+    hotspotProvisioningRepository =
+        HotspotProvisioningRepository(viam: mockViam, pluginWifiConnectService: mockPluginWifiConnectService, permissionService: mockPermissionService);
 
     when(mockViam.provisioningClient).thenReturn(mockProvisioningClient);
     when(mockViam.appClient).thenReturn(mockAppClient);

@@ -46,6 +46,10 @@ part 'src/screens/hotspot_credentials_input/view_model/hotspot_credentials_input
 // Repository
 part 'src/data/repositories/hotspot_provisioning_repository.dart';
 
+// Services
+part 'src/data/services/plugin_wifi_connect_service.dart';
+part 'src/data/services/permission_service.dart';
+
 // widgets
 part 'src/screens/shared_widgets/no_content_widget.dart';
 part 'src/screens/shared_widgets/pill_button.dart';

@@ -9,11 +9,11 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i9;
 import 'package:permission_handler/permission_handler.dart' as _i8;
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart'
-    as _i6;
-import 'package:viam_sdk/protos/app/app.dart' as _i3;
+    as _i3;
+import 'package:viam_sdk/protos/app/app.dart' as _i4;
 import 'package:viam_sdk/protos/app/packages.dart' as _i11;
-import 'package:viam_sdk/src/app/app.dart' as _i4;
-import 'package:viam_sdk/src/app/billing.dart' as _i5;
+import 'package:viam_sdk/src/app/app.dart' as _i5;
+import 'package:viam_sdk/src/app/billing.dart' as _i6;
 import 'package:viam_sdk/src/gen/common/v1/common.pb.dart' as _i10;
 import 'package:viam_sdk/viam_sdk.dart' as _i2;
 
@@ -41,9 +41,31 @@ class _FakeViam_0 extends _i1.SmartFake implements _i2.Viam {
         );
 }
 
-class _FakeGetSmartMachineStatusResponse_1 extends _i1.SmartFake
+class _FakePluginWifiConnectService_1 extends _i1.SmartFake
+    implements _i3.PluginWifiConnectService {
+  _FakePluginWifiConnectService_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakePermissionService_2 extends _i1.SmartFake
+    implements _i3.PermissionService {
+  _FakePermissionService_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGetSmartMachineStatusResponse_3 extends _i1.SmartFake
     implements _i2.GetSmartMachineStatusResponse {
-  _FakeGetSmartMachineStatusResponse_1(
+  _FakeGetSmartMachineStatusResponse_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -52,8 +74,8 @@ class _FakeGetSmartMachineStatusResponse_1 extends _i1.SmartFake
         );
 }
 
-class _FakeRobot_2 extends _i1.SmartFake implements _i3.Robot {
-  _FakeRobot_2(
+class _FakeRobot_4 extends _i1.SmartFake implements _i4.Robot {
+  _FakeRobot_4(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -62,8 +84,8 @@ class _FakeRobot_2 extends _i1.SmartFake implements _i3.Robot {
         );
 }
 
-class _FakeAppClient_3 extends _i1.SmartFake implements _i4.AppClient {
-  _FakeAppClient_3(
+class _FakeAppClient_5 extends _i1.SmartFake implements _i5.AppClient {
+  _FakeAppClient_5(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -72,9 +94,9 @@ class _FakeAppClient_3 extends _i1.SmartFake implements _i4.AppClient {
         );
 }
 
-class _FakeAppRobotClient_4 extends _i1.SmartFake
+class _FakeAppRobotClient_6 extends _i1.SmartFake
     implements _i2.AppRobotClient {
-  _FakeAppRobotClient_4(
+  _FakeAppRobotClient_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -83,8 +105,8 @@ class _FakeAppRobotClient_4 extends _i1.SmartFake
         );
 }
 
-class _FakeBillingClient_5 extends _i1.SmartFake implements _i5.BillingClient {
-  _FakeBillingClient_5(
+class _FakeBillingClient_7 extends _i1.SmartFake implements _i6.BillingClient {
+  _FakeBillingClient_7(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -93,8 +115,8 @@ class _FakeBillingClient_5 extends _i1.SmartFake implements _i5.BillingClient {
         );
 }
 
-class _FakeDataClient_6 extends _i1.SmartFake implements _i2.DataClient {
-  _FakeDataClient_6(
+class _FakeDataClient_8 extends _i1.SmartFake implements _i2.DataClient {
+  _FakeDataClient_8(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -103,9 +125,9 @@ class _FakeDataClient_6 extends _i1.SmartFake implements _i2.DataClient {
         );
 }
 
-class _FakeProvisioningClient_7 extends _i1.SmartFake
+class _FakeProvisioningClient_9 extends _i1.SmartFake
     implements _i2.ProvisioningClient {
-  _FakeProvisioningClient_7(
+  _FakeProvisioningClient_9(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -114,8 +136,8 @@ class _FakeProvisioningClient_7 extends _i1.SmartFake
         );
 }
 
-class _FakeRobotClient_8 extends _i1.SmartFake implements _i2.RobotClient {
-  _FakeRobotClient_8(
+class _FakeRobotClient_10 extends _i1.SmartFake implements _i2.RobotClient {
+  _FakeRobotClient_10(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -124,8 +146,8 @@ class _FakeRobotClient_8 extends _i1.SmartFake implements _i2.RobotClient {
         );
 }
 
-class _FakeOrganization_9 extends _i1.SmartFake implements _i3.Organization {
-  _FakeOrganization_9(
+class _FakeOrganization_11 extends _i1.SmartFake implements _i4.Organization {
+  _FakeOrganization_11(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -134,9 +156,9 @@ class _FakeOrganization_9 extends _i1.SmartFake implements _i3.Organization {
         );
 }
 
-class _FakeListOrganizationMembersResponse_10 extends _i1.SmartFake
-    implements _i3.ListOrganizationMembersResponse {
-  _FakeListOrganizationMembersResponse_10(
+class _FakeListOrganizationMembersResponse_12 extends _i1.SmartFake
+    implements _i4.ListOrganizationMembersResponse {
+  _FakeListOrganizationMembersResponse_12(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -145,9 +167,9 @@ class _FakeListOrganizationMembersResponse_10 extends _i1.SmartFake
         );
 }
 
-class _FakeOrganizationInvite_11 extends _i1.SmartFake
-    implements _i3.OrganizationInvite {
-  _FakeOrganizationInvite_11(
+class _FakeOrganizationInvite_13 extends _i1.SmartFake
+    implements _i4.OrganizationInvite {
+  _FakeOrganizationInvite_13(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -156,8 +178,8 @@ class _FakeOrganizationInvite_11 extends _i1.SmartFake
         );
 }
 
-class _FakeLocation_12 extends _i1.SmartFake implements _i3.Location {
-  _FakeLocation_12(
+class _FakeLocation_14 extends _i1.SmartFake implements _i4.Location {
+  _FakeLocation_14(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -166,8 +188,8 @@ class _FakeLocation_12 extends _i1.SmartFake implements _i3.Location {
         );
 }
 
-class _FakeLocationAuth_13 extends _i1.SmartFake implements _i3.LocationAuth {
-  _FakeLocationAuth_13(
+class _FakeLocationAuth_15 extends _i1.SmartFake implements _i4.LocationAuth {
+  _FakeLocationAuth_15(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -176,8 +198,8 @@ class _FakeLocationAuth_13 extends _i1.SmartFake implements _i3.LocationAuth {
         );
 }
 
-class _FakeRobotPart_14 extends _i1.SmartFake implements _i3.RobotPart {
-  _FakeRobotPart_14(
+class _FakeRobotPart_16 extends _i1.SmartFake implements _i4.RobotPart {
+  _FakeRobotPart_16(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -186,9 +208,9 @@ class _FakeRobotPart_14 extends _i1.SmartFake implements _i3.RobotPart {
         );
 }
 
-class _FakeGetRobotPartLogsResponse_15 extends _i1.SmartFake
-    implements _i3.GetRobotPartLogsResponse {
-  _FakeGetRobotPartLogsResponse_15(
+class _FakeGetRobotPartLogsResponse_17 extends _i1.SmartFake
+    implements _i4.GetRobotPartLogsResponse {
+  _FakeGetRobotPartLogsResponse_17(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -197,8 +219,8 @@ class _FakeGetRobotPartLogsResponse_15 extends _i1.SmartFake
         );
 }
 
-class _FakeFragment_16 extends _i1.SmartFake implements _i3.Fragment {
-  _FakeFragment_16(
+class _FakeFragment_18 extends _i1.SmartFake implements _i4.Fragment {
+  _FakeFragment_18(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -207,8 +229,8 @@ class _FakeFragment_16 extends _i1.SmartFake implements _i3.Fragment {
         );
 }
 
-class _FakeRegistryItem_17 extends _i1.SmartFake implements _i3.RegistryItem {
-  _FakeRegistryItem_17(
+class _FakeRegistryItem_19 extends _i1.SmartFake implements _i4.RegistryItem {
+  _FakeRegistryItem_19(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -217,9 +239,9 @@ class _FakeRegistryItem_17 extends _i1.SmartFake implements _i3.RegistryItem {
         );
 }
 
-class _FakeCreateModuleResponse_18 extends _i1.SmartFake
-    implements _i3.CreateModuleResponse {
-  _FakeCreateModuleResponse_18(
+class _FakeCreateModuleResponse_20 extends _i1.SmartFake
+    implements _i4.CreateModuleResponse {
+  _FakeCreateModuleResponse_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -228,8 +250,8 @@ class _FakeCreateModuleResponse_18 extends _i1.SmartFake
         );
 }
 
-class _FakeModule_19 extends _i1.SmartFake implements _i3.Module {
-  _FakeModule_19(
+class _FakeModule_21 extends _i1.SmartFake implements _i4.Module {
+  _FakeModule_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -238,9 +260,9 @@ class _FakeModule_19 extends _i1.SmartFake implements _i3.Module {
         );
 }
 
-class _FakeCreateKeyResponse_20 extends _i1.SmartFake
-    implements _i3.CreateKeyResponse {
-  _FakeCreateKeyResponse_20(
+class _FakeCreateKeyResponse_22 extends _i1.SmartFake
+    implements _i4.CreateKeyResponse {
+  _FakeCreateKeyResponse_22(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -249,9 +271,9 @@ class _FakeCreateKeyResponse_20 extends _i1.SmartFake
         );
 }
 
-class _FakeRotateKeyResponse_21 extends _i1.SmartFake
-    implements _i3.RotateKeyResponse {
-  _FakeRotateKeyResponse_21(
+class _FakeRotateKeyResponse_23 extends _i1.SmartFake
+    implements _i4.RotateKeyResponse {
+  _FakeRotateKeyResponse_23(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -260,9 +282,9 @@ class _FakeRotateKeyResponse_21 extends _i1.SmartFake
         );
 }
 
-class _FakeCreateKeyFromExistingKeyAuthorizationsResponse_22 extends _i1
-    .SmartFake implements _i3.CreateKeyFromExistingKeyAuthorizationsResponse {
-  _FakeCreateKeyFromExistingKeyAuthorizationsResponse_22(
+class _FakeCreateKeyFromExistingKeyAuthorizationsResponse_24 extends _i1
+    .SmartFake implements _i4.CreateKeyFromExistingKeyAuthorizationsResponse {
+  _FakeCreateKeyFromExistingKeyAuthorizationsResponse_24(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -271,9 +293,9 @@ class _FakeCreateKeyFromExistingKeyAuthorizationsResponse_22 extends _i1
         );
 }
 
-class _FakeGetOrganizationMetadataResponse_23 extends _i1.SmartFake
-    implements _i3.GetOrganizationMetadataResponse {
-  _FakeGetOrganizationMetadataResponse_23(
+class _FakeGetOrganizationMetadataResponse_25 extends _i1.SmartFake
+    implements _i4.GetOrganizationMetadataResponse {
+  _FakeGetOrganizationMetadataResponse_25(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -282,9 +304,9 @@ class _FakeGetOrganizationMetadataResponse_23 extends _i1.SmartFake
         );
 }
 
-class _FakeGetLocationMetadataResponse_24 extends _i1.SmartFake
-    implements _i3.GetLocationMetadataResponse {
-  _FakeGetLocationMetadataResponse_24(
+class _FakeGetLocationMetadataResponse_26 extends _i1.SmartFake
+    implements _i4.GetLocationMetadataResponse {
+  _FakeGetLocationMetadataResponse_26(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -293,9 +315,9 @@ class _FakeGetLocationMetadataResponse_24 extends _i1.SmartFake
         );
 }
 
-class _FakeGetRobotMetadataResponse_25 extends _i1.SmartFake
-    implements _i3.GetRobotMetadataResponse {
-  _FakeGetRobotMetadataResponse_25(
+class _FakeGetRobotMetadataResponse_27 extends _i1.SmartFake
+    implements _i4.GetRobotMetadataResponse {
+  _FakeGetRobotMetadataResponse_27(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -304,9 +326,9 @@ class _FakeGetRobotMetadataResponse_25 extends _i1.SmartFake
         );
 }
 
-class _FakeGetRobotPartMetadataResponse_26 extends _i1.SmartFake
-    implements _i3.GetRobotPartMetadataResponse {
-  _FakeGetRobotPartMetadataResponse_26(
+class _FakeGetRobotPartMetadataResponse_28 extends _i1.SmartFake
+    implements _i4.GetRobotPartMetadataResponse {
+  _FakeGetRobotPartMetadataResponse_28(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -319,7 +341,7 @@ class _FakeGetRobotPartMetadataResponse_26 extends _i1.SmartFake
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockHotspotProvisioningRepository extends _i1.Mock
-    implements _i6.HotspotProvisioningRepository {
+    implements _i3.HotspotProvisioningRepository {
   MockHotspotProvisioningRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -334,6 +356,25 @@ class MockHotspotProvisioningRepository extends _i1.Mock
       ) as _i2.Viam);
 
   @override
+  _i3.PluginWifiConnectService get pluginWifiConnectService =>
+      (super.noSuchMethod(
+        Invocation.getter(#pluginWifiConnectService),
+        returnValue: _FakePluginWifiConnectService_1(
+          this,
+          Invocation.getter(#pluginWifiConnectService),
+        ),
+      ) as _i3.PluginWifiConnectService);
+
+  @override
+  _i3.PermissionService get permissionService => (super.noSuchMethod(
+        Invocation.getter(#permissionService),
+        returnValue: _FakePermissionService_2(
+          this,
+          Invocation.getter(#permissionService),
+        ),
+      ) as _i3.PermissionService);
+
+  @override
   _i7.Future<_i2.GetSmartMachineStatusResponse> getSmartMachineStatus() =>
       (super.noSuchMethod(
         Invocation.method(
@@ -341,7 +382,7 @@ class MockHotspotProvisioningRepository extends _i1.Mock
           [],
         ),
         returnValue: _i7.Future<_i2.GetSmartMachineStatusResponse>.value(
-            _FakeGetSmartMachineStatusResponse_1(
+            _FakeGetSmartMachineStatusResponse_3(
           this,
           Invocation.method(
             #getSmartMachineStatus,
@@ -490,30 +531,30 @@ class MockHotspotProvisioningRepository extends _i1.Mock
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.Robot> getRobot(String? robotId) => (super.noSuchMethod(
+  _i7.Future<_i4.Robot> getRobot(String? robotId) => (super.noSuchMethod(
         Invocation.method(
           #getRobot,
           [robotId],
         ),
-        returnValue: _i7.Future<_i3.Robot>.value(_FakeRobot_2(
+        returnValue: _i7.Future<_i4.Robot>.value(_FakeRobot_4(
           this,
           Invocation.method(
             #getRobot,
             [robotId],
           ),
         )),
-      ) as _i7.Future<_i3.Robot>);
+      ) as _i7.Future<_i4.Robot>);
 
   @override
-  _i7.Future<_i6.MachineStatus> calculateMachineStatus(_i3.Robot? robot) =>
+  _i7.Future<_i3.MachineStatus> calculateMachineStatus(_i4.Robot? robot) =>
       (super.noSuchMethod(
         Invocation.method(
           #calculateMachineStatus,
           [robot],
         ),
         returnValue:
-            _i7.Future<_i6.MachineStatus>.value(_i6.MachineStatus.online),
-      ) as _i7.Future<_i6.MachineStatus>);
+            _i7.Future<_i3.MachineStatus>.value(_i3.MachineStatus.online),
+      ) as _i7.Future<_i3.MachineStatus>);
 }
 
 /// A class which mocks [Viam].
@@ -525,36 +566,36 @@ class MockViam extends _i1.Mock implements _i2.Viam {
   }
 
   @override
-  _i4.AppClient get appClient => (super.noSuchMethod(
+  _i5.AppClient get appClient => (super.noSuchMethod(
         Invocation.getter(#appClient),
-        returnValue: _FakeAppClient_3(
+        returnValue: _FakeAppClient_5(
           this,
           Invocation.getter(#appClient),
         ),
-      ) as _i4.AppClient);
+      ) as _i5.AppClient);
 
   @override
   _i2.AppRobotClient get appRobotClient => (super.noSuchMethod(
         Invocation.getter(#appRobotClient),
-        returnValue: _FakeAppRobotClient_4(
+        returnValue: _FakeAppRobotClient_6(
           this,
           Invocation.getter(#appRobotClient),
         ),
       ) as _i2.AppRobotClient);
 
   @override
-  _i5.BillingClient get billingClient => (super.noSuchMethod(
+  _i6.BillingClient get billingClient => (super.noSuchMethod(
         Invocation.getter(#billingClient),
-        returnValue: _FakeBillingClient_5(
+        returnValue: _FakeBillingClient_7(
           this,
           Invocation.getter(#billingClient),
         ),
-      ) as _i5.BillingClient);
+      ) as _i6.BillingClient);
 
   @override
   _i2.DataClient get dataClient => (super.noSuchMethod(
         Invocation.getter(#dataClient),
-        returnValue: _FakeDataClient_6(
+        returnValue: _FakeDataClient_8(
           this,
           Invocation.getter(#dataClient),
         ),
@@ -563,20 +604,20 @@ class MockViam extends _i1.Mock implements _i2.Viam {
   @override
   _i2.ProvisioningClient get provisioningClient => (super.noSuchMethod(
         Invocation.getter(#provisioningClient),
-        returnValue: _FakeProvisioningClient_7(
+        returnValue: _FakeProvisioningClient_9(
           this,
           Invocation.getter(#provisioningClient),
         ),
       ) as _i2.ProvisioningClient);
 
   @override
-  _i7.Future<_i2.RobotClient> getRobotClient(_i3.Robot? robot) =>
+  _i7.Future<_i2.RobotClient> getRobotClient(_i4.Robot? robot) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRobotClient,
           [robot],
         ),
-        returnValue: _i7.Future<_i2.RobotClient>.value(_FakeRobotClient_8(
+        returnValue: _i7.Future<_i2.RobotClient>.value(_FakeRobotClient_10(
           this,
           Invocation.method(
             #getRobotClient,
@@ -603,7 +644,7 @@ class MockProvisioningClient extends _i1.Mock
           [],
         ),
         returnValue: _i7.Future<_i2.GetSmartMachineStatusResponse>.value(
-            _FakeGetSmartMachineStatusResponse_1(
+            _FakeGetSmartMachineStatusResponse_3(
           this,
           Invocation.method(
             #getSmartMachineStatus,
@@ -676,22 +717,22 @@ class MockProvisioningClient extends _i1.Mock
 /// A class which mocks [AppClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppClient extends _i1.Mock implements _i4.AppClient {
+class MockAppClient extends _i1.Mock implements _i5.AppClient {
   MockAppClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<List<_i3.LocationSummary>> listMachineSummaries(
+  _i7.Future<List<_i4.LocationSummary>> listMachineSummaries(
           String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listMachineSummaries,
           [organizationId],
         ),
-        returnValue: _i7.Future<List<_i3.LocationSummary>>.value(
-            <_i3.LocationSummary>[]),
-      ) as _i7.Future<List<_i3.LocationSummary>>);
+        returnValue: _i7.Future<List<_i4.LocationSummary>>.value(
+            <_i4.LocationSummary>[]),
+      ) as _i7.Future<List<_i4.LocationSummary>>);
 
   @override
   _i7.Future<String> getUserIdByEmail(String? email) => (super.noSuchMethod(
@@ -709,68 +750,68 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<_i3.Organization> createOrganization(String? name) =>
+  _i7.Future<_i4.Organization> createOrganization(String? name) =>
       (super.noSuchMethod(
         Invocation.method(
           #createOrganization,
           [name],
         ),
-        returnValue: _i7.Future<_i3.Organization>.value(_FakeOrganization_9(
+        returnValue: _i7.Future<_i4.Organization>.value(_FakeOrganization_11(
           this,
           Invocation.method(
             #createOrganization,
             [name],
           ),
         )),
-      ) as _i7.Future<_i3.Organization>);
+      ) as _i7.Future<_i4.Organization>);
 
   @override
-  _i7.Future<List<_i3.Organization>> listOrganizations() => (super.noSuchMethod(
+  _i7.Future<List<_i4.Organization>> listOrganizations() => (super.noSuchMethod(
         Invocation.method(
           #listOrganizations,
           [],
         ),
         returnValue:
-            _i7.Future<List<_i3.Organization>>.value(<_i3.Organization>[]),
-      ) as _i7.Future<List<_i3.Organization>>);
+            _i7.Future<List<_i4.Organization>>.value(<_i4.Organization>[]),
+      ) as _i7.Future<List<_i4.Organization>>);
 
   @override
-  _i7.Future<List<_i3.OrganizationIdentity>>
+  _i7.Future<List<_i4.OrganizationIdentity>>
       getOrganizationsWithAccessToLocation(String? locationId) =>
           (super.noSuchMethod(
             Invocation.method(
               #getOrganizationsWithAccessToLocation,
               [locationId],
             ),
-            returnValue: _i7.Future<List<_i3.OrganizationIdentity>>.value(
-                <_i3.OrganizationIdentity>[]),
-          ) as _i7.Future<List<_i3.OrganizationIdentity>>);
+            returnValue: _i7.Future<List<_i4.OrganizationIdentity>>.value(
+                <_i4.OrganizationIdentity>[]),
+          ) as _i7.Future<List<_i4.OrganizationIdentity>>);
 
   @override
-  _i7.Future<List<_i3.OrgDetails>> listOrganizationsByUser(String? userId) =>
+  _i7.Future<List<_i4.OrgDetails>> listOrganizationsByUser(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listOrganizationsByUser,
           [userId],
         ),
-        returnValue: _i7.Future<List<_i3.OrgDetails>>.value(<_i3.OrgDetails>[]),
-      ) as _i7.Future<List<_i3.OrgDetails>>);
+        returnValue: _i7.Future<List<_i4.OrgDetails>>.value(<_i4.OrgDetails>[]),
+      ) as _i7.Future<List<_i4.OrgDetails>>);
 
   @override
-  _i7.Future<_i3.Organization> getOrganization(String? organizationId) =>
+  _i7.Future<_i4.Organization> getOrganization(String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getOrganization,
           [organizationId],
         ),
-        returnValue: _i7.Future<_i3.Organization>.value(_FakeOrganization_9(
+        returnValue: _i7.Future<_i4.Organization>.value(_FakeOrganization_11(
           this,
           Invocation.method(
             #getOrganization,
             [organizationId],
           ),
         )),
-      ) as _i7.Future<_i3.Organization>);
+      ) as _i7.Future<_i4.Organization>);
 
   @override
   _i7.Future<bool> getOrganizationNamespaceAvailability(
@@ -784,7 +825,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<bool>);
 
   @override
-  _i7.Future<_i3.Organization> updateOrganization(
+  _i7.Future<_i4.Organization> updateOrganization(
     String? organizationId, {
     String? name,
     String? publicNamespace,
@@ -802,7 +843,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             #cid: cid,
           },
         ),
-        returnValue: _i7.Future<_i3.Organization>.value(_FakeOrganization_9(
+        returnValue: _i7.Future<_i4.Organization>.value(_FakeOrganization_11(
           this,
           Invocation.method(
             #updateOrganization,
@@ -815,7 +856,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             },
           ),
         )),
-      ) as _i7.Future<_i3.Organization>);
+      ) as _i7.Future<_i4.Organization>);
 
   @override
   _i7.Future<void> deleteOrganization(String? organizationId) =>
@@ -829,25 +870,25 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.ListOrganizationMembersResponse> listOrganizationMembers(
+  _i7.Future<_i4.ListOrganizationMembersResponse> listOrganizationMembers(
           String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listOrganizationMembers,
           [organizationId],
         ),
-        returnValue: _i7.Future<_i3.ListOrganizationMembersResponse>.value(
-            _FakeListOrganizationMembersResponse_10(
+        returnValue: _i7.Future<_i4.ListOrganizationMembersResponse>.value(
+            _FakeListOrganizationMembersResponse_12(
           this,
           Invocation.method(
             #listOrganizationMembers,
             [organizationId],
           ),
         )),
-      ) as _i7.Future<_i3.ListOrganizationMembersResponse>);
+      ) as _i7.Future<_i4.ListOrganizationMembersResponse>);
 
   @override
-  _i7.Future<_i3.OrganizationInvite> createOrganizationInvite(
+  _i7.Future<_i4.OrganizationInvite> createOrganizationInvite(
     String? organizationId,
     String? email,
     List<_i2.ViamAuthorization>? authorizations, {
@@ -864,7 +905,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           {#sendEmailInvite: sendEmailInvite},
         ),
         returnValue:
-            _i7.Future<_i3.OrganizationInvite>.value(_FakeOrganizationInvite_11(
+            _i7.Future<_i4.OrganizationInvite>.value(_FakeOrganizationInvite_13(
           this,
           Invocation.method(
             #createOrganizationInvite,
@@ -876,10 +917,10 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             {#sendEmailInvite: sendEmailInvite},
           ),
         )),
-      ) as _i7.Future<_i3.OrganizationInvite>);
+      ) as _i7.Future<_i4.OrganizationInvite>);
 
   @override
-  _i7.Future<_i3.OrganizationInvite> updateOrganizationInviteAuthorizations(
+  _i7.Future<_i4.OrganizationInvite> updateOrganizationInviteAuthorizations(
     String? organizationId,
     String? email,
     List<_i2.ViamAuthorization>? addAuthorizations,
@@ -896,7 +937,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           ],
         ),
         returnValue:
-            _i7.Future<_i3.OrganizationInvite>.value(_FakeOrganizationInvite_11(
+            _i7.Future<_i4.OrganizationInvite>.value(_FakeOrganizationInvite_13(
           this,
           Invocation.method(
             #updateOrganizationInviteAuthorizations,
@@ -908,7 +949,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.OrganizationInvite>);
+      ) as _i7.Future<_i4.OrganizationInvite>);
 
   @override
   _i7.Future<void> deleteOrganizationMember(
@@ -945,7 +986,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.OrganizationInvite> resendOrganizationInvite(
+  _i7.Future<_i4.OrganizationInvite> resendOrganizationInvite(
     String? organizationId,
     String? email, {
     bool? sendEmailInvite = true,
@@ -960,7 +1001,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           {#sendEmailInvite: sendEmailInvite},
         ),
         returnValue:
-            _i7.Future<_i3.OrganizationInvite>.value(_FakeOrganizationInvite_11(
+            _i7.Future<_i4.OrganizationInvite>.value(_FakeOrganizationInvite_13(
           this,
           Invocation.method(
             #resendOrganizationInvite,
@@ -971,10 +1012,10 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             {#sendEmailInvite: sendEmailInvite},
           ),
         )),
-      ) as _i7.Future<_i3.OrganizationInvite>);
+      ) as _i7.Future<_i4.OrganizationInvite>);
 
   @override
-  _i7.Future<_i3.Location> createLocation(
+  _i7.Future<_i4.Location> createLocation(
     String? organizationId,
     String? name, {
     String? parentLocationId,
@@ -988,7 +1029,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           ],
           {#parentLocationId: parentLocationId},
         ),
-        returnValue: _i7.Future<_i3.Location>.value(_FakeLocation_12(
+        returnValue: _i7.Future<_i4.Location>.value(_FakeLocation_14(
           this,
           Invocation.method(
             #createLocation,
@@ -999,26 +1040,26 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             {#parentLocationId: parentLocationId},
           ),
         )),
-      ) as _i7.Future<_i3.Location>);
+      ) as _i7.Future<_i4.Location>);
 
   @override
-  _i7.Future<_i3.Location> getLocation(String? locationId) =>
+  _i7.Future<_i4.Location> getLocation(String? locationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getLocation,
           [locationId],
         ),
-        returnValue: _i7.Future<_i3.Location>.value(_FakeLocation_12(
+        returnValue: _i7.Future<_i4.Location>.value(_FakeLocation_14(
           this,
           Invocation.method(
             #getLocation,
             [locationId],
           ),
         )),
-      ) as _i7.Future<_i3.Location>);
+      ) as _i7.Future<_i4.Location>);
 
   @override
-  _i7.Future<_i3.Location> updateLocation(
+  _i7.Future<_i4.Location> updateLocation(
     String? locationId, {
     String? name,
     String? parentLocationId,
@@ -1034,7 +1075,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             #region: region,
           },
         ),
-        returnValue: _i7.Future<_i3.Location>.value(_FakeLocation_12(
+        returnValue: _i7.Future<_i4.Location>.value(_FakeLocation_14(
           this,
           Invocation.method(
             #updateLocation,
@@ -1046,7 +1087,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             },
           ),
         )),
-      ) as _i7.Future<_i3.Location>);
+      ) as _i7.Future<_i4.Location>);
 
   @override
   _i7.Future<void> deleteLocation(String? locationId) => (super.noSuchMethod(
@@ -1059,14 +1100,14 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.Location>> listLocations(String? organizationId) =>
+  _i7.Future<List<_i4.Location>> listLocations(String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listLocations,
           [organizationId],
         ),
-        returnValue: _i7.Future<List<_i3.Location>>.value(<_i3.Location>[]),
-      ) as _i7.Future<List<_i3.Location>>);
+        returnValue: _i7.Future<List<_i4.Location>>.value(<_i4.Location>[]),
+      ) as _i7.Future<List<_i4.Location>>);
 
   @override
   _i7.Future<void> shareLocation(
@@ -1103,36 +1144,36 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.LocationAuth> locationAuth(String? locationId) =>
+  _i7.Future<_i4.LocationAuth> locationAuth(String? locationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #locationAuth,
           [locationId],
         ),
-        returnValue: _i7.Future<_i3.LocationAuth>.value(_FakeLocationAuth_13(
+        returnValue: _i7.Future<_i4.LocationAuth>.value(_FakeLocationAuth_15(
           this,
           Invocation.method(
             #locationAuth,
             [locationId],
           ),
         )),
-      ) as _i7.Future<_i3.LocationAuth>);
+      ) as _i7.Future<_i4.LocationAuth>);
 
   @override
-  _i7.Future<_i3.LocationAuth> createLocationSecret(String? locationId) =>
+  _i7.Future<_i4.LocationAuth> createLocationSecret(String? locationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #createLocationSecret,
           [locationId],
         ),
-        returnValue: _i7.Future<_i3.LocationAuth>.value(_FakeLocationAuth_13(
+        returnValue: _i7.Future<_i4.LocationAuth>.value(_FakeLocationAuth_15(
           this,
           Invocation.method(
             #createLocationSecret,
             [locationId],
           ),
         )),
-      ) as _i7.Future<_i3.LocationAuth>);
+      ) as _i7.Future<_i4.LocationAuth>);
 
   @override
   _i7.Future<void> deleteLocationSecret(
@@ -1152,58 +1193,58 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.Robot> getRobot(String? robotId) => (super.noSuchMethod(
+  _i7.Future<_i4.Robot> getRobot(String? robotId) => (super.noSuchMethod(
         Invocation.method(
           #getRobot,
           [robotId],
         ),
-        returnValue: _i7.Future<_i3.Robot>.value(_FakeRobot_2(
+        returnValue: _i7.Future<_i4.Robot>.value(_FakeRobot_4(
           this,
           Invocation.method(
             #getRobot,
             [robotId],
           ),
         )),
-      ) as _i7.Future<_i3.Robot>);
+      ) as _i7.Future<_i4.Robot>);
 
   @override
-  _i7.Future<List<_i3.RoverRentalRobot>> getRoverRentalRobots(String? orgId) =>
+  _i7.Future<List<_i4.RoverRentalRobot>> getRoverRentalRobots(String? orgId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRoverRentalRobots,
           [orgId],
         ),
-        returnValue: _i7.Future<List<_i3.RoverRentalRobot>>.value(
-            <_i3.RoverRentalRobot>[]),
-      ) as _i7.Future<List<_i3.RoverRentalRobot>>);
+        returnValue: _i7.Future<List<_i4.RoverRentalRobot>>.value(
+            <_i4.RoverRentalRobot>[]),
+      ) as _i7.Future<List<_i4.RoverRentalRobot>>);
 
   @override
-  _i7.Future<List<_i3.RobotPart>> listRobotParts(String? robotId) =>
+  _i7.Future<List<_i4.RobotPart>> listRobotParts(String? robotId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listRobotParts,
           [robotId],
         ),
-        returnValue: _i7.Future<List<_i3.RobotPart>>.value(<_i3.RobotPart>[]),
-      ) as _i7.Future<List<_i3.RobotPart>>);
+        returnValue: _i7.Future<List<_i4.RobotPart>>.value(<_i4.RobotPart>[]),
+      ) as _i7.Future<List<_i4.RobotPart>>);
 
   @override
-  _i7.Future<_i3.RobotPart> getRobotPart(String? partId) => (super.noSuchMethod(
+  _i7.Future<_i4.RobotPart> getRobotPart(String? partId) => (super.noSuchMethod(
         Invocation.method(
           #getRobotPart,
           [partId],
         ),
-        returnValue: _i7.Future<_i3.RobotPart>.value(_FakeRobotPart_14(
+        returnValue: _i7.Future<_i4.RobotPart>.value(_FakeRobotPart_16(
           this,
           Invocation.method(
             #getRobotPart,
             [partId],
           ),
         )),
-      ) as _i7.Future<_i3.RobotPart>);
+      ) as _i7.Future<_i4.RobotPart>);
 
   @override
-  _i7.Future<_i3.GetRobotPartLogsResponse> getLogs(
+  _i7.Future<_i4.GetRobotPartLogsResponse> getLogs(
     String? partId, {
     String? filter,
     String? pageToken,
@@ -1227,8 +1268,8 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             #source: source,
           },
         ),
-        returnValue: _i7.Future<_i3.GetRobotPartLogsResponse>.value(
-            _FakeGetRobotPartLogsResponse_15(
+        returnValue: _i7.Future<_i4.GetRobotPartLogsResponse>.value(
+            _FakeGetRobotPartLogsResponse_17(
           this,
           Invocation.method(
             #getLogs,
@@ -1244,7 +1285,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             },
           ),
         )),
-      ) as _i7.Future<_i3.GetRobotPartLogsResponse>);
+      ) as _i7.Future<_i4.GetRobotPartLogsResponse>);
 
   @override
   _i7.Stream<List<_i10.LogEntry>> tailLogs(
@@ -1265,18 +1306,18 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Stream<List<_i10.LogEntry>>);
 
   @override
-  _i7.Future<List<_i3.RobotPartHistoryEntry>> getRobotPartHistory(String? id) =>
+  _i7.Future<List<_i4.RobotPartHistoryEntry>> getRobotPartHistory(String? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRobotPartHistory,
           [id],
         ),
-        returnValue: _i7.Future<List<_i3.RobotPartHistoryEntry>>.value(
-            <_i3.RobotPartHistoryEntry>[]),
-      ) as _i7.Future<List<_i3.RobotPartHistoryEntry>>);
+        returnValue: _i7.Future<List<_i4.RobotPartHistoryEntry>>.value(
+            <_i4.RobotPartHistoryEntry>[]),
+      ) as _i7.Future<List<_i4.RobotPartHistoryEntry>>);
 
   @override
-  _i7.Future<_i3.RobotPart> updateRobotPart(
+  _i7.Future<_i4.RobotPart> updateRobotPart(
     String? partId,
     String? name,
     Map<String, dynamic>? robotConfig, {
@@ -1292,7 +1333,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           ],
           {#lastKnownUpdate: lastKnownUpdate},
         ),
-        returnValue: _i7.Future<_i3.RobotPart>.value(_FakeRobotPart_14(
+        returnValue: _i7.Future<_i4.RobotPart>.value(_FakeRobotPart_16(
           this,
           Invocation.method(
             #updateRobotPart,
@@ -1304,7 +1345,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             {#lastKnownUpdate: lastKnownUpdate},
           ),
         )),
-      ) as _i7.Future<_i3.RobotPart>);
+      ) as _i7.Future<_i4.RobotPart>);
 
   @override
   _i7.Future<String> newRobotPart(
@@ -1342,16 +1383,16 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.APIKeyWithAuthorizations>> getRobotApiKeys(
+  _i7.Future<List<_i4.APIKeyWithAuthorizations>> getRobotApiKeys(
           String? robotId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRobotApiKeys,
           [robotId],
         ),
-        returnValue: _i7.Future<List<_i3.APIKeyWithAuthorizations>>.value(
-            <_i3.APIKeyWithAuthorizations>[]),
-      ) as _i7.Future<List<_i3.APIKeyWithAuthorizations>>);
+        returnValue: _i7.Future<List<_i4.APIKeyWithAuthorizations>>.value(
+            <_i4.APIKeyWithAuthorizations>[]),
+      ) as _i7.Future<List<_i4.APIKeyWithAuthorizations>>);
 
   @override
   _i7.Future<void> markPartAsMain(String? partId) => (super.noSuchMethod(
@@ -1374,20 +1415,20 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.RobotPart> createRobotPartSecret(String? partId) =>
+  _i7.Future<_i4.RobotPart> createRobotPartSecret(String? partId) =>
       (super.noSuchMethod(
         Invocation.method(
           #createRobotPartSecret,
           [partId],
         ),
-        returnValue: _i7.Future<_i3.RobotPart>.value(_FakeRobotPart_14(
+        returnValue: _i7.Future<_i4.RobotPart>.value(_FakeRobotPart_16(
           this,
           Invocation.method(
             #createRobotPartSecret,
             [partId],
           ),
         )),
-      ) as _i7.Future<_i3.RobotPart>);
+      ) as _i7.Future<_i4.RobotPart>);
 
   @override
   _i7.Future<void> deleteRobotPartSecret(
@@ -1407,14 +1448,14 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.Robot>> listRobots(String? locationId) =>
+  _i7.Future<List<_i4.Robot>> listRobots(String? locationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listRobots,
           [locationId],
         ),
-        returnValue: _i7.Future<List<_i3.Robot>>.value(<_i3.Robot>[]),
-      ) as _i7.Future<List<_i3.Robot>>);
+        returnValue: _i7.Future<List<_i4.Robot>>.value(<_i4.Robot>[]),
+      ) as _i7.Future<List<_i4.Robot>>);
 
   @override
   _i7.Future<String> newMachine(
@@ -1442,7 +1483,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<_i3.Robot> updateRobot(
+  _i7.Future<_i4.Robot> updateRobot(
     String? id,
     String? name,
     String? location,
@@ -1456,7 +1497,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             location,
           ],
         ),
-        returnValue: _i7.Future<_i3.Robot>.value(_FakeRobot_2(
+        returnValue: _i7.Future<_i4.Robot>.value(_FakeRobot_4(
           this,
           Invocation.method(
             #updateRobot,
@@ -1467,7 +1508,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.Robot>);
+      ) as _i7.Future<_i4.Robot>);
 
   @override
   _i7.Future<void> deleteRobot(String? id) => (super.noSuchMethod(
@@ -1480,10 +1521,10 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.Fragment>> listFragments(
+  _i7.Future<List<_i4.Fragment>> listFragments(
     String? organizationId,
     bool? showPublic, {
-    List<_i3.FragmentVisibility>? fragmentVisibility,
+    List<_i4.FragmentVisibility>? fragmentVisibility,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1494,26 +1535,26 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           ],
           {#fragmentVisibility: fragmentVisibility},
         ),
-        returnValue: _i7.Future<List<_i3.Fragment>>.value(<_i3.Fragment>[]),
-      ) as _i7.Future<List<_i3.Fragment>>);
+        returnValue: _i7.Future<List<_i4.Fragment>>.value(<_i4.Fragment>[]),
+      ) as _i7.Future<List<_i4.Fragment>>);
 
   @override
-  _i7.Future<_i3.Fragment> getFragment(String? id) => (super.noSuchMethod(
+  _i7.Future<_i4.Fragment> getFragment(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getFragment,
           [id],
         ),
-        returnValue: _i7.Future<_i3.Fragment>.value(_FakeFragment_16(
+        returnValue: _i7.Future<_i4.Fragment>.value(_FakeFragment_18(
           this,
           Invocation.method(
             #getFragment,
             [id],
           ),
         )),
-      ) as _i7.Future<_i3.Fragment>);
+      ) as _i7.Future<_i4.Fragment>);
 
   @override
-  _i7.Future<_i3.Fragment> createFragment(
+  _i7.Future<_i4.Fragment> createFragment(
     String? name,
     Map<String, dynamic>? config,
     String? organizationId,
@@ -1527,7 +1568,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             organizationId,
           ],
         ),
-        returnValue: _i7.Future<_i3.Fragment>.value(_FakeFragment_16(
+        returnValue: _i7.Future<_i4.Fragment>.value(_FakeFragment_18(
           this,
           Invocation.method(
             #createFragment,
@@ -1538,15 +1579,15 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.Fragment>);
+      ) as _i7.Future<_i4.Fragment>);
 
   @override
-  _i7.Future<_i3.Fragment> updateFragment(
+  _i7.Future<_i4.Fragment> updateFragment(
     String? id,
     String? name,
     Map<String, dynamic>? config, {
     bool? public,
-    _i3.FragmentVisibility? visibility,
+    _i4.FragmentVisibility? visibility,
     DateTime? lastKnownUpdate,
   }) =>
       (super.noSuchMethod(
@@ -1563,7 +1604,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             #lastKnownUpdate: lastKnownUpdate,
           },
         ),
-        returnValue: _i7.Future<_i3.Fragment>.value(_FakeFragment_16(
+        returnValue: _i7.Future<_i4.Fragment>.value(_FakeFragment_18(
           this,
           Invocation.method(
             #updateFragment,
@@ -1579,7 +1620,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             },
           ),
         )),
-      ) as _i7.Future<_i3.Fragment>);
+      ) as _i7.Future<_i4.Fragment>);
 
   @override
   _i7.Future<void> deleteFragment(String? id) => (super.noSuchMethod(
@@ -1631,7 +1672,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.Authorization>> listAuthorizations(
+  _i7.Future<List<_i4.Authorization>> listAuthorizations(
     String? organizationId, {
     List<String>? resourceIds = const [],
   }) =>
@@ -1642,8 +1683,8 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           {#resourceIds: resourceIds},
         ),
         returnValue:
-            _i7.Future<List<_i3.Authorization>>.value(<_i3.Authorization>[]),
-      ) as _i7.Future<List<_i3.Authorization>>);
+            _i7.Future<List<_i4.Authorization>>.value(<_i4.Authorization>[]),
+      ) as _i7.Future<List<_i4.Authorization>>);
 
   @override
   _i7.Future<List<_i2.Permission>> checkPermissions(
@@ -1664,20 +1705,20 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<List<_i2.Permission>>);
 
   @override
-  _i7.Future<_i3.RegistryItem> getRegistryItem(String? itemId) =>
+  _i7.Future<_i4.RegistryItem> getRegistryItem(String? itemId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRegistryItem,
           [itemId],
         ),
-        returnValue: _i7.Future<_i3.RegistryItem>.value(_FakeRegistryItem_17(
+        returnValue: _i7.Future<_i4.RegistryItem>.value(_FakeRegistryItem_19(
           this,
           Invocation.method(
             #getRegistryItem,
             [itemId],
           ),
         )),
-      ) as _i7.Future<_i3.RegistryItem>);
+      ) as _i7.Future<_i4.RegistryItem>);
 
   @override
   _i7.Future<void> createRegistryItem(
@@ -1703,7 +1744,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
     String? itemId,
     _i11.PackageType? type,
     String? description,
-    _i3.Visibility? visibility,
+    _i4.Visibility? visibility,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1720,11 +1761,11 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.RegistryItem>> listRegistryItems(
+  _i7.Future<List<_i4.RegistryItem>> listRegistryItems(
     List<_i11.PackageType>? types,
-    List<_i3.Visibility>? visibilities,
+    List<_i4.Visibility>? visibilities,
     List<String>? platforms,
-    List<_i3.RegistryItemStatus>? statuses, {
+    List<_i4.RegistryItemStatus>? statuses, {
     String? organizationId,
     String? searchTerm,
     String? pageToken,
@@ -1745,8 +1786,8 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           },
         ),
         returnValue:
-            _i7.Future<List<_i3.RegistryItem>>.value(<_i3.RegistryItem>[]),
-      ) as _i7.Future<List<_i3.RegistryItem>>);
+            _i7.Future<List<_i4.RegistryItem>>.value(<_i4.RegistryItem>[]),
+      ) as _i7.Future<List<_i4.RegistryItem>>);
 
   @override
   _i7.Future<void> deleteRegistryItem(String? itemId) => (super.noSuchMethod(
@@ -1759,7 +1800,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.CreateModuleResponse> createModule(
+  _i7.Future<_i4.CreateModuleResponse> createModule(
     String? organizationId,
     String? name,
   ) =>
@@ -1771,8 +1812,8 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             name,
           ],
         ),
-        returnValue: _i7.Future<_i3.CreateModuleResponse>.value(
-            _FakeCreateModuleResponse_18(
+        returnValue: _i7.Future<_i4.CreateModuleResponse>.value(
+            _FakeCreateModuleResponse_20(
           this,
           Invocation.method(
             #createModule,
@@ -1782,15 +1823,15 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.CreateModuleResponse>);
+      ) as _i7.Future<_i4.CreateModuleResponse>);
 
   @override
   _i7.Future<String> updateModule(
     String? moduleId,
-    _i3.Visibility? visibility,
+    _i4.Visibility? visibility,
     String? url,
     String? description,
-    List<_i3.Model>? models,
+    List<_i4.Model>? models,
     String? entrypoint,
   ) =>
       (super.noSuchMethod(
@@ -1823,7 +1864,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
 
   @override
   _i7.Future<String> uploadModuleFile(
-    _i3.ModuleFileInfo? moduleFileInfo,
+    _i4.ModuleFileInfo? moduleFileInfo,
     List<int>? file,
   ) =>
       (super.noSuchMethod(
@@ -1847,32 +1888,32 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<_i3.Module> getModule(String? moduleId) => (super.noSuchMethod(
+  _i7.Future<_i4.Module> getModule(String? moduleId) => (super.noSuchMethod(
         Invocation.method(
           #getModule,
           [moduleId],
         ),
-        returnValue: _i7.Future<_i3.Module>.value(_FakeModule_19(
+        returnValue: _i7.Future<_i4.Module>.value(_FakeModule_21(
           this,
           Invocation.method(
             #getModule,
             [moduleId],
           ),
         )),
-      ) as _i7.Future<_i3.Module>);
+      ) as _i7.Future<_i4.Module>);
 
   @override
-  _i7.Future<List<_i3.Module>> listModules(String? organizationId) =>
+  _i7.Future<List<_i4.Module>> listModules(String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listModules,
           [organizationId],
         ),
-        returnValue: _i7.Future<List<_i3.Module>>.value(<_i3.Module>[]),
-      ) as _i7.Future<List<_i3.Module>>);
+        returnValue: _i7.Future<List<_i4.Module>>.value(<_i4.Module>[]),
+      ) as _i7.Future<List<_i4.Module>>);
 
   @override
-  _i7.Future<_i3.CreateKeyResponse> createKey(
+  _i7.Future<_i4.CreateKeyResponse> createKey(
     List<_i2.ViamAuthorization>? authorizations,
     String? name,
   ) =>
@@ -1885,7 +1926,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
           ],
         ),
         returnValue:
-            _i7.Future<_i3.CreateKeyResponse>.value(_FakeCreateKeyResponse_20(
+            _i7.Future<_i4.CreateKeyResponse>.value(_FakeCreateKeyResponse_22(
           this,
           Invocation.method(
             #createKey,
@@ -1895,7 +1936,7 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.CreateKeyResponse>);
+      ) as _i7.Future<_i4.CreateKeyResponse>);
 
   @override
   _i7.Future<void> deleteKey(String? id) => (super.noSuchMethod(
@@ -1908,68 +1949,68 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<List<_i3.APIKeyWithAuthorizations>> listKeys(String? orgId) =>
+  _i7.Future<List<_i4.APIKeyWithAuthorizations>> listKeys(String? orgId) =>
       (super.noSuchMethod(
         Invocation.method(
           #listKeys,
           [orgId],
         ),
-        returnValue: _i7.Future<List<_i3.APIKeyWithAuthorizations>>.value(
-            <_i3.APIKeyWithAuthorizations>[]),
-      ) as _i7.Future<List<_i3.APIKeyWithAuthorizations>>);
+        returnValue: _i7.Future<List<_i4.APIKeyWithAuthorizations>>.value(
+            <_i4.APIKeyWithAuthorizations>[]),
+      ) as _i7.Future<List<_i4.APIKeyWithAuthorizations>>);
 
   @override
-  _i7.Future<_i3.RotateKeyResponse> rotateKey(String? id) =>
+  _i7.Future<_i4.RotateKeyResponse> rotateKey(String? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #rotateKey,
           [id],
         ),
         returnValue:
-            _i7.Future<_i3.RotateKeyResponse>.value(_FakeRotateKeyResponse_21(
+            _i7.Future<_i4.RotateKeyResponse>.value(_FakeRotateKeyResponse_23(
           this,
           Invocation.method(
             #rotateKey,
             [id],
           ),
         )),
-      ) as _i7.Future<_i3.RotateKeyResponse>);
+      ) as _i7.Future<_i4.RotateKeyResponse>);
 
   @override
-  _i7.Future<_i3.CreateKeyFromExistingKeyAuthorizationsResponse>
+  _i7.Future<_i4.CreateKeyFromExistingKeyAuthorizationsResponse>
       createKeyFromExistingKeyAuthorizations(String? id) => (super.noSuchMethod(
             Invocation.method(
               #createKeyFromExistingKeyAuthorizations,
               [id],
             ),
             returnValue: _i7.Future<
-                    _i3.CreateKeyFromExistingKeyAuthorizationsResponse>.value(
-                _FakeCreateKeyFromExistingKeyAuthorizationsResponse_22(
+                    _i4.CreateKeyFromExistingKeyAuthorizationsResponse>.value(
+                _FakeCreateKeyFromExistingKeyAuthorizationsResponse_24(
               this,
               Invocation.method(
                 #createKeyFromExistingKeyAuthorizations,
                 [id],
               ),
             )),
-          ) as _i7.Future<_i3.CreateKeyFromExistingKeyAuthorizationsResponse>);
+          ) as _i7.Future<_i4.CreateKeyFromExistingKeyAuthorizationsResponse>);
 
   @override
-  _i7.Future<_i3.GetOrganizationMetadataResponse> getOrganizationMetadata(
+  _i7.Future<_i4.GetOrganizationMetadataResponse> getOrganizationMetadata(
           String? organizationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getOrganizationMetadata,
           [organizationId],
         ),
-        returnValue: _i7.Future<_i3.GetOrganizationMetadataResponse>.value(
-            _FakeGetOrganizationMetadataResponse_23(
+        returnValue: _i7.Future<_i4.GetOrganizationMetadataResponse>.value(
+            _FakeGetOrganizationMetadataResponse_25(
           this,
           Invocation.method(
             #getOrganizationMetadata,
             [organizationId],
           ),
         )),
-      ) as _i7.Future<_i3.GetOrganizationMetadataResponse>);
+      ) as _i7.Future<_i4.GetOrganizationMetadataResponse>);
 
   @override
   _i7.Future<void> updateOrganizationMetadata(
@@ -1989,22 +2030,22 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.GetLocationMetadataResponse> getLocationMetadata(
+  _i7.Future<_i4.GetLocationMetadataResponse> getLocationMetadata(
           String? locationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getLocationMetadata,
           [locationId],
         ),
-        returnValue: _i7.Future<_i3.GetLocationMetadataResponse>.value(
-            _FakeGetLocationMetadataResponse_24(
+        returnValue: _i7.Future<_i4.GetLocationMetadataResponse>.value(
+            _FakeGetLocationMetadataResponse_26(
           this,
           Invocation.method(
             #getLocationMetadata,
             [locationId],
           ),
         )),
-      ) as _i7.Future<_i3.GetLocationMetadataResponse>);
+      ) as _i7.Future<_i4.GetLocationMetadataResponse>);
 
   @override
   _i7.Future<void> updateLocationMetadata(
@@ -2024,21 +2065,21 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.GetRobotMetadataResponse> getRobotMetadata(String? robotId) =>
+  _i7.Future<_i4.GetRobotMetadataResponse> getRobotMetadata(String? robotId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRobotMetadata,
           [robotId],
         ),
-        returnValue: _i7.Future<_i3.GetRobotMetadataResponse>.value(
-            _FakeGetRobotMetadataResponse_25(
+        returnValue: _i7.Future<_i4.GetRobotMetadataResponse>.value(
+            _FakeGetRobotMetadataResponse_27(
           this,
           Invocation.method(
             #getRobotMetadata,
             [robotId],
           ),
         )),
-      ) as _i7.Future<_i3.GetRobotMetadataResponse>);
+      ) as _i7.Future<_i4.GetRobotMetadataResponse>);
 
   @override
   _i7.Future<void> updateRobotMetadata(
@@ -2058,22 +2099,22 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
       ) as _i7.Future<void>);
 
   @override
-  _i7.Future<_i3.GetRobotPartMetadataResponse> getRobotPartMetadata(
+  _i7.Future<_i4.GetRobotPartMetadataResponse> getRobotPartMetadata(
           String? robotPartId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRobotPartMetadata,
           [robotPartId],
         ),
-        returnValue: _i7.Future<_i3.GetRobotPartMetadataResponse>.value(
-            _FakeGetRobotPartMetadataResponse_26(
+        returnValue: _i7.Future<_i4.GetRobotPartMetadataResponse>.value(
+            _FakeGetRobotPartMetadataResponse_28(
           this,
           Invocation.method(
             #getRobotPartMetadata,
             [robotPartId],
           ),
         )),
-      ) as _i7.Future<_i3.GetRobotPartMetadataResponse>);
+      ) as _i7.Future<_i4.GetRobotPartMetadataResponse>);
 
   @override
   _i7.Future<void> updateRobotPartMetadata(
@@ -2091,4 +2132,84 @@ class MockAppClient extends _i1.Mock implements _i4.AppClient {
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
+}
+
+/// A class which mocks [PluginWifiConnectService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPluginWifiConnectService extends _i1.Mock
+    implements _i3.PluginWifiConnectService {
+  MockPluginWifiConnectService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<String?> getCurrentSSID() => (super.noSuchMethod(
+        Invocation.method(
+          #getCurrentSSID,
+          [],
+        ),
+        returnValue: _i7.Future<String?>.value(),
+      ) as _i7.Future<String?>);
+
+  @override
+  _i7.Future<bool> connectToSecureNetworkByPrefix({
+    required String? prefix,
+    required String? password,
+    required bool? isWep,
+    required bool? isWpa3,
+    required bool? saveNetwork,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #connectToSecureNetworkByPrefix,
+          [],
+          {
+            #prefix: prefix,
+            #password: password,
+            #isWep: isWep,
+            #isWpa3: isWpa3,
+            #saveNetwork: saveNetwork,
+          },
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+
+  @override
+  _i7.Future<bool> disconnect() => (super.noSuchMethod(
+        Invocation.method(
+          #disconnect,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
+}
+
+/// A class which mocks [PermissionService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPermissionService extends _i1.Mock implements _i3.PermissionService {
+  MockPermissionService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<_i8.PermissionStatus> requestLocationPermission() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #requestLocationPermission,
+          [],
+        ),
+        returnValue:
+            _i7.Future<_i8.PermissionStatus>.value(_i8.PermissionStatus.denied),
+      ) as _i7.Future<_i8.PermissionStatus>);
+
+  @override
+  _i7.Future<bool> getLocationPermission() => (super.noSuchMethod(
+        Invocation.method(
+          #getLocationPermission,
+          [],
+        ),
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
 }
