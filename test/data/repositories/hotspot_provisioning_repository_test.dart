@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'package:viam_sdk/src/gen/google/protobuf/struct.pb.dart';
 import 'package:viam_sdk/src/gen/google/protobuf/timestamp.pb.dart';
@@ -35,8 +36,8 @@ void main() {
     mockAppClient = MockAppClient();
     mockPluginWifiConnectService = MockPluginWifiConnectService();
     mockPermissionService = MockPermissionService();
-    hotspotProvisioningRepository =
-        HotspotProvisioningRepository(viam: mockViam, pluginWifiConnectService: mockPluginWifiConnectService, permissionService: mockPermissionService);
+    hotspotProvisioningRepository = HotspotProvisioningRepository(
+        viam: mockViam, pluginWifiConnectService: mockPluginWifiConnectService, permissionService: mockPermissionService);
 
     when(mockViam.provisioningClient).thenReturn(mockProvisioningClient);
     when(mockViam.appClient).thenReturn(mockAppClient);
@@ -168,22 +169,95 @@ void main() {
   });
 
   group('getCurrentSSID', () {
-    // TODO: Add tests for functions that rely on PluginWifiConnect
+    test('getCurrentSSID calls the getCurrentSSID method on the pluginWifiConnectService', () async {
+      when(mockPluginWifiConnectService.getCurrentSSID()).thenAnswer((_) async => 'test-ssid');
+
+      final response = await hotspotProvisioningRepository.getCurrentSSID();
+
+      verify(mockPluginWifiConnectService.getCurrentSSID()).called(1);
+      expect(response, 'test-ssid');
+    });
+    test('throws an exception if the getCurrentSSID call fails', () async {
+      when(mockPluginWifiConnectService.getCurrentSSID()).thenAnswer((_) async => throw Exception('Failed to get current SSID'));
+
+      expect(() => hotspotProvisioningRepository.getCurrentSSID(), throwsA(isA<Exception>()));
+    });
   });
 
   group('connectToSecureNetworkByPrefix', () {
-    // TODO: Add tests for functions that rely on PluginWifiConnect
+    test('connectToSecureNetworkByPrefix calls the connectToSecureNetworkByPrefix method on the pluginWifiConnectService', () async {
+      when(mockPluginWifiConnectService.connectToSecureNetworkByPrefix(
+              prefix: 'test-prefix', password: 'test-password', isWep: false, isWpa3: false, saveNetwork: true))
+          .thenAnswer((_) async => true);
+
+      final response = await hotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+          prefix: 'test-prefix', password: 'test-password', isWep: false, isWpa3: false, saveNetwork: true);
+
+      verify(mockPluginWifiConnectService.connectToSecureNetworkByPrefix(
+              prefix: 'test-prefix', password: 'test-password', isWep: false, isWpa3: false, saveNetwork: true))
+          .called(1);
+
+      expect(response, true);
+    });
+    test('throws an exception if the connectToSecureNetworkByPrefix call fails', () async {
+      when(mockPluginWifiConnectService.connectToSecureNetworkByPrefix(
+              prefix: 'test-prefix', password: 'test-password', isWep: false, isWpa3: false, saveNetwork: true))
+          .thenAnswer((_) async => throw Exception('Failed to connect to secure network by prefix'));
+
+      expect(
+          () => hotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+              prefix: 'test-prefix', password: 'test-password', isWep: false, isWpa3: false, saveNetwork: true),
+          throwsA(isA<Exception>()));
+    });
   });
 
   group('disconnect', () {
-    // TODO: Add tests for functions that rely on PluginWifiConnect
+    test('disconnect calls the disconnect method on the pluginWifiConnectService', () async {
+      when(mockPluginWifiConnectService.disconnect()).thenAnswer((_) async => true);
+
+      final response = await hotspotProvisioningRepository.disconnect();
+
+      verify(mockPluginWifiConnectService.disconnect()).called(1);
+      expect(response, true);
+    });
+    test('throws an exception if the disconnect call fails', () async {
+      when(mockPluginWifiConnectService.disconnect()).thenAnswer((_) async => throw Exception('Failed to disconnect'));
+
+      expect(() => hotspotProvisioningRepository.disconnect(), throwsA(isA<Exception>()));
+    });
   });
 
   group('requestLocationPermission', () {
-    // TODO: Add tests for functions that rely on permission_handler
+    test('requestLocationPermission calls the requestLocationPermission method on the permissionService', () async {
+      when(mockPermissionService.requestLocationPermission()).thenAnswer((_) async => PermissionStatus.granted);
+
+      final response = await hotspotProvisioningRepository.requestLocationPermission();
+
+      verify(mockPermissionService.requestLocationPermission()).called(1);
+      expect(response, PermissionStatus.granted);
+    });
+    test('throws an exception if the requestLocationPermission call fails', () async {
+      when(mockPermissionService.requestLocationPermission())
+          .thenAnswer((_) async => throw Exception('Failed to request location permission'));
+
+      expect(() => hotspotProvisioningRepository.requestLocationPermission(), throwsA(isA<Exception>()));
+    });
   });
   group('getLocationPermission', () {
-    // TODO: Add tests for functions that rely on permission_handler
+    test('getLocationPermission calls the getLocationPermission method on the permissionService', () async {
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => true);
+
+      final response = await hotspotProvisioningRepository.getLocationPermission();
+
+      verify(mockPermissionService.getLocationPermission()).called(1);
+
+      expect(response, true);
+    });
+    test('throws an exception if the getLocationPermission call fails', () async {
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => throw Exception('Failed to get location permission'));
+      
+      expect(() => hotspotProvisioningRepository.getLocationPermission(), throwsA(isA<Exception>()));
+    });
   });
 
   group('updateRobotPart', () {
