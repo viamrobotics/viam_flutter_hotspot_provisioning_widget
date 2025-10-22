@@ -7,6 +7,8 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   final String? configuredHotspotPassword;
   final String? fragmentId;
   final PageController pageController;
+  final PluginWifiConnectService pluginWifiConnectService;
+  final PermissionService permissionService;
 
   late final HotspotCredentialsInputViewModel hotspotCredentialsInputViewModel;
   late final NetworkSelectionViewModel networkSelectionViewModel;
@@ -24,26 +26,33 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     this.configuredHotspotPassword,
     this.fragmentId,
     required this.pageController,
-    required PluginWifiConnectService wifiService,
-    required PermissionService permissionService,
+    required this.pluginWifiConnectService,
+    required this.permissionService,
+    // Optional child view models for testing, this allows us to inject mocks
+    // If not provided, they get created internally like normal
+    HotspotCredentialsInputViewModel? hotspotCredentialsInputViewModel,
+    NetworkSelectionViewModel? networkSelectionViewModel,
+    PasswordInputViewModel? passwordInputViewModel,
   }) {
     _repository = HotspotProvisioningRepository(
       viam: viam,
-      pluginWifiConnectService: wifiService,
+      pluginWifiConnectService: pluginWifiConnectService,
       permissionService: permissionService,
     );
-    hotspotCredentialsInputViewModel = HotspotCredentialsInputViewModel(
-      configuredHotspotPrefix: configuredHotspotPrefix,
-      configuredHotspotPassword: configuredHotspotPassword,
-      onCredentialsSubmitted: onCredentialsSubmitted,
-    );
-    networkSelectionViewModel = NetworkSelectionViewModel(repository: _repository);
-    passwordInputViewModel = PasswordInputViewModel(
-      repository: _repository,
-      mainPart: mainPart,
-      fragmentId: fragmentId,
-      onPasswordSubmitted: onPasswordSubmitted,
-    );
+    this.hotspotCredentialsInputViewModel = hotspotCredentialsInputViewModel ??
+        HotspotCredentialsInputViewModel(
+          configuredHotspotPrefix: configuredHotspotPrefix,
+          configuredHotspotPassword: configuredHotspotPassword,
+          onCredentialsSubmitted: onCredentialsSubmitted,
+        );
+    this.networkSelectionViewModel = networkSelectionViewModel ?? NetworkSelectionViewModel(repository: _repository);
+    this.passwordInputViewModel = passwordInputViewModel ??
+        PasswordInputViewModel(
+          repository: _repository,
+          mainPart: mainPart,
+          fragmentId: fragmentId,
+          onPasswordSubmitted: onPasswordSubmitted,
+        );
   }
 
   String? get determinedFragmentId => _determinedFragmentId;
