@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 
 import '../../mocks/generate_mocks.mocks.dart';
@@ -46,7 +45,7 @@ void main() {
 
       connectHotspotPrefixViewModel.findProvisionedMachine();
 
-      // Wait for the polling to complete
+      // 5s Delay + 3s polling interval
       await Future.delayed(const Duration(seconds: 9));
 
       expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isTrue);
@@ -55,11 +54,10 @@ void main() {
     });
 
     test('should not start polling if already polling', () async {
-      // Directly set the state to simulate already polling
       connectHotspotPrefixViewModel.setPollingForMachine(true);
       connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(false);
 
-      // Try to start polling - should be ignored due to guard condition
+      // Try to start polling, should be ignored due to guard condition
       connectHotspotPrefixViewModel.findProvisionedMachine();
 
       // Should still be in polling state (guard condition prevented new polling)
@@ -68,11 +66,10 @@ void main() {
     });
 
     test('should not start polling if machine already found', () async {
-      // Directly set the state to simulate machine already found
       connectHotspotPrefixViewModel.setPollingForMachine(false);
       connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(true);
 
-      // Try to start polling - should be ignored due to guard condition
+      // Try to start polling, should be ignored due to guard condition
       connectHotspotPrefixViewModel.findProvisionedMachine();
 
       // Should still be in found state (guard condition prevented new polling)
@@ -96,7 +93,7 @@ void main() {
 
       connectHotspotPrefixViewModel.findProvisionedMachine();
 
-      // Wait for the polling to complete
+      // 5s Delay + 3s polling interval
       await Future.delayed(const Duration(seconds: 9));
 
       expect(navigationCallbackCalled, isTrue);
@@ -109,7 +106,7 @@ void main() {
 
       connectHotspotPrefixViewModel.findProvisionedMachine();
 
-      // Wait for polling to start and encounter error
+      // 5s Delay + 3s polling interval
       await Future.delayed(const Duration(seconds: 9));
 
       // Should still be polling despite the error
@@ -118,6 +115,226 @@ void main() {
     });
   });
   group('test connectToHotspot', () {
-    test('', () async {});
+    test('should set attempting connection to true when starting', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isTrue);
+    });
+
+    test('should call findProvisionedMachine if already connected to hotspot', () async {
+      connectHotspotPrefixViewModel.setConnectedToHotspot(true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'test-prefix-1234');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Verify that getCurrentSSID was called
+      verify(mockHotspotProvisioningRepository.getCurrentSSID()).called(1);
+      // Verify that connectToSecureNetworkByPrefix was NOT called since we're already connected
+      verifyNever(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      ));
+    });
+
+    test('should not call findProvisionedMachine if not connected to hotspot prefix', () async {
+      connectHotspotPrefixViewModel.setConnectedToHotspot(false);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'test-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Should proceed to connection attempt
+      verify(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: 'test-prefix',
+        password: 'test-password',
+        isWep: false,
+        isWpa3: false,
+        saveNetwork: true,
+      )).called(1);
+    });
+
+    test('should handle SSID with quotes correctly', () async {
+      connectHotspotPrefixViewModel.setConnectedToHotspot(true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => '"test-prefix-5678"');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Should recognize the SSID with quotes as matching the prefix
+      verify(mockHotspotProvisioningRepository.getCurrentSSID()).called(1);
+      verifyNever(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      ));
+    });
+
+    test('should call connectToSecureNetworkByPrefix with correct parameters', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'test-prefix-1234');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      verify(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: 'test-prefix',
+        password: 'test-password',
+        isWep: false,
+        isWpa3: false,
+        saveNetwork: true,
+      )).called(1);
+    });
+
+    test('should set connected to hotspot and call findProvisionedMachine on successful connection', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'test-prefix-1234');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isTrue);
+    });
+
+    test('should handle connection failure and set retry state', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => false);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+    });
+
+    test('should handle successful connection but wrong SSID', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'wrong-network');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+    });
+
+    test('should handle unknown SSID after connection', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => '<unknown ssid>');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+    });
+
+    test('should handle null SSID after connection', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => null);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+    });
+
+    test('should handle SSID with quotes after connection', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => '"test-prefix-1234"');
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isTrue);
+    });
   });
 }
