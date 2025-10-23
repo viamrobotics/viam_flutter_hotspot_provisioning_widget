@@ -25,27 +25,27 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool get pollingForMachine => _pollingForMachine;
   bool get connectedToHotspot => _connectedToHotspot;
 
-  void _setIsAttemptingConnectionToHotspot(bool value) {
+  void setIsAttemptingConnectionToHotspot(bool value) {
     _isAttemptingConnectionToHotspot = value;
     notifyListeners();
   }
 
-  void _setIsRetryingHotspot(bool value) {
+  void setIsRetryingHotspot(bool value) {
     _isRetryingHotspot = value;
     notifyListeners();
   }
 
-  void _setFoundValidSmartMachineStatus(bool value) {
+  void setFoundValidSmartMachineStatus(bool value) {
     _foundValidSmartMachineStatus = value;
     notifyListeners();
   }
 
-  void _setPollingForMachine(bool value) {
+  void setPollingForMachine(bool value) {
     _pollingForMachine = value;
     notifyListeners();
   }
 
-  void _setConnectedToHotspot(bool value) {
+  void setConnectedToHotspot(bool value) {
     _connectedToHotspot = value;
     notifyListeners();
   }
@@ -55,11 +55,11 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   }
 
 // This function should only ever be called after we are connected to the hotspot
-  void _findProvisionedMachine() {
+  void findProvisionedMachine() {
     if (_pollingForMachine || _foundValidSmartMachineStatus) return;
 
-    _setPollingForMachine(true);
-    _setIsAttemptingConnectionToHotspot(false);
+    setPollingForMachine(true);
+    setIsAttemptingConnectionToHotspot(false);
 
     // Add a delay to allow the robot's provisioning service to start up
     Future.delayed(const Duration(seconds: 5), () {
@@ -72,8 +72,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
             final response = await repository.getSmartMachineStatus();
             debugPrint('provisioningInfo: ${response.provisioningInfo}');
             _pollingTimer?.cancel();
-            _setFoundValidSmartMachineStatus(true);
-            _setPollingForMachine(false);
+            setFoundValidSmartMachineStatus(true);
+            setPollingForMachine(false);
             onNavigateToNetworkSelection();
           } catch (e) {
             debugPrint('Error during smart machine status check, continuing polling. Error: $e');
@@ -84,13 +84,13 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   }
 
   void connectToHotspot() async {
-    _setIsAttemptingConnectionToHotspot(true);
+    setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await repository.getCurrentSSID();
     // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
     if (connectedSSID != null && connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix) && _connectedToHotspot) {
       debugPrint('Already connected to $hotspotPrefix hotspot');
-      _findProvisionedMachine();
+      findProvisionedMachine();
       return;
     }
     // If we are not connected to the hotspot, we need to connect to it.
@@ -107,17 +107,17 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
       if (connectedSSID != null &&
           connectedSSID != '<unknown ssid>' &&
           connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix)) {
-        _setConnectedToHotspot(true);
-        _findProvisionedMachine();
+        setConnectedToHotspot(true);
+        findProvisionedMachine();
       } else {
-        _setConnectedToHotspot(false);
-        _setIsAttemptingConnectionToHotspot(false);
-        _setIsRetryingHotspot(true);
+        setConnectedToHotspot(false);
+        setIsAttemptingConnectionToHotspot(false);
+        setIsRetryingHotspot(true);
       }
     } else {
-      _setConnectedToHotspot(false);
-      _setIsAttemptingConnectionToHotspot(false);
-      _setIsRetryingHotspot(true);
+      setConnectedToHotspot(false);
+      setIsAttemptingConnectionToHotspot(false);
+      setIsRetryingHotspot(true);
     }
   }
 
