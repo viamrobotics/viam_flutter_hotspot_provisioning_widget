@@ -25,6 +25,5 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      # TODO: add tests
-      # - name: Run tests
-      #   run: flutter test
+      - name: Run tests
+        run: flutter test
