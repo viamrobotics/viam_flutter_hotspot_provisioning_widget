@@ -8,9 +8,9 @@ on:
 
 jobs:
   test:
-    runs-on: [ubuntu-large]
+    runs-on: [self-hosted, x64]
     container:
-      image: ghcr.io/cirruslabs/flutter:latest
+      image: ghcr.io/cirruslabs/flutter:${{ vars.FLUTTER_VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -18,12 +18,12 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
 
-       # Verify formatting in all dart files
+        # Verify formatting in all dart files
       - name: Verify formatting
-        run: dart format --line-length=140 --set-exit-if-changed $(find ./lib -name "*.dart" -not -path "./lib/proto/*")
+        run: dart format --line-length=140 --set-exit-if-changed $(find ./lib -name "*.dart" -not -path "./lib/proto/*" -not -name "*.g.dart" -not -name "*.freezed.dart")
 
       - name: Analyze project source
-        run: dart analyze
+        run: dart analyze $(find ./lib -name "*.dart" -not -path "./lib/proto/*" -not -name "*.g.dart" -not -name "*.freezed.dart")
 
       - name: Run tests
         run: flutter test
