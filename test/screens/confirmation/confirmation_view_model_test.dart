@@ -41,11 +41,9 @@ void main() {
 
   group('startCheckingOnline', () {
     test('should emit loading status immediately when called', () async {
-      // Arrange
       when(mockHotspotProvisioningRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
       when(mockHotspotProvisioningRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
 
-      // Act & Assert
       expectLater(
         confirmationViewModel.machineStatusStream,
         emitsInOrder([MachineStatus.loading]),
@@ -56,11 +54,9 @@ void main() {
     });
 
     test('should emit online status and close stream when robot comes online', () async {
-      // Arrange
       when(mockHotspotProvisioningRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
       when(mockHotspotProvisioningRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.online);
 
-      // Act & Assert
       expectLater(
         confirmationViewModel.machineStatusStream,
         emitsInOrder([
@@ -72,37 +68,34 @@ void main() {
       confirmationViewModel.startCheckingOnline();
       await Future.delayed(const Duration(seconds: 6));
 
-      // Verify repository calls
       verify(mockHotspotProvisioningRepository.getRobot(mockRobot.id)).called(1);
       verify(mockHotspotProvisioningRepository.calculateMachineStatus(mockRobot)).called(1);
     });
 
     test('should emit loading status when repository throws error', () async {
-      // Arrange
       when(mockHotspotProvisioningRepository.getRobot(any)).thenThrow(Exception('Network error'));
 
-      // Act & Assert
       expectLater(
         confirmationViewModel.machineStatusStream,
         emitsInOrder([
           MachineStatus.loading,
-          MachineStatus.loading, // After error
+          MachineStatus.loading,
         ]),
       );
 
       confirmationViewModel.startCheckingOnline();
       await Future.delayed(const Duration(seconds: 6));
 
-      // Verify repository was called
       verify(mockHotspotProvisioningRepository.getRobot(mockRobot.id)).called(1);
     });
 
     test('should emit loading then offline when timeout occurs', () async {
-      // Arrange
+      // Mock a shorter timeout for testing
+      ConfirmationViewModel.provisioningTimeoutSeconds = 5;
+
       when(mockHotspotProvisioningRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
       when(mockHotspotProvisioningRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
 
-      // Act & Assert
       expectLater(
         confirmationViewModel.machineStatusStream,
         emitsInOrder([
@@ -112,25 +105,17 @@ void main() {
       );
 
       confirmationViewModel.startCheckingOnline();
-
-      // Wait for timer to be set up and verify it exists
-      await Future.delayed(const Duration(milliseconds: 100));
-      expect(confirmationViewModel.timer, isNotNull);
-      expect(confirmationViewModel.timer!.isActive, isTrue);
+      await Future.delayed(const Duration(seconds: 6));
     });
 
     test('should create timer when function is called', () async {
-      // Arrange
       confirmationViewModel.machineStatusStream.listen((_) {});
 
-      // Act
       confirmationViewModel.startCheckingOnline();
 
-      // Assert
       expect(confirmationViewModel.timer, isNotNull);
       expect(confirmationViewModel.timer!.isActive, isTrue);
 
-      // Clean up
       confirmationViewModel.timer?.cancel();
     });
   });

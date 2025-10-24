@@ -36,7 +36,7 @@ class ConfirmationViewModel {
   bool get overrideFragment => _overrideFragment;
   bool get replaceHardware => _replaceHardware;
 
-  static const int provisioningTimeoutSeconds = 120;
+  static int provisioningTimeoutSeconds = 120;
 
   // Updates the machine status stream with the current machine status until the machine is online or we timeout
   void startCheckingOnline() async {
