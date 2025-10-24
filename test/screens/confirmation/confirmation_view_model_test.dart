@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
@@ -20,9 +18,9 @@ void main() {
     }),
   );
 
-  // final mockRobotConfig = {
-  //   'test-key': 'test-value',
-  // };
+  final mockRobotConfig = {
+    'test-key': 'test-value',
+  };
 
   final mockRobot = Robot(id: mockRobotPart.id, name: mockRobotPart.name, location: mockRobotPart.locationId);
 
@@ -36,6 +34,7 @@ void main() {
       fragmentId: 'test-fragment-id',
       overrideFragment: true,
       replaceHardware: true,
+      robotConfig: null,
     );
   });
 
@@ -121,26 +120,192 @@ void main() {
   });
 
   group('disconnectFromHotspot', () {
-    test('', () {});
+    test('should wait 5 seconds and call repository disconnect', () async {
+      when(mockHotspotProvisioningRepository.disconnect()).thenAnswer((_) async => true);
+
+      final result = await confirmationViewModel.disconnectFromHotspot();
+
+      expect(result, isTrue);
+      verify(mockHotspotProvisioningRepository.disconnect()).called(1);
+    });
+
+    test('should return false when repository disconnect fails', () async {
+      when(mockHotspotProvisioningRepository.disconnect()).thenAnswer((_) async => false);
+
+      final result = await confirmationViewModel.disconnectFromHotspot();
+
+      expect(result, isFalse);
+      verify(mockHotspotProvisioningRepository.disconnect()).called(1);
+    });
   });
 
   group('performFragmentOverride', () {
-    test('', () {});
+    test('should update robot part with fragment when fragmentId is provided', () async {
+      // The confirmationViewModel is initialized with a fragmentId in setUp() above
+      when(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      )).thenAnswer((_) async {});
+
+      await confirmationViewModel.performFragmentOverride();
+
+      verify(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: mockRobotPart.id,
+        robotName: mockRobot.name,
+        config: {
+          'fragments': ['test-fragment-id']
+        },
+      )).called(1);
+    });
+
+    test('should not update robot part when fragmentId is null', () async {
+      final viewModelWithNullFragment = ConfirmationViewModel(
+        repository: mockHotspotProvisioningRepository,
+        robot: mockRobot,
+        mainPart: mockRobotPart,
+        fragmentId: null,
+        overrideFragment: true,
+        replaceHardware: true,
+      );
+
+      await viewModelWithNullFragment.performFragmentOverride();
+
+      verifyNever(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      ));
+    });
+
+    test('should not update robot part when fragmentId is empty', () async {
+      final viewModelWithEmptyFragment = ConfirmationViewModel(
+        repository: mockHotspotProvisioningRepository,
+        robot: mockRobot,
+        mainPart: mockRobotPart,
+        fragmentId: '',
+        overrideFragment: true,
+        replaceHardware: true,
+      );
+
+      await viewModelWithEmptyFragment.performFragmentOverride();
+
+      verifyNever(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      ));
+    });
   });
 
   group('applyRobotConfig', () {
-    test('', () {});
+    test('should update robot part with robot config when config is provided', () async {
+      final viewModelWithConfig = ConfirmationViewModel(
+        repository: mockHotspotProvisioningRepository,
+        robot: mockRobot,
+        mainPart: mockRobotPart,
+        fragmentId: 'test-fragment-id',
+        overrideFragment: true,
+        replaceHardware: true,
+        robotConfig: mockRobotConfig,
+      );
+
+      when(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      )).thenAnswer((_) async {});
+
+      await viewModelWithConfig.applyRobotConfig();
+
+      verify(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: mockRobotPart.id,
+        robotName: mockRobotPart.name,
+        config: mockRobotConfig,
+      )).called(1);
+    });
+
+    test('should not update robot part when robotConfig is null', () async {
+      // The confirmationViewModel is initialized with robotConfig: null in setUp()
+      await confirmationViewModel.applyRobotConfig();
+
+      verifyNever(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      ));
+    });
+
+    test('should handle repository errors gracefully', () async {
+      final viewModelWithConfig = ConfirmationViewModel(
+        repository: mockHotspotProvisioningRepository,
+        robot: mockRobot,
+        mainPart: mockRobotPart,
+        fragmentId: 'test-fragment-id',
+        overrideFragment: true,
+        replaceHardware: true,
+        robotConfig: mockRobotConfig,
+      );
+
+      when(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: anyNamed('partId'),
+        robotName: anyNamed('robotName'),
+        config: anyNamed('config'),
+      )).thenThrow(Exception('Update failed'));
+
+      // Should not throw exception
+      await viewModelWithConfig.applyRobotConfig();
+
+      verify(mockHotspotProvisioningRepository.updateRobotPart(
+        partId: mockRobotPart.id,
+        robotName: mockRobotPart.name,
+        config: mockRobotConfig,
+      )).called(1);
+    });
   });
 
   group('dispose', () {
-    test('', () {});
+    test('should close machine status stream', () async {
+      bool streamClosed = false;
+      confirmationViewModel.machineStatusStream.listen(
+        (status) {},
+        onDone: () => streamClosed = true,
+      );
+
+      confirmationViewModel.dispose();
+
+      // Wait a bit for the stream to close
+      await Future.delayed(const Duration(milliseconds: 100));
+      expect(streamClosed, isTrue);
+    });
   });
 
-  group('_addMachineStatus', () {
-    test('', () {});
+  group('addMachineStatus', () {
+    test('should emit status to stream', () async {
+      expectLater(
+        confirmationViewModel.machineStatusStream,
+        emits(MachineStatus.online),
+      );
+
+      confirmationViewModel.addMachineStatus(MachineStatus.online);
+    });
   });
 
-  group('_closeMachineStatusStream', () {
-    test('', () {});
+  group('closeMachineStatusStream', () {
+    test('should cancel timer and close stream', () async {
+      confirmationViewModel.startCheckingOnline();
+
+      bool streamClosed = false;
+      confirmationViewModel.machineStatusStream.listen(
+        (status) {},
+        onDone: () => streamClosed = true,
+      );
+
+      confirmationViewModel.closeMachineStatusStream();
+      // Wait a bit for the stream to close
+      await Future.delayed(const Duration(milliseconds: 100));
+      expect(streamClosed, isTrue);
+      expect(confirmationViewModel.timer?.isActive, isFalse);
+    });
   });
 }
