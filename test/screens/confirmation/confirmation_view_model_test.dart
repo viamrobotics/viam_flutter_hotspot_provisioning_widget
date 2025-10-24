@@ -274,7 +274,7 @@ void main() {
 
       confirmationViewModel.dispose();
 
-      // Wait a bit for the stream to close
+      // Wait for the stream to close
       await Future.delayed(const Duration(milliseconds: 100));
       expect(streamClosed, isTrue);
     });
