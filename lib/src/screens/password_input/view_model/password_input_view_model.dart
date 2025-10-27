@@ -16,10 +16,10 @@ class PasswordInputViewModel extends ChangeNotifier {
     required RobotPart mainPart,
     required String? fragmentId,
     required Function(String? fragmentId) onPasswordSubmitted,
-  })  : _repository = repository,
-        _mainPart = mainPart,
+  })  : _mainPart = mainPart,
         _fragmentId = fragmentId,
-        _onPasswordSubmitted = onPasswordSubmitted {
+        _onPasswordSubmitted = onPasswordSubmitted,
+        _repository = repository {
     // Set up text field listeners
     _passwordController.addListener(notifyListeners);
     _ssidController.addListener(notifyListeners);
@@ -30,6 +30,10 @@ class PasswordInputViewModel extends ChangeNotifier {
   bool get obscureText => _obscureText;
   bool get loading => _loading;
   NetworkInfo? get network => _network;
+  RobotPart get mainPart => _mainPart;
+  String? get fragmentId => _fragmentId;
+  Function(String? fragmentId) get onPasswordSubmitted => _onPasswordSubmitted;
+  HotspotProvisioningRepository get repository => _repository;
 
   set network(NetworkInfo? value) {
     _network = value;
@@ -38,8 +42,7 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   bool get areNetworkCredentialsValid {
     if (_network != null) {
-      // For public networks, credentials are entered even with empty password
-      // For private networks, password must be non-empty
+      // Network credentials are valid if: it is a public network (no password needed) OR it is a private network with password provided
       return isPublicNetwork(_network!) || _passwordController.text.isNotEmpty;
     }
     return _ssidController.text.isNotEmpty;
@@ -58,7 +61,7 @@ class PasswordInputViewModel extends ChangeNotifier {
     return network.security == '-';
   }
 
-  void _setLoading(bool value) {
+  void setLoading(bool value) {
     _loading = value;
     notifyListeners();
   }
@@ -74,14 +77,14 @@ class PasswordInputViewModel extends ChangeNotifier {
 
   Future<void> submitPassword() async {
     Version? agentVersion;
-    _setLoading(true);
+    setLoading(true);
 
     try {
       // For v.0.16.0 of viam-agent, we expect machineCreds to be sent first, and then networkCreds.
       // This is why we are NOT sending them at the same time.
-      final response = await _repository.getSmartMachineStatus();
+      final response = await repository.getSmartMachineStatus();
       if (!response.hasSmartMachineCredentials) {
-        await _repository.setSmartMachineCredentials(
+        await repository.setSmartMachineCredentials(
           id: _mainPart.id,
           secret: _mainPart.secret,
         );
@@ -95,19 +98,19 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (response.agentVersion.isNotEmpty) {
         agentVersion = Version.parse(response.agentVersion);
       }
-      await _repository.setNetworkCredentials(
+      await repository.setNetworkCredentials(
         type: NetworkType.wifi,
         ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
         psk: password,
       );
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
-        await _repository.exitProvisioning();
+        await repository.exitProvisioning();
       }
       _onPasswordSubmitted(fragmentIdToWrite);
     } catch (e) {
       rethrow; // Let the view handle the error
     } finally {
-      _setLoading(false);
+      setLoading(false);
     }
   }
 }
