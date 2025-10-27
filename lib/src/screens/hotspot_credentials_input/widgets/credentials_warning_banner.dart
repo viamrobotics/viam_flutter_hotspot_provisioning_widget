@@ -12,7 +12,7 @@ class CredentialsWarningBanner extends StatelessWidget {
 
   String get _warningMessage {
     if (prefixConfigured && passwordConfigured) {
-      return 'Initial hotspot prefix and password credentialswere provided earlier but will be overridden by the values you enter here.';
+      return 'Initial hotspot prefix and password credentials were provided earlier but will be overridden by the values you enter here.';
     } else if (prefixConfigured) {
       return 'Initial hotspot prefix credential was provided earlier but will be overridden by the value you enter here.';
     } else if (passwordConfigured) {
