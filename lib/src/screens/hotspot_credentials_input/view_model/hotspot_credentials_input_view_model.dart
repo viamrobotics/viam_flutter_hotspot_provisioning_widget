@@ -13,13 +13,13 @@ class HotspotCredentialsInputViewModel extends ChangeNotifier {
 
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
-
+// Treats any non-null, non-empty string as configured, including whitespace-only strings
   bool get hasConfiguredPrefix {
-    return configuredHotspotPrefix != null && configuredHotspotPrefix!.trim().isNotEmpty;
+    return configuredHotspotPrefix != null && configuredHotspotPrefix!.isNotEmpty;
   }
 
   bool get hasConfiguredPassword {
-    return configuredHotspotPassword != null && configuredHotspotPassword!.trim().isNotEmpty;
+    return configuredHotspotPassword != null && configuredHotspotPassword!.isNotEmpty;
   }
 
   void submitCredentials(String prefix, String password) {

@@ -71,14 +71,14 @@ void main() {
       expect(viewModel.hasConfiguredPrefix, isFalse);
     });
 
-    test('should return false when prefix has only whitespace', () {
+    test('should return true when prefix has only whitespace', () {
       final viewModel = HotspotCredentialsInputViewModel(
         configuredHotspotPrefix: '   ',
         configuredHotspotPassword: mockConfiguredHotspotPassword,
         onCredentialsSubmitted: mockOnCredentialsSubmitted,
       );
 
-      expect(viewModel.hasConfiguredPrefix, isFalse);
+      expect(viewModel.hasConfiguredPrefix, isTrue);
     });
 
     test('should return true when prefix is configured', () {
@@ -123,14 +123,14 @@ void main() {
       expect(viewModel.hasConfiguredPassword, isFalse);
     });
 
-    test('should return false when password has only whitespace', () {
+    test('should return true when password has only whitespace', () {
       final viewModel = HotspotCredentialsInputViewModel(
         configuredHotspotPrefix: mockConfiguredHotspotPrefix,
         configuredHotspotPassword: '   ',
         onCredentialsSubmitted: mockOnCredentialsSubmitted,
       );
 
-      expect(viewModel.hasConfiguredPassword, isFalse);
+      expect(viewModel.hasConfiguredPassword, isTrue);
     });
 
     test('should return true when password is configured', () {
