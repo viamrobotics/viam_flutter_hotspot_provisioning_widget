@@ -31,7 +31,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
       FocusScope.of(context).unfocus();
       widget.viewModel.submitCredentials(
         _prefixController.text.trim(),
-        _passwordController.text,
+        _passwordController.text.trim(),
       );
     }
   }
@@ -57,7 +57,11 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             key: _formKey,
             child: Column(
               children: [
-                if (widget.viewModel.hasConfiguredCredentials) const CredentialsWarningBanner(),
+                if (widget.viewModel.hasConfiguredPrefix || widget.viewModel.hasConfiguredPassword) 
+                  CredentialsWarningBanner(
+                    prefixConfigured: widget.viewModel.hasConfiguredPrefix,
+                    passwordConfigured: widget.viewModel.hasConfiguredPassword,
+                  ),
                 const Spacer(),
                 CredentialsTextField(
                   controller: _prefixController,
