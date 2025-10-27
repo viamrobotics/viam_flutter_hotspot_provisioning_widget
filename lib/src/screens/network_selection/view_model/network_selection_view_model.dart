@@ -2,10 +2,10 @@ part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NetworkSelectionViewModel extends ChangeNotifier {
   NetworkSelectionViewModel({
-    required HotspotProvisioningRepository repository,
-  }) : _repository = repository;
+    required this.repository,
+  });
 
-  final HotspotProvisioningRepository _repository;
+  final HotspotProvisioningRepository repository;
 
   bool _loadingNetworks = false;
   List<NetworkInfo> _machineVisibleNetworks = [];
@@ -27,28 +27,28 @@ class NetworkSelectionViewModel extends ChangeNotifier {
   }
 
   Future<void> getNetworks({bool refresh = false}) async {
-    _setLoadingNetworks(true);
+    setLoadingNetworks(true);
 
     try {
       if (refresh) {
         await Future.delayed(const Duration(milliseconds: 500));
       }
-      final networks = await _repository.getNetworkList();
+      final networks = await repository.getNetworkList();
       final sortedNetworks = networks.toList()..sort((b, a) => a.signal.compareTo(b.signal));
-      _setMachineVisibleNetworks(sortedNetworks);
+      setMachineVisibleNetworks(sortedNetworks);
     } catch (e) {
       debugPrint('getNetworkList error: ${e.toString()}');
     }
 
-    _setLoadingNetworks(false);
+    setLoadingNetworks(false);
   }
 
-  void _setLoadingNetworks(bool value) {
+  void setLoadingNetworks(bool value) {
     _loadingNetworks = value;
     notifyListeners();
   }
 
-  void _setMachineVisibleNetworks(List<NetworkInfo> networks) {
+  void setMachineVisibleNetworks(List<NetworkInfo> networks) {
     _machineVisibleNetworks = networks;
     notifyListeners();
   }
