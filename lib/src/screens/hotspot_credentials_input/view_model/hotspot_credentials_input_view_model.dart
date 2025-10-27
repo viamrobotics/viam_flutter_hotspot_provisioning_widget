@@ -13,7 +13,8 @@ class HotspotCredentialsInputViewModel extends ChangeNotifier {
 
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
-// Treats any non-null, non-empty string as configured, including whitespace-only strings
+
+  // Treats any non-null, non-empty string as configured, including whitespace-only strings
   bool get hasConfiguredPrefix {
     return configuredHotspotPrefix != null && configuredHotspotPrefix!.isNotEmpty;
   }
