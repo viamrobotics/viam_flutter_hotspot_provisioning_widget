@@ -28,7 +28,7 @@ class ConfirmationViewModel {
   final StreamController<MachineStatus> _machineStatusController = StreamController<MachineStatus>.broadcast();
   Stream<MachineStatus> get machineStatusStream => _machineStatusController.stream;
 
-  Timer? _timer;
+  Timer? timer;
   int _secondsLoading = 0;
   int get secondsLoading => _secondsLoading;
 
@@ -36,34 +36,34 @@ class ConfirmationViewModel {
   bool get overrideFragment => _overrideFragment;
   bool get replaceHardware => _replaceHardware;
 
-  static const int _provisioningTimeoutSeconds = 120;
+  static int provisioningTimeoutSeconds = 120;
 
   // Updates the machine status stream with the current machine status until the machine is online or we timeout
   void startCheckingOnline() async {
-    _addMachineStatus(MachineStatus.loading);
+    addMachineStatus(MachineStatus.loading);
 
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       _secondsLoading += 5;
 
-      if (_secondsLoading >= _provisioningTimeoutSeconds) {
-        _addMachineStatus(MachineStatus.offline);
-        _closeMachineStatusStream();
+      if (_secondsLoading >= provisioningTimeoutSeconds) {
+        addMachineStatus(MachineStatus.offline);
+        closeMachineStatusStream();
         return;
       }
 
       try {
         final refreshedRobot = await _repository.getRobot(_robot.id);
         final newMachineStatus = await _repository.calculateMachineStatus(refreshedRobot);
-        _addMachineStatus(newMachineStatus);
+        addMachineStatus(newMachineStatus);
 
         if (newMachineStatus == MachineStatus.online) {
           debugPrint('Machine status is online');
-          _closeMachineStatusStream();
+          closeMachineStatusStream();
           return;
         }
       } catch (e) {
         debugPrint('Error getting robot status ${e.toString()}');
-        _addMachineStatus(MachineStatus.loading);
+        addMachineStatus(MachineStatus.loading);
       }
     });
   }
@@ -101,16 +101,16 @@ class ConfirmationViewModel {
   }
 
   void dispose() {
-    _closeMachineStatusStream();
+    closeMachineStatusStream();
   }
 
-  void _addMachineStatus(MachineStatus machineStatus) {
+  void addMachineStatus(MachineStatus machineStatus) {
     debugPrint('Machine status is: $machineStatus');
     _machineStatusController.add(machineStatus);
   }
 
-  void _closeMachineStatusStream() {
-    _timer?.cancel();
+  void closeMachineStatusStream() {
+    timer?.cancel();
     _machineStatusController.close();
   }
 }
