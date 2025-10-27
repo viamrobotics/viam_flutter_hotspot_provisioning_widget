@@ -1,7 +1,26 @@
 part of '../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class CredentialsWarningBanner extends StatelessWidget {
-  const CredentialsWarningBanner({super.key});
+  final bool prefixConfigured;
+  final bool passwordConfigured;
+
+  const CredentialsWarningBanner({
+    super.key,
+    required this.prefixConfigured,
+    required this.passwordConfigured,
+  });
+
+  String get _warningMessage {
+    if (prefixConfigured && passwordConfigured) {
+      return 'Initial hotspot prefix and password credentials were provided earlier but will be overwritten by the values you enter here.';
+    } else if (prefixConfigured) {
+      return 'Initial hotspot prefix credential was provided earlier but will be overwritten by the value you enter here.';
+    } else if (passwordConfigured) {
+      return 'Initial hotspot password credential was provided earlier but will be overwritten by the value you enter here.';
+    } else {
+      return 'Initial hotspot credentials were provided earlier but will be overwritten by the values you enter here.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +38,7 @@ class CredentialsWarningBanner extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Initial credentials were provided but will be overridden by the values you enter here.',
+              _warningMessage,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSecondaryContainer,
                 fontSize: 14,
