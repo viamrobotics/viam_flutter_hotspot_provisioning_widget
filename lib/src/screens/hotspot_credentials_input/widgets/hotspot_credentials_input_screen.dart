@@ -57,7 +57,7 @@ class _HotspotCredentialsInputScreenState extends State<HotspotCredentialsInputS
             key: _formKey,
             child: Column(
               children: [
-                if (widget.viewModel.hasConfiguredPrefix || widget.viewModel.hasConfiguredPassword) 
+                if (widget.viewModel.hasConfiguredPrefix || widget.viewModel.hasConfiguredPassword)
                   CredentialsWarningBanner(
                     prefixConfigured: widget.viewModel.hasConfiguredPrefix,
                     passwordConfigured: widget.viewModel.hasConfiguredPassword,
