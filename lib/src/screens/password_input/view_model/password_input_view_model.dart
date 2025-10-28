@@ -17,10 +17,10 @@ class PasswordInputViewModel extends ChangeNotifier {
     required RobotPart mainPart,
     required String? fragmentId,
     required Function(String? fragmentId) onPasswordSubmitted,
-  })  : _mainPart = mainPart,
+  })  : _repository = repository,
+        _mainPart = mainPart,
         _fragmentId = fragmentId,
-        _onPasswordSubmitted = onPasswordSubmitted,
-        _repository = repository {
+        _onPasswordSubmitted = onPasswordSubmitted {
     // Set up text field listeners
     _passwordController.addListener(notifyListeners);
     _ssidController.addListener(notifyListeners);
