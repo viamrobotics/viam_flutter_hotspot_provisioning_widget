@@ -1,54 +1,94 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
-
-// Note: We cannot mock Permission.location.request() because it's a static method call.
-// And we cannot mock PermissionStatus because it's an enum.
-// Therefore, we cannot test the PermissionService class directly.
-
+import '../../mocks/generate_mocks.mocks.dart';
+ // Note: We cannot test Permission.location.request() because it's a static method call.
+ // And we cannot mock PermissionStatus because it's an enum.
+ // Therefore, we cannot test PermissionService class directly.
 void main() {
-  late PermissionService permissionService;
+  late MockPermissionService mockPermissionService;
 
   setUp(() {
-    permissionService = PermissionService();
+    mockPermissionService = MockPermissionService();
   });
 
   group('requestLocationPermission', () {
-    test('should return a PermissionStatus', () async {
-      final response = await permissionService.requestLocationPermission();
+    test('should return granted permission status', () async {
+      when(mockPermissionService.requestLocationPermission()).thenAnswer((_) async => PermissionStatus.granted);
+
+      final response = await mockPermissionService.requestLocationPermission();
+
       expect(response, isA<PermissionStatus>());
+      expect(response, PermissionStatus.granted);
+      verify(mockPermissionService.requestLocationPermission()).called(1);
     });
 
-    test('should handle permission request without throwing an exception', () async {
-      expect(() => permissionService.requestLocationPermission(), returnsNormally);
+    test('should return denied permission status', () async {
+      when(mockPermissionService.requestLocationPermission()).thenAnswer((_) async => PermissionStatus.denied);
+
+      final response = await mockPermissionService.requestLocationPermission();
+
+      expect(response, isA<PermissionStatus>());
+      expect(response, PermissionStatus.denied);
+      verify(mockPermissionService.requestLocationPermission()).called(1);
+    });
+
+    test('should throw an exception if the requestLocationPermission call fails', () async {
+      when(mockPermissionService.requestLocationPermission())
+          .thenAnswer((_) async => throw Exception('Failed to request location permission'));
+
+      expect(() => mockPermissionService.requestLocationPermission(), throwsA(isA<Exception>()));
     });
   });
 
   group('getLocationPermission', () {
-    test('should return a boolean', () async {
-      final response = await permissionService.getLocationPermission();
-      expect(response, isA<bool>());
+    test('should return true if permission is granted', () async {
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => true);
+      expect(await mockPermissionService.getLocationPermission(), isTrue);
     });
 
-    test('should handle permission check without throwing an exception', () async {
-      expect(() => permissionService.getLocationPermission(), returnsNormally);
+    test('should return false if permission is denied, permanently denied, or restricted', () async {
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => false);
+      expect(await mockPermissionService.getLocationPermission(), isFalse);
+    });
+
+    test('should throw an exception if the getLocationPermission call fails', () async {
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => throw Exception('Failed to get location permission'));
+      expect(() => mockPermissionService.getLocationPermission(), throwsA(isA<Exception>()));
     });
   });
 
-  group('requestLocationPermission and getLocationPermission', () {
-    test('should have consistent behavior between methods', () async {
-      final permissionStatus = await permissionService.requestLocationPermission();
-      final hasPermission = await permissionService.getLocationPermission();
+  group('requestLocationPermission and getLocationPermission should be consistent', () {
+    test('requestLocationPermission should return "granted" permission status and getLocationPermission should return true', () async {
+      when(mockPermissionService.requestLocationPermission()).thenAnswer((_) async => PermissionStatus.granted);
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => true);
+
+      final permissionStatus = await mockPermissionService.requestLocationPermission();
+      final hasPermission = await mockPermissionService.getLocationPermission();
 
       expect(permissionStatus, isA<PermissionStatus>());
       expect(hasPermission, isA<bool>());
+      expect(permissionStatus, PermissionStatus.granted);
+      expect(hasPermission, true);
 
-      // Verify the boolean result matches the permission status
-      if (permissionStatus == PermissionStatus.granted) {
-        expect(hasPermission, true);
-      } else {
-        expect(hasPermission, false);
-      }
+      verify(mockPermissionService.requestLocationPermission()).called(1);
+      verify(mockPermissionService.getLocationPermission()).called(1);
+    });
+
+    test('requestLocationPermission should return "denied" permission status and getLocationPermission should return false', () async {
+      when(mockPermissionService.requestLocationPermission()).thenAnswer((_) async => PermissionStatus.denied);
+      when(mockPermissionService.getLocationPermission()).thenAnswer((_) async => false);
+
+      final permissionStatus = await mockPermissionService.requestLocationPermission();
+      final hasPermission = await mockPermissionService.getLocationPermission();
+
+      expect(permissionStatus, isA<PermissionStatus>());
+      expect(hasPermission, isA<bool>());
+      expect(permissionStatus, PermissionStatus.denied);
+      expect(hasPermission, false);
+
+      verify(mockPermissionService.requestLocationPermission()).called(1);
+      verify(mockPermissionService.getLocationPermission()).called(1);
     });
   });
 }
