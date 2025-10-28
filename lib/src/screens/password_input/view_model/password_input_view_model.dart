@@ -10,6 +10,7 @@ class PasswordInputViewModel extends ChangeNotifier {
   bool _obscureText = false;
   bool _loading = false;
   NetworkInfo? _network;
+  String? _fragmentIdToWrite;
 
   PasswordInputViewModel({
     required HotspotProvisioningRepository repository,
@@ -34,6 +35,8 @@ class PasswordInputViewModel extends ChangeNotifier {
   String? get fragmentId => _fragmentId;
   Function(String? fragmentId) get onPasswordSubmitted => _onPasswordSubmitted;
   HotspotProvisioningRepository get repository => _repository;
+
+  String? get fragmentIdToWrite => _fragmentIdToWrite;
 
   set network(NetworkInfo? value) {
     _network = value;
@@ -92,7 +95,7 @@ class PasswordInputViewModel extends ChangeNotifier {
       // For public networks, submit empty string as password
       final String password = _network != null && isPublicNetwork(_network!) ? '' : _passwordController.text.trim();
       // Get the fragmentId that was passed in to this hotspot provisioning flow or get it from agent.
-      final fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;
+      _fragmentIdToWrite = _fragmentId ?? response.provisioningInfo.fragmentId;
       // Check if agent version is greater than or equal to 0.20.0
       // If it is, we can call exitProvisioning after setting network credentials, otherwise just set network credentials and move on.
       if (response.agentVersion.isNotEmpty) {
@@ -106,7 +109,7 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
         await repository.exitProvisioning();
       }
-      _onPasswordSubmitted(fragmentIdToWrite);
+      _onPasswordSubmitted(_fragmentIdToWrite);
     } catch (e) {
       rethrow; // Let the view handle the error
     } finally {

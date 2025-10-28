@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
-import 'package:viam_sdk/viam_sdk.dart';
-import 'package:viam_sdk/protos/app/app.dart';
 
 import '../../mocks/generate_mocks.mocks.dart';
 
@@ -13,6 +11,8 @@ void main() {
   late PasswordInputViewModel viewModel;
   late Function(String? fragmentId) mockOnPasswordSubmitted;
   bool listenerCalled = false;
+  late GetSmartMachineStatusResponse mockGetSmartMachineStatusResponse;
+  late NetworkInfo mockNetwork;
 
   setUp(() {
     mockRepository = MockHotspotProvisioningRepository();
@@ -36,29 +36,23 @@ void main() {
       listenerCalled = true;
     });
 
-    final mockResponse = GetSmartMachineStatusResponse();
-    mockResponse.hasSmartMachineCredentials = true;
-    mockResponse.agentVersion = '0.20.0';
-    mockResponse.provisioningInfo = ProvisioningInfo();
-    mockResponse.provisioningInfo.fragmentId = 'agent-fragment-id';
-
-    // when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockResponse);
-    // when(mockRepository.setSmartMachineCredentials(
-    //   id: anyNamed('id'),
-    //   secret: anyNamed('secret'),
-    // )).thenAnswer((_) async {});
-    // when(mockRepository.setNetworkCredentials(
-    //   type: anyNamed('type'),
-    //   ssid: anyNamed('ssid'),
-    //   psk: anyNamed('psk'),
-    // )).thenAnswer((_) async {});
-    // when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+    mockGetSmartMachineStatusResponse = GetSmartMachineStatusResponse(
+      hasSmartMachineCredentials: true,
+      agentVersion: '0.20.0',
+      provisioningInfo: ProvisioningInfo(
+        fragmentId: 'agent-fragment-id',
+      ),
+    );
   });
+  mockNetwork = NetworkInfo(
+    ssid: 'test-network',
+    security: 'WPA2',
+    signal: 80,
+  );
 
-// spend more time thinking thru this
-  // tearDown(() {
-  //   viewModel.dispose();
-  // });
+  tearDown(() {
+    viewModel.dispose();
+  });
 
   group('Initialization', () {
     test('should initialize with correct default values', () {
@@ -158,15 +152,20 @@ void main() {
     });
 
     test('should be true during password submission', () async {
-      viewModel.passwordController.text = 'test-password';
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
 
+      viewModel.passwordController.text = 'test-password';
       final future = viewModel.submitPassword();
 
       // Check that loading is true during submission
       expect(viewModel.loading, true);
-
       await future;
-
       // Check that loading is false after completion
       expect(viewModel.loading, false);
     });
@@ -178,28 +177,16 @@ void main() {
     });
 
     test('should set and get network correctly', () {
-      final testNetwork = NetworkInfo(
-        ssid: 'test-network',
-        security: 'WPA2',
-        signal: 80,
-      );
-
       listenerCalled = false;
-      viewModel.network = testNetwork;
+      viewModel.network = mockNetwork;
 
-      expect(viewModel.network, testNetwork);
+      expect(viewModel.network, mockNetwork);
       expect(listenerCalled, true);
     });
 
     test('should clear network when set to null', () {
-      final testNetwork = NetworkInfo(
-        ssid: 'test-network',
-        security: 'WPA2',
-        signal: 80,
-      );
-
-      viewModel.network = testNetwork;
-      expect(viewModel.network, testNetwork);
+      viewModel.network = mockNetwork;
+      expect(viewModel.network, mockNetwork);
 
       listenerCalled = false;
       viewModel.network = null;
@@ -341,5 +328,274 @@ void main() {
     });
   });
 
-  // need to test submit password and think thru edge cases
+  group('submitPassword', () {
+    test('should submit password successfully with network and agent version >= 0.20.0', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModel.network = mockNetwork;
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.getSmartMachineStatus()).called(1);
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: mockNetwork.ssid,
+        psk: 'test-password',
+      )).called(1);
+      verify(mockRepository.exitProvisioning()).called(1);
+    });
+
+    test('should submit password successfully with network and agent version < 0.20.0', () async {
+      mockGetSmartMachineStatusResponse.agentVersion = '0.19.0';
+
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+
+      viewModel.network = mockNetwork;
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.getSmartMachineStatus()).called(1);
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: mockNetwork.ssid,
+        psk: 'test-password',
+      )).called(1);
+      verifyNever(mockRepository.exitProvisioning());
+    });
+
+    test('should submit password successfully with SSID controller when network is null', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModel.network = null;
+      viewModel.ssidController.text = mockNetwork.ssid;
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: mockNetwork.ssid,
+        psk: 'test-password',
+      )).called(1);
+    });
+
+    test('should submit empty password for public network', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      final publicNetwork = NetworkInfo(
+        ssid: 'public-network',
+        security: '-',
+        signal: 80,
+      );
+
+      viewModel.network = publicNetwork;
+      viewModel.passwordController.text = 'some-password'; // This should be ignored
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: 'public-network',
+        psk: '',
+      )).called(1);
+    });
+
+    test('should set smart machine credentials when not already set', () async {
+      mockGetSmartMachineStatusResponse.hasSmartMachineCredentials = false;
+
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setSmartMachineCredentials(
+        id: anyNamed('id'),
+        secret: anyNamed('secret'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.setSmartMachineCredentials(
+        id: 'test-part-id',
+        secret: 'test-secret',
+      )).called(1);
+    });
+
+    test('should use provided fragmentId when available', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      expect(viewModel.fragmentIdToWrite, 'test-fragment-id');
+      verify(mockRepository.getSmartMachineStatus()).called(1);
+    });
+
+    test('should use agent fragmentId when provided fragmentId is null', () async {
+      // Create a new view model with null fragmentId
+      final viewModelWithNullFragment = PasswordInputViewModel(
+        repository: mockRepository,
+        mainPart: mockRobotPart,
+        fragmentId: null,
+        onPasswordSubmitted: mockOnPasswordSubmitted,
+      );
+
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModelWithNullFragment.passwordController.text = 'test-password';
+
+      await viewModelWithNullFragment.submitPassword();
+
+      expect(viewModelWithNullFragment.fragmentIdToWrite, 'agent-fragment-id');
+      verify(mockRepository.getSmartMachineStatus()).called(1);
+
+      viewModelWithNullFragment.dispose();
+    });
+
+    test('should handle empty agent version gracefully', () async {
+      mockGetSmartMachineStatusResponse.agentVersion = '';
+
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+
+      viewModel.passwordController.text = 'test-password';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.getSmartMachineStatus()).called(1);
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: '',
+        psk: 'test-password',
+      )).called(1);
+      verifyNever(mockRepository.exitProvisioning());
+    });
+
+    test('should trim password and SSID values', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
+
+      viewModel.network = null;
+      viewModel.ssidController.text = '  test-ssid  ';
+      viewModel.passwordController.text = '  test-password  ';
+
+      await viewModel.submitPassword();
+
+      verify(mockRepository.setNetworkCredentials(
+        type: NetworkType.wifi,
+        ssid: 'test-ssid',
+        psk: 'test-password',
+      )).called(1);
+    });
+
+    test('should handle repository errors and rethrow', () async {
+      when(mockRepository.getSmartMachineStatus()).thenThrow(Exception('Network error'));
+
+      viewModel.passwordController.text = 'test-password';
+
+      try {
+        await viewModel.submitPassword();
+        fail('Expected exception to be thrown');
+      } catch (e) {
+        expect(e, isA<Exception>());
+      }
+
+      // Ensure loading is reset even after error
+      expect(viewModel.loading, false);
+    });
+
+    test('should handle setNetworkCredentials errors and rethrow', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenThrow(Exception('Network credentials error'));
+
+      viewModel.passwordController.text = 'test-password';
+
+      try {
+        await viewModel.submitPassword();
+        fail('Expected exception to be thrown');
+      } catch (e) {
+        expect(e, isA<Exception>());
+      }
+
+      // Ensure loading is reset even after error
+      expect(viewModel.loading, false);
+    });
+
+    test('should handle exitProvisioning errors and rethrow', () async {
+      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
+      when(mockRepository.setNetworkCredentials(
+        type: anyNamed('type'),
+        ssid: anyNamed('ssid'),
+        psk: anyNamed('psk'),
+      )).thenAnswer((_) async {});
+      when(mockRepository.exitProvisioning()).thenThrow(Exception('Exit provisioning error'));
+
+      viewModel.passwordController.text = 'test-password';
+
+      try {
+        await viewModel.submitPassword();
+        fail('Expected exception to be thrown');
+      } catch (e) {
+        expect(e, isA<Exception>());
+      }
+
+      // Ensure loading is reset even after error
+      expect(viewModel.loading, false);
+    });
+  });
 }
