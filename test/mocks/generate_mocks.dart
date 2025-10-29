@@ -12,5 +12,8 @@ import 'package:viam_sdk/src/app/app.dart';
   PermissionService,
   HotspotProvisioningFlowViewModel,
   PageController,
+  HotspotCredentialsInputViewModel,
+  NetworkSelectionViewModel,
+  PasswordInputViewModel,
 ])
 void main() {}

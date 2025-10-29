@@ -394,8 +394,9 @@ class _FakeScrollPosition_33 extends _i1.SmartFake
         );
 }
 
-class _FakeIconData_34 extends _i1.SmartFake implements _i7.IconData {
-  _FakeIconData_34(
+class _FakeHotspotProvisioningRepository_34 extends _i1.SmartFake
+    implements _i3.HotspotProvisioningRepository {
+  _FakeHotspotProvisioningRepository_34(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -404,9 +405,19 @@ class _FakeIconData_34 extends _i1.SmartFake implements _i7.IconData {
         );
 }
 
-class _FakeTextEditingController_35 extends _i1.SmartFake
+class _FakeIconData_35 extends _i1.SmartFake implements _i7.IconData {
+  _FakeIconData_35(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeTextEditingController_36 extends _i1.SmartFake
     implements _i7.TextEditingController {
-  _FakeTextEditingController_35(
+  _FakeTextEditingController_36(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -2801,8 +2812,14 @@ class MockHotspotCredentialsInputViewModel extends _i1.Mock
       ) as bool);
 
   @override
-  bool get hasConfiguredCredentials => (super.noSuchMethod(
-        Invocation.getter(#hasConfiguredCredentials),
+  bool get hasConfiguredPrefix => (super.noSuchMethod(
+        Invocation.getter(#hasConfiguredPrefix),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get hasConfiguredPassword => (super.noSuchMethod(
+        Invocation.getter(#hasConfiguredPassword),
         returnValue: false,
       ) as bool);
 
@@ -2875,6 +2892,15 @@ class MockNetworkSelectionViewModel extends _i1.Mock
   }
 
   @override
+  _i3.HotspotProvisioningRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeHotspotProvisioningRepository_34(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i3.HotspotProvisioningRepository);
+
+  @override
   bool get loadingNetworks => (super.noSuchMethod(
         Invocation.getter(#loadingNetworks),
         returnValue: false,
@@ -2898,7 +2924,7 @@ class MockNetworkSelectionViewModel extends _i1.Mock
           #signalToIcon,
           [signal],
         ),
-        returnValue: _FakeIconData_34(
+        returnValue: _FakeIconData_35(
           this,
           Invocation.method(
             #signalToIcon,
@@ -2913,7 +2939,7 @@ class MockNetworkSelectionViewModel extends _i1.Mock
           #securityToIcon,
           [security],
         ),
-        returnValue: _FakeIconData_34(
+        returnValue: _FakeIconData_35(
           this,
           Invocation.method(
             #securityToIcon,
@@ -2932,6 +2958,25 @@ class MockNetworkSelectionViewModel extends _i1.Mock
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
+
+  @override
+  void setLoadingNetworks(bool? value) => super.noSuchMethod(
+        Invocation.method(
+          #setLoadingNetworks,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void setMachineVisibleNetworks(List<_i2.NetworkInfo>? networks) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #setMachineVisibleNetworks,
+          [networks],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addListener(_i13.VoidCallback? listener) => super.noSuchMethod(
@@ -2982,7 +3027,7 @@ class MockPasswordInputViewModel extends _i1.Mock
   @override
   _i7.TextEditingController get passwordController => (super.noSuchMethod(
         Invocation.getter(#passwordController),
-        returnValue: _FakeTextEditingController_35(
+        returnValue: _FakeTextEditingController_36(
           this,
           Invocation.getter(#passwordController),
         ),
@@ -2991,7 +3036,7 @@ class MockPasswordInputViewModel extends _i1.Mock
   @override
   _i7.TextEditingController get ssidController => (super.noSuchMethod(
         Invocation.getter(#ssidController),
-        returnValue: _FakeTextEditingController_35(
+        returnValue: _FakeTextEditingController_36(
           this,
           Invocation.getter(#ssidController),
         ),
@@ -3008,6 +3053,30 @@ class MockPasswordInputViewModel extends _i1.Mock
         Invocation.getter(#loading),
         returnValue: false,
       ) as bool);
+
+  @override
+  _i4.RobotPart get mainPart => (super.noSuchMethod(
+        Invocation.getter(#mainPart),
+        returnValue: _FakeRobotPart_16(
+          this,
+          Invocation.getter(#mainPart),
+        ),
+      ) as _i4.RobotPart);
+
+  @override
+  dynamic Function(String?) get onPasswordSubmitted => (super.noSuchMethod(
+        Invocation.getter(#onPasswordSubmitted),
+        returnValue: (String? fragmentId) => null,
+      ) as dynamic Function(String?));
+
+  @override
+  _i3.HotspotProvisioningRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeHotspotProvisioningRepository_34(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i3.HotspotProvisioningRepository);
 
   @override
   bool get areNetworkCredentialsValid => (super.noSuchMethod(
@@ -3056,6 +3125,15 @@ class MockPasswordInputViewModel extends _i1.Mock
         ),
         returnValue: false,
       ) as bool);
+
+  @override
+  void setLoading(bool? value) => super.noSuchMethod(
+        Invocation.method(
+          #setLoading,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void dispose() => super.noSuchMethod(
