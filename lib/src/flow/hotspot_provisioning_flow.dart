@@ -121,7 +121,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         ChangeNotifierProvider.value(value: _viewModel.hotspotCredentialsInputViewModel),
         ChangeNotifierProvider.value(value: _viewModel.networkSelectionViewModel),
         ChangeNotifierProvider.value(value: _viewModel.passwordInputViewModel),
-   
       ],
       child: Consumer<HotspotProvisioningFlowViewModel>(builder: (context, viewModel, _) {
         return PageView(
