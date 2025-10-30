@@ -23,9 +23,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) {
-      _checkLocationPermission();
-    }
+    _checkLocationPermission();
   }
 
   Future<void> _checkLocationPermission() async {

@@ -64,7 +64,28 @@ Add the following to your `Info.plist`:
 ```xml
 <key>NSBluetoothAlwaysUsageDescription</key>
 <string>Finding and connecting nearby local bluetooth devices</string>
+
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs location to access nearby Wi‑Fi information.</string>
 ```
+
+Add the following to your `Podfile`:
+
+```ruby
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        # Required for reading Wi‑Fi SSID/BSSID on iOS
+        'PERMISSION_LOCATION=1',
+      ]
+    end
+  end
+end
+```
+
+After editing the `Podfile`, run:
 
 ### Android
 
