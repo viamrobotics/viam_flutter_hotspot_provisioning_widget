@@ -67,7 +67,6 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
   late final HotspotProvisioningFlowViewModel _viewModel;
   late final PluginWifiConnectService _pluginWifiConnectService;
   late final PermissionService _permissionService;
-  late final ConfirmationViewModel _confirmationViewModel;
 
   @override
   void initState() {
@@ -89,26 +88,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       replaceHardware: widget.replaceHardware,
       robotConfig: widget.robotConfig,
     );
-    _confirmationViewModel = ConfirmationViewModel(
-      repository: HotspotProvisioningRepository(
-        viam: widget.viam,
-        pluginWifiConnectService: _pluginWifiConnectService,
-        permissionService: _permissionService,
-      ),
-      robot: widget.robot,
-      mainPart: widget.mainPart,
-      fragmentId: widget.fragmentId,
-      overrideFragment: widget.overrideFragment,
-      replaceHardware: widget.replaceHardware,
-      robotConfig: widget.robotConfig,
-    );
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     _viewModel.dispose();
-    _confirmationViewModel.dispose();
     super.dispose();
   }
 
@@ -136,6 +121,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
         ChangeNotifierProvider.value(value: _viewModel.hotspotCredentialsInputViewModel),
         ChangeNotifierProvider.value(value: _viewModel.networkSelectionViewModel),
         ChangeNotifierProvider.value(value: _viewModel.passwordInputViewModel),
+   
       ],
       child: Consumer<HotspotProvisioningFlowViewModel>(builder: (context, viewModel, _) {
         return PageView(
