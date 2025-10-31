@@ -66,7 +66,7 @@ Add the following to your `Info.plist`:
 <string>Finding and connecting nearby local bluetooth devices</string>
 
 <key>NSLocationWhenInUseUsageDescription</key>
-<string>This app needs location to access nearby Wi‑Fi information.</string>
+<string>This app uses your location to detect and connect to nearby devices over Wi-Fi</string>
 ```
 
 Add the following to your `Podfile`:
@@ -84,8 +84,6 @@ post_install do |installer|
   end
 end
 ```
-
-After editing the `Podfile`, run:
 
 ### Android
 
