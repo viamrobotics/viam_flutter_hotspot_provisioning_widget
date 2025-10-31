@@ -1,3 +1,30 @@
+## 0.0.21
+- [CONSULT-1231] Provisioning: Unsecured Network Polish by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/86
+- ConfirmationViewModel initialization improvement by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/84
+- [APP-9948] Add unit tests for permission service and pluginwificonnect service by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/82
+- [APP-9913] Provisioning widget: Add Unit Tests for PasswordInputViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/81
+- [APP-9912] Provisioning widget: Add Unit Tests for NetworkSelectionViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/80
+- [APP-9911] Provisioning widget: Add Unit Tests for HotspotCredentialsInputViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/79
+- [APP-9909] Add Unit Tests for ConfirmationViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/78
+- edit test.yaml file to run tests by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/77
+- [APP-9910] Add Unit Tests for ConnectHotspotPrefixViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/76
+- add tests for hotspot flow view model by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/75
+- [APP-8458] Add Unit Tests for HotspotProvisioningRepository by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/74
+- [APP-9945] Refactor Static Dependencies to Services for Better Testability by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/73
+- [APP-8458] Provisioning widget: Add Unit Tests for HotspotProvisioningRepository by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/72
+- done button reactive by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/70
+- [APP-9933] Inject repo as dependency to ConnectHotspotPrefixViewModel by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/69
+- [APP-9688] Refactor for password_input screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/68
+- [APP-9687] Refactor for network_selection screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/67
+- [APP-9685] Refactor confirmation screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/65
+- Pass in viewModel to PasswordInputScreen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/66
+- random clean ups by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/63
+- [APP-9890] Fix hotspot credential input logic so the user cannot proceed with empty creds by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/62
+- [APP-9686] Add view model for hotspot_credentials_input screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/61
+- rename files by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/60
+- create view model for hotspot prov flow by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/59
+- [APP-9881] Move appBar logic into each respective screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/57
+
 ## 0.0.20 
 - Hotspot provisioning on android: connectedSSID.startsWith(hotspotPrefix) was failing by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/55
 
