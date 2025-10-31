@@ -77,6 +77,7 @@ class PasswordInputViewModel extends ChangeNotifier {
     _ssidController.dispose();
     super.dispose();
   }
+
   // This function submits the smart machine credentials and network credentials to the agent.
   // If the network is public, we submit an empty string as the password.
   Future<void> submitCredentials() async {
