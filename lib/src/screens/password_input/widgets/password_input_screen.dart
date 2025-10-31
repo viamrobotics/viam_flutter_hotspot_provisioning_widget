@@ -97,7 +97,7 @@ class _PasswordInputScreenState extends State<PasswordInputScreen> {
     FocusScope.of(context).unfocus();
 
     try {
-      await widget.viewModel.submitPassword();
+      await widget.viewModel.submitCredentials();
     } catch (e) {
       if (context.mounted) {
         _showErrorDialog(

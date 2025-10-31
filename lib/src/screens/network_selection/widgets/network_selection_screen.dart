@@ -1,14 +1,16 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
-  final void Function(NetworkInfo) onSelectNetwork;
+  final void Function(NetworkInfo) onSelectPublicNetwork;
+  final void Function(NetworkInfo) onSelectPrivateNetwork;
   final VoidCallback onManualEntry;
   final NetworkSelectionViewModel viewModel;
   final VoidCallback onBack;
 
   const NetworkSelectionScreen({
     super.key,
-    required this.onSelectNetwork,
+    required this.onSelectPublicNetwork,
+    required this.onSelectPrivateNetwork,
     required this.onManualEntry,
     required this.viewModel,
     required this.onBack,
@@ -79,7 +81,8 @@ class _NetworkSelectionScreenState extends State<NetworkSelectionScreen> {
                   Expanded(
                     child: NetworkList(
                       networks: widget.viewModel.machineVisibleNetworks,
-                      onSelectNetwork: widget.onSelectNetwork,
+                      onSelectPublicNetwork: widget.onSelectPublicNetwork,
+                      onSelectPrivateNetwork: widget.onSelectPrivateNetwork,
                       signalToIcon: widget.viewModel.signalToIcon,
                       securityToIcon: widget.viewModel.securityToIcon,
                     ),

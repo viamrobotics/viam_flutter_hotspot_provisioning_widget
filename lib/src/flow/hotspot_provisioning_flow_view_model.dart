@@ -100,6 +100,13 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
+  Future<void> onPublicNetworkSelected(NetworkInfo? network) {
+    passwordInputViewModel.network = network;
+    pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    // Submit credentials automatically, onPasswordSubmitted callback will navigate to confirmation page
+    return passwordInputViewModel.submitCredentials();
+  }
+
   void navigateToNextPage() {
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }

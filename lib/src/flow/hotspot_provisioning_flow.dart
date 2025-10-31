@@ -150,8 +150,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
             NetworkSelectionScreen(
               onBack: _goToPreviousPage,
               viewModel: viewModel.networkSelectionViewModel,
-              onSelectNetwork: (network) {
-                viewModel.onNetworkSelected(network);
+              onSelectPrivateNetwork: (network) {
+                 viewModel.onNetworkSelected(network);
+                // viewModel.onPublicNetworkSelected(network); // doing this for testing
+              },
+              onSelectPublicNetwork: (network) {
+                viewModel.onPublicNetworkSelected(network);
               },
               onManualEntry: () {
                 viewModel.onNetworkSelected(null);

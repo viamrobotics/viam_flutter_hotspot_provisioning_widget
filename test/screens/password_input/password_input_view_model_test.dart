@@ -161,7 +161,7 @@ void main() {
       when(mockRepository.exitProvisioning()).thenAnswer((_) async {});
 
       viewModel.passwordController.text = 'test-password';
-      final future = viewModel.submitPassword();
+      final future = viewModel.submitCredentials();
 
       // Check that loading is true during submission
       expect(viewModel.loading, true);
@@ -341,7 +341,7 @@ void main() {
       viewModel.network = mockNetwork;
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.getSmartMachineStatus()).called(1);
       verify(mockRepository.setNetworkCredentials(
@@ -365,7 +365,7 @@ void main() {
       viewModel.network = mockNetwork;
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.getSmartMachineStatus()).called(1);
       verify(mockRepository.setNetworkCredentials(
@@ -389,7 +389,7 @@ void main() {
       viewModel.ssidController.text = mockNetwork.ssid;
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.setNetworkCredentials(
         type: NetworkType.wifi,
@@ -416,7 +416,7 @@ void main() {
       viewModel.network = publicNetwork;
       viewModel.passwordController.text = 'some-password'; // This should be ignored
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.setNetworkCredentials(
         type: NetworkType.wifi,
@@ -442,7 +442,7 @@ void main() {
 
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.setSmartMachineCredentials(
         id: 'test-part-id',
@@ -461,7 +461,7 @@ void main() {
 
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       expect(viewModel.fragmentIdToWrite, 'test-fragment-id');
       verify(mockRepository.getSmartMachineStatus()).called(1);
@@ -486,7 +486,7 @@ void main() {
 
       viewModelWithNullFragment.passwordController.text = 'test-password';
 
-      await viewModelWithNullFragment.submitPassword();
+      await viewModelWithNullFragment.submitCredentials();
 
       expect(viewModelWithNullFragment.fragmentIdToWrite, 'agent-fragment-id');
       verify(mockRepository.getSmartMachineStatus()).called(1);
@@ -506,7 +506,7 @@ void main() {
 
       viewModel.passwordController.text = 'test-password';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.getSmartMachineStatus()).called(1);
       verify(mockRepository.setNetworkCredentials(
@@ -530,7 +530,7 @@ void main() {
       viewModel.ssidController.text = '  test-ssid  ';
       viewModel.passwordController.text = '  test-password  ';
 
-      await viewModel.submitPassword();
+      await viewModel.submitCredentials();
 
       verify(mockRepository.setNetworkCredentials(
         type: NetworkType.wifi,
@@ -545,7 +545,7 @@ void main() {
       viewModel.passwordController.text = 'test-password';
 
       try {
-        await viewModel.submitPassword();
+        await viewModel.submitCredentials();
         fail('Expected exception to be thrown');
       } catch (e) {
         expect(e, isA<Exception>());
@@ -566,7 +566,7 @@ void main() {
       viewModel.passwordController.text = 'test-password';
 
       try {
-        await viewModel.submitPassword();
+        await viewModel.submitCredentials();
         fail('Expected exception to be thrown');
       } catch (e) {
         expect(e, isA<Exception>());
@@ -588,7 +588,7 @@ void main() {
       viewModel.passwordController.text = 'test-password';
 
       try {
-        await viewModel.submitPassword();
+        await viewModel.submitCredentials();
         fail('Expected exception to be thrown');
       } catch (e) {
         expect(e, isA<Exception>());
