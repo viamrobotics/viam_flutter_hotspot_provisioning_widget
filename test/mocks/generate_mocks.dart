@@ -15,5 +15,6 @@ import 'package:viam_sdk/src/app/app.dart';
   HotspotCredentialsInputViewModel,
   NetworkSelectionViewModel,
   PasswordInputViewModel,
+  ConfirmationViewModel,
 ])
 void main() {}

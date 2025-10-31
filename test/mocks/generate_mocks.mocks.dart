@@ -383,9 +383,20 @@ class _FakePasswordInputViewModel_32 extends _i1.SmartFake
         );
 }
 
-class _FakeScrollPosition_33 extends _i1.SmartFake
+class _FakeConfirmationViewModel_33 extends _i1.SmartFake
+    implements _i3.ConfirmationViewModel {
+  _FakeConfirmationViewModel_33(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeScrollPosition_34 extends _i1.SmartFake
     implements _i7.ScrollPosition {
-  _FakeScrollPosition_33(
+  _FakeScrollPosition_34(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -394,9 +405,9 @@ class _FakeScrollPosition_33 extends _i1.SmartFake
         );
 }
 
-class _FakeHotspotProvisioningRepository_34 extends _i1.SmartFake
+class _FakeHotspotProvisioningRepository_35 extends _i1.SmartFake
     implements _i3.HotspotProvisioningRepository {
-  _FakeHotspotProvisioningRepository_34(
+  _FakeHotspotProvisioningRepository_35(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -405,8 +416,8 @@ class _FakeHotspotProvisioningRepository_34 extends _i1.SmartFake
         );
 }
 
-class _FakeIconData_35 extends _i1.SmartFake implements _i7.IconData {
-  _FakeIconData_35(
+class _FakeIconData_36 extends _i1.SmartFake implements _i7.IconData {
+  _FakeIconData_36(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -415,9 +426,9 @@ class _FakeIconData_35 extends _i1.SmartFake implements _i7.IconData {
         );
 }
 
-class _FakeTextEditingController_36 extends _i1.SmartFake
+class _FakeTextEditingController_37 extends _i1.SmartFake
     implements _i7.TextEditingController {
-  _FakeTextEditingController_36(
+  _FakeTextEditingController_37(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -2313,6 +2324,15 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
   }
 
   @override
+  _i4.Robot get robot => (super.noSuchMethod(
+        Invocation.getter(#robot),
+        returnValue: _FakeRobot_4(
+          this,
+          Invocation.getter(#robot),
+        ),
+      ) as _i4.Robot);
+
+  @override
   _i2.Viam get viam => (super.noSuchMethod(
         Invocation.getter(#viam),
         returnValue: _FakeViam_0(
@@ -2359,6 +2379,18 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
       ) as _i3.PermissionService);
 
   @override
+  bool get overrideFragment => (super.noSuchMethod(
+        Invocation.getter(#overrideFragment),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get replaceHardware => (super.noSuchMethod(
+        Invocation.getter(#replaceHardware),
+        returnValue: false,
+      ) as bool);
+
+  @override
   _i3.HotspotCredentialsInputViewModel get hotspotCredentialsInputViewModel =>
       (super.noSuchMethod(
         Invocation.getter(#hotspotCredentialsInputViewModel),
@@ -2386,6 +2418,15 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
           Invocation.getter(#passwordInputViewModel),
         ),
       ) as _i3.PasswordInputViewModel);
+
+  @override
+  _i3.ConfirmationViewModel get confirmationViewModel => (super.noSuchMethod(
+        Invocation.getter(#confirmationViewModel),
+        returnValue: _FakeConfirmationViewModel_33(
+          this,
+          Invocation.getter(#confirmationViewModel),
+        ),
+      ) as _i3.ConfirmationViewModel);
 
   @override
   String get hotspotPrefix => (super.noSuchMethod(
@@ -2435,6 +2476,17 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
         Invocation.setter(
           #passwordInputViewModel,
           _passwordInputViewModel,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set confirmationViewModel(
+          _i3.ConfirmationViewModel? _confirmationViewModel) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #confirmationViewModel,
+          _confirmationViewModel,
         ),
         returnValueForMissingStub: null,
       );
@@ -2578,7 +2630,7 @@ class MockPageController extends _i1.Mock implements _i7.PageController {
   @override
   _i7.ScrollPosition get position => (super.noSuchMethod(
         Invocation.getter(#position),
-        returnValue: _FakeScrollPosition_33(
+        returnValue: _FakeScrollPosition_34(
           this,
           Invocation.getter(#position),
         ),
@@ -2675,7 +2727,7 @@ class MockPageController extends _i1.Mock implements _i7.PageController {
             oldPosition,
           ],
         ),
-        returnValue: _FakeScrollPosition_33(
+        returnValue: _FakeScrollPosition_34(
           this,
           Invocation.method(
             #createScrollPosition,
@@ -2894,7 +2946,7 @@ class MockNetworkSelectionViewModel extends _i1.Mock
   @override
   _i3.HotspotProvisioningRepository get repository => (super.noSuchMethod(
         Invocation.getter(#repository),
-        returnValue: _FakeHotspotProvisioningRepository_34(
+        returnValue: _FakeHotspotProvisioningRepository_35(
           this,
           Invocation.getter(#repository),
         ),
@@ -2924,7 +2976,7 @@ class MockNetworkSelectionViewModel extends _i1.Mock
           #signalToIcon,
           [signal],
         ),
-        returnValue: _FakeIconData_35(
+        returnValue: _FakeIconData_36(
           this,
           Invocation.method(
             #signalToIcon,
@@ -2939,7 +2991,7 @@ class MockNetworkSelectionViewModel extends _i1.Mock
           #securityToIcon,
           [security],
         ),
-        returnValue: _FakeIconData_35(
+        returnValue: _FakeIconData_36(
           this,
           Invocation.method(
             #securityToIcon,
@@ -3027,7 +3079,7 @@ class MockPasswordInputViewModel extends _i1.Mock
   @override
   _i7.TextEditingController get passwordController => (super.noSuchMethod(
         Invocation.getter(#passwordController),
-        returnValue: _FakeTextEditingController_36(
+        returnValue: _FakeTextEditingController_37(
           this,
           Invocation.getter(#passwordController),
         ),
@@ -3036,7 +3088,7 @@ class MockPasswordInputViewModel extends _i1.Mock
   @override
   _i7.TextEditingController get ssidController => (super.noSuchMethod(
         Invocation.getter(#ssidController),
-        returnValue: _FakeTextEditingController_36(
+        returnValue: _FakeTextEditingController_37(
           this,
           Invocation.getter(#ssidController),
         ),
@@ -3072,7 +3124,7 @@ class MockPasswordInputViewModel extends _i1.Mock
   @override
   _i3.HotspotProvisioningRepository get repository => (super.noSuchMethod(
         Invocation.getter(#repository),
-        returnValue: _FakeHotspotProvisioningRepository_34(
+        returnValue: _FakeHotspotProvisioningRepository_35(
           this,
           Invocation.getter(#repository),
         ),
@@ -3176,6 +3228,123 @@ class MockPasswordInputViewModel extends _i1.Mock
   void notifyListeners() => super.noSuchMethod(
         Invocation.method(
           #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [ConfirmationViewModel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConfirmationViewModel extends _i1.Mock
+    implements _i3.ConfirmationViewModel {
+  MockConfirmationViewModel() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Stream<_i3.MachineStatus> get machineStatusStream => (super.noSuchMethod(
+        Invocation.getter(#machineStatusStream),
+        returnValue: _i8.Stream<_i3.MachineStatus>.empty(),
+      ) as _i8.Stream<_i3.MachineStatus>);
+
+  @override
+  int get secondsLoading => (super.noSuchMethod(
+        Invocation.getter(#secondsLoading),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  _i4.Robot get robot => (super.noSuchMethod(
+        Invocation.getter(#robot),
+        returnValue: _FakeRobot_4(
+          this,
+          Invocation.getter(#robot),
+        ),
+      ) as _i4.Robot);
+
+  @override
+  bool get overrideFragment => (super.noSuchMethod(
+        Invocation.getter(#overrideFragment),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get replaceHardware => (super.noSuchMethod(
+        Invocation.getter(#replaceHardware),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  set timer(_i8.Timer? _timer) => super.noSuchMethod(
+        Invocation.setter(
+          #timer,
+          _timer,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void startCheckingOnline() => super.noSuchMethod(
+        Invocation.method(
+          #startCheckingOnline,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i8.Future<bool> disconnectFromHotspot() => (super.noSuchMethod(
+        Invocation.method(
+          #disconnectFromHotspot,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+
+  @override
+  _i8.Future<void> performFragmentOverride() => (super.noSuchMethod(
+        Invocation.method(
+          #performFragmentOverride,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<void> applyRobotConfig() => (super.noSuchMethod(
+        Invocation.method(
+          #applyRobotConfig,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addMachineStatus(_i3.MachineStatus? machineStatus) => super.noSuchMethod(
+        Invocation.method(
+          #addMachineStatus,
+          [machineStatus],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void closeMachineStatusStream() => super.noSuchMethod(
+        Invocation.method(
+          #closeMachineStatusStream,
           [],
         ),
         returnValueForMissingStub: null,

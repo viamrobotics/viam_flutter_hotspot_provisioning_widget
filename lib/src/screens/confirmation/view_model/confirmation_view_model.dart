@@ -106,6 +106,7 @@ class ConfirmationViewModel {
 
   void addMachineStatus(MachineStatus machineStatus) {
     debugPrint('Machine status is: $machineStatus');
+    if (_machineStatusController.isClosed) return;
     _machineStatusController.add(machineStatus);
   }
 

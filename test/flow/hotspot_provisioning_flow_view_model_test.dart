@@ -15,6 +15,9 @@ void main() {
   late MockHotspotCredentialsInputViewModel mockHotspotCredentialsInputViewModel;
   late MockNetworkSelectionViewModel mockNetworkSelectionViewModel;
   late MockPasswordInputViewModel mockPasswordInputViewModel;
+  late MockConfirmationViewModel mockConfirmationViewModel;
+
+  final mockRobot = Robot(id: 'test-robot-id', name: 'test-robot-name', location: 'test-location-id');
 
   final mockRobotPart = RobotPart(
     id: 'test-part-id',
@@ -33,8 +36,10 @@ void main() {
     mockHotspotCredentialsInputViewModel = MockHotspotCredentialsInputViewModel();
     mockNetworkSelectionViewModel = MockNetworkSelectionViewModel();
     mockPasswordInputViewModel = MockPasswordInputViewModel();
+    mockConfirmationViewModel = MockConfirmationViewModel();
 
     hotspotProvisioningFlowViewModel = HotspotProvisioningFlowViewModel(
+      robot: mockRobot,
       viam: mockViam,
       mainPart: mockRobotPart,
       configuredHotspotPrefix: 'test-prefix',
@@ -46,6 +51,9 @@ void main() {
       hotspotCredentialsInputViewModel: mockHotspotCredentialsInputViewModel,
       networkSelectionViewModel: mockNetworkSelectionViewModel,
       passwordInputViewModel: mockPasswordInputViewModel,
+      confirmationViewModel: mockConfirmationViewModel,
+      overrideFragment: true,
+      replaceHardware: true,
     );
   });
   group('test onCredentialsSubmitted', () {

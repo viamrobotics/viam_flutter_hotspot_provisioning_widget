@@ -75,6 +75,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
     _pluginWifiConnectService = PluginWifiConnectService();
     _permissionService = PermissionService();
     _viewModel = HotspotProvisioningFlowViewModel(
+      robot: widget.robot,
       viam: widget.viam,
       mainPart: widget.mainPart,
       configuredHotspotPrefix: widget.hotspotPrefix,
@@ -83,6 +84,9 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       pageController: _pageController,
       pluginWifiConnectService: _pluginWifiConnectService,
       permissionService: _permissionService,
+      overrideFragment: widget.overrideFragment,
+      replaceHardware: widget.replaceHardware,
+      robotConfig: widget.robotConfig,
     );
   }
 
@@ -154,22 +158,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               },
             ),
             PasswordInputScreen(viewModel: viewModel.passwordInputViewModel, onBack: _goToPreviousPage),
-            ConfirmationScreen(
-              viewModel: ConfirmationViewModel(
-                repository: HotspotProvisioningRepository(
-                  viam: widget.viam,
-                  pluginWifiConnectService: _pluginWifiConnectService,
-                  permissionService: _permissionService,
-                ),
-                robot: widget.robot,
-                mainPart: widget.mainPart,
-                fragmentId: viewModel.determinedFragmentId,
-                overrideFragment: widget.overrideFragment,
-                replaceHardware: widget.replaceHardware,
-                robotConfig: widget.robotConfig,
-              ),
-              onStatusDetermined: _onConfirmationStatusDetermined,
-            ),
+            ConfirmationScreen(viewModel: viewModel.confirmationViewModel, onStatusDetermined: _onConfirmationStatusDetermined),
           ],
         );
       }),

@@ -1,6 +1,7 @@
 part of '../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class HotspotProvisioningFlowViewModel extends ChangeNotifier {
+  final Robot robot;
   final Viam viam;
   final RobotPart mainPart;
   final String? configuredHotspotPrefix;
@@ -9,10 +10,14 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   final PageController pageController;
   final PluginWifiConnectService pluginWifiConnectService;
   final PermissionService permissionService;
+  final bool overrideFragment;
+  final bool replaceHardware;
+  final Map<String, dynamic>? robotConfig;
 
   late final HotspotCredentialsInputViewModel hotspotCredentialsInputViewModel;
   late final NetworkSelectionViewModel networkSelectionViewModel;
   late final PasswordInputViewModel passwordInputViewModel;
+  late final ConfirmationViewModel confirmationViewModel;
   late final HotspotProvisioningRepository _repository;
 
   String? _determinedFragmentId;
@@ -20,6 +25,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   String? _userHotspotPassword;
 
   HotspotProvisioningFlowViewModel({
+    required this.robot,
     required this.viam,
     required this.mainPart,
     this.configuredHotspotPrefix,
@@ -28,11 +34,15 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     required this.pageController,
     required this.pluginWifiConnectService,
     required this.permissionService,
+    required this.overrideFragment,
+    required this.replaceHardware,
+    this.robotConfig,
     // Optional child view models for testing, this allows us to inject mocks
     // If not provided, they get created internally like normal
     HotspotCredentialsInputViewModel? hotspotCredentialsInputViewModel,
     NetworkSelectionViewModel? networkSelectionViewModel,
     PasswordInputViewModel? passwordInputViewModel,
+    ConfirmationViewModel? confirmationViewModel,
   }) {
     _repository = HotspotProvisioningRepository(
       viam: viam,
@@ -52,6 +62,16 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
           mainPart: mainPart,
           fragmentId: fragmentId,
           onPasswordSubmitted: onPasswordSubmitted,
+        );
+    this.confirmationViewModel = confirmationViewModel ??
+        ConfirmationViewModel(
+          repository: _repository,
+          robot: robot,
+          mainPart: mainPart,
+          fragmentId: fragmentId,
+          overrideFragment: overrideFragment,
+          replaceHardware: replaceHardware,
+          robotConfig: robotConfig,
         );
   }
 
@@ -89,6 +109,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     hotspotCredentialsInputViewModel.dispose();
     networkSelectionViewModel.dispose();
     passwordInputViewModel.dispose();
+    confirmationViewModel.dispose();
     super.dispose();
   }
 }
