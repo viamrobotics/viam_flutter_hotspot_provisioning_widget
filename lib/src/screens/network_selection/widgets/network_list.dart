@@ -4,13 +4,15 @@ class NetworkList extends StatelessWidget {
   const NetworkList({
     super.key,
     required this.networks,
-    required this.onSelectNetwork,
+    required this.onSelectPublicNetwork,
+    required this.onSelectPrivateNetwork,
     required this.signalToIcon,
     required this.securityToIcon,
   });
 
   final List<NetworkInfo> networks;
-  final void Function(NetworkInfo) onSelectNetwork;
+  final Future<void> Function(NetworkInfo) onSelectPublicNetwork;
+  final void Function(NetworkInfo) onSelectPrivateNetwork;
   final IconData Function(int) signalToIcon;
   final IconData Function(String?) securityToIcon;
 
@@ -25,7 +27,13 @@ class NetworkList extends StatelessWidget {
         itemBuilder: (context, index) {
           final network = networks[index];
           return GestureDetector(
-            onTap: () => onSelectNetwork(network),
+            onTap: () async {
+              if (network.security == '-') {
+                await onSelectPublicNetwork(network);
+              } else {
+                onSelectPrivateNetwork(network);
+              }
+            },
             child: ProvisioningListItem(
               textString: network.ssid,
               leading: Icon(

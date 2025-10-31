@@ -78,7 +78,9 @@ class PasswordInputViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> submitPassword() async {
+  // This function submits the smart machine credentials and network credentials to the agent.
+  // If the network is public, we submit an empty string as the password.
+  Future<void> submitCredentials() async {
     Version? agentVersion;
     setLoading(true);
 
