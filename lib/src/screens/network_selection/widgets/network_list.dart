@@ -27,7 +27,6 @@ class NetworkList extends StatelessWidget {
         itemBuilder: (context, index) {
           final network = networks[index];
           return GestureDetector(
-            // onTap: () => onSelectNetwork(network),
             onTap: () async {
               if (network.security == '-') {
                 await onSelectPublicNetwork(network);
