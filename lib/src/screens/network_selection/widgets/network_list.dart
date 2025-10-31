@@ -11,7 +11,7 @@ class NetworkList extends StatelessWidget {
   });
 
   final List<NetworkInfo> networks;
-  final void Function(NetworkInfo) onSelectPublicNetwork;
+  final Future<void> Function(NetworkInfo) onSelectPublicNetwork;
   final void Function(NetworkInfo) onSelectPrivateNetwork;
   final IconData Function(int) signalToIcon;
   final IconData Function(String?) securityToIcon;
@@ -28,9 +28,9 @@ class NetworkList extends StatelessWidget {
           final network = networks[index];
           return GestureDetector(
             // onTap: () => onSelectNetwork(network),
-            onTap: () {
+            onTap: () async {
               if (network.security == '-') {
-                onSelectPublicNetwork(network);
+                await onSelectPublicNetwork(network);
               } else {
                 onSelectPrivateNetwork(network);
               }

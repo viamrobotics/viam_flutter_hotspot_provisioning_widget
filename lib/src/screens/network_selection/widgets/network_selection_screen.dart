@@ -1,7 +1,7 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class NetworkSelectionScreen extends StatefulWidget {
-  final void Function(NetworkInfo) onSelectPublicNetwork;
+  final Future<void> Function(NetworkInfo) onSelectPublicNetwork;
   final void Function(NetworkInfo) onSelectPrivateNetwork;
   final VoidCallback onManualEntry;
   final NetworkSelectionViewModel viewModel;
