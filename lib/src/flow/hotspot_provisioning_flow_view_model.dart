@@ -101,13 +101,10 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   }
 
   Future<void> onPublicNetworkSelected(NetworkInfo? network) async {
-    debugPrint('onPublicNetworkSelected');
     passwordInputViewModel.network = network;
-    // Navigate to password page instantly (we'll skip past it visually with auto-submission)
-    pageController.nextPage(duration: Duration.zero, curve: Curves.easeInOut);
+    pageController.nextPage(duration: const Duration(milliseconds: 1), curve: Curves.easeInOut);
     // Submit credentials automatically, onPasswordSubmitted callback will navigate to confirmation page
     await passwordInputViewModel.submitCredentials();
-    debugPrint('onPublicNetworkSelected after submitCredentials');
   }
 
   void navigateToNextPage() {
