@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
@@ -21,7 +23,7 @@ void main() {
   group('initial state', () {
     test('should have correct initial state', () {
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isFalse);
       expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
@@ -115,7 +117,7 @@ void main() {
     });
   });
   group('test connectToHotspot', () {
-    test('should set attempting connection to true when starting', () async {
+    test('should set attempting connection to true when starting on iOS', () async {
       when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'other-network');
       when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
         prefix: anyNamed('prefix'),
@@ -127,7 +129,12 @@ void main() {
 
       connectHotspotPrefixViewModel.connectToHotspot();
 
-      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isTrue);
+      // Only iOS sets attempting connection state
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isTrue);
+      } else {
+        expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      }
     });
 
     test('should call findProvisionedMachine if already connected to hotspot', () async {
@@ -251,8 +258,15 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 100));
 
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+
+      // iOS-specific behavior: shows error state
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
+      } else {
+        // Android uses native dialogs, doesn't set these flags
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      }
     });
 
     test('should handle successful connection but wrong SSID', () async {
@@ -273,7 +287,13 @@ void main() {
 
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+
+      // iOS shows error dialog for wrong SSID, Android doesn't
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
+      } else {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      }
     });
 
     test('should handle unknown SSID after connection', () async {
@@ -294,7 +314,13 @@ void main() {
 
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+
+      // iOS shows error dialog for unknown SSID, Android doesn't
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
+      } else {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      }
     });
 
     test('should handle null SSID after connection', () async {
@@ -315,7 +341,13 @@ void main() {
 
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
-      expect(connectHotspotPrefixViewModel.isRetryingHotspot, isTrue);
+
+      // iOS shows error dialog for null SSID, Android doesn't
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
+      } else {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      }
     });
 
     test('should handle SSID with quotes after connection', () async {
