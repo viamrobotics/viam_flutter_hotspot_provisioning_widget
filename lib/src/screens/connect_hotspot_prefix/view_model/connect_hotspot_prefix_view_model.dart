@@ -6,7 +6,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   final VoidCallback onNavigateToNetworkSelection;
   final HotspotProvisioningRepository repository;
   bool _isAttemptingConnectionToHotspot = false;
-  bool _isRetryingHotspot = false;
+  bool _failedToConnectToHotspot = false;
   Timer? _pollingTimer;
   bool _foundValidSmartMachineStatus = false;
   bool _pollingForMachine = false;
@@ -20,7 +20,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   });
 
   bool get isAttemptingConnectionToHotspot => _isAttemptingConnectionToHotspot;
-  bool get isRetryingHotspot => _isRetryingHotspot;
+  bool get failedToConnectToHotspot => _failedToConnectToHotspot;
   bool get foundValidSmartMachineStatus => _foundValidSmartMachineStatus;
   bool get pollingForMachine => _pollingForMachine;
   bool get connectedToHotspot => _connectedToHotspot;
@@ -30,8 +30,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsRetryingHotspot(bool value) {
-    _isRetryingHotspot = value;
+  void setFailedToConnectToHotspot(bool value) {
+    _failedToConnectToHotspot = value;
     notifyListeners();
   }
 
@@ -83,16 +83,14 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     });
   }
 
+  /// Attempts to connect to the device hotspot.
+  ///
+  /// We only show loading and failure states on iOS because Android displays
+  /// its own native dialogs for connection status and errors.
   void connectToHotspot() async {
-    if (Platform.isAndroid) {
-      _connectToHotspotOnAndroid();
-    } else if (Platform.isIOS) {
-      _connectToHotspotOnIOS();
+    if (Platform.isIOS) {
+      setIsAttemptingConnectionToHotspot(true);
     }
-  }
-
-  void _connectToHotspotOnIOS() async {
-    setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await repository.getCurrentSSID();
     // In case we are already connected to the hotspot, we can just go to the next step, finding the provisioned machine.
@@ -119,33 +117,16 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
         findProvisionedMachine();
       } else {
         setConnectedToHotspot(false);
-        setIsAttemptingConnectionToHotspot(false);
-        setIsRetryingHotspot(true);
+        if (Platform.isIOS) {
+          setIsAttemptingConnectionToHotspot(false);
+          setFailedToConnectToHotspot(true);
+        }
       }
     } else {
       setConnectedToHotspot(false);
-      setIsAttemptingConnectionToHotspot(false);
-      setIsRetryingHotspot(true);
-    }
-  }
-
-  void _connectToHotspotOnAndroid() async {
-    debugPrint('Connecting to $hotspotPrefix-#### hotspot');
-    final connected = await repository.connectToSecureNetworkByPrefix(
-      prefix: hotspotPrefix,
-      password: hotspotPassword,
-      isWep: false,
-      isWpa3: false,
-      saveNetwork: true, // flips joinOnce on iOS to false
-    );
-
-    if (connected) {
-      final connectedSSID = await repository.getCurrentSSID();
-      if (connectedSSID != null &&
-          connectedSSID != '<unknown ssid>' &&
-          connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix)) {
-        setConnectedToHotspot(true);
-        findProvisionedMachine();
+      if (Platform.isIOS) {
+        setIsAttemptingConnectionToHotspot(false);
+        setFailedToConnectToHotspot(true);
       }
     }
   }
