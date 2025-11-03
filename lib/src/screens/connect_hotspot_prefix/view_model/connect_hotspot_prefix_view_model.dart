@@ -84,6 +84,14 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   }
 
   void connectToHotspot() async {
+    if (Platform.isAndroid) {
+      _connectToHotspotOnAndroid();
+    } else if (Platform.isIOS) {
+      _connectToHotspotOnIOS();
+    }
+  }
+
+  void _connectToHotspotOnIOS() async {
     setIsAttemptingConnectionToHotspot(true);
 
     final connectedSSID = await repository.getCurrentSSID();
@@ -118,6 +126,27 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
       setConnectedToHotspot(false);
       setIsAttemptingConnectionToHotspot(false);
       setIsRetryingHotspot(true);
+    }
+  }
+
+  void _connectToHotspotOnAndroid() async {
+    debugPrint('Connecting to $hotspotPrefix-#### hotspot');
+    final connected = await repository.connectToSecureNetworkByPrefix(
+      prefix: hotspotPrefix,
+      password: hotspotPassword,
+      isWep: false,
+      isWpa3: false,
+      saveNetwork: true, // flips joinOnce on iOS to false
+    );
+
+    if (connected) {
+      final connectedSSID = await repository.getCurrentSSID();
+      if (connectedSSID != null &&
+          connectedSSID != '<unknown ssid>' &&
+          connectedSSID.replaceAll(RegExp(r'^"|"$'), '').startsWith(hotspotPrefix)) {
+        setConnectedToHotspot(true);
+        findProvisionedMachine();
+      }
     }
   }
 
