@@ -75,6 +75,22 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
     );
   }
 
+  Future<void> showConnectionErrorDialog() {
+    return showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Connection Failed'),
+        content: const Text('Failed to connect to the device hotspot. Please try again.'),
+        actions: [
+          PlatformDialogAction(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('OK'),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +109,14 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         child: ListenableBuilder(
           listenable: widget.viewModel,
           builder: (context, _) {
+            // Show error dialog if connection failed
+            if (widget.viewModel.failedToConnectToHotspot) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                widget.viewModel.setFailedToConnectToHotspot(false);
+                showConnectionErrorDialog();
+              });
+            }
+
             return Column(
               children: [
                 Expanded(
@@ -161,7 +185,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
                                   widget.viewModel.connectToHotspot();
                                 }
                               },
-                        text: widget.viewModel.isRetryingHotspot ? "Retry Connect to Device Hotspot" : "Connect to Device Hotspot",
+                        text: "Connect to Device Hotspot",
                         isLoading: widget.viewModel.isAttemptingConnectionToHotspot || widget.viewModel.pollingForMachine,
                       ),
                     ),
