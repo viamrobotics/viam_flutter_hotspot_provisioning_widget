@@ -88,7 +88,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
           )
         ],
       ),
-    ).then((_) {});
+    );
   }
 
   @override
