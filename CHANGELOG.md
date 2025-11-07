@@ -1,5 +1,5 @@
 ## 0.0.23
-- Lower viam_sdk version
+- Lower SDK version and bump version by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/92
 
 ## 0.0.22
 - Read and update fragmentId from agent when fragmentId is not supplied by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/90 
