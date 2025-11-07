@@ -20,7 +20,7 @@ class ConfirmationViewModel {
   final HotspotProvisioningRepository _repository;
   final Robot _robot;
   final RobotPart _mainPart;
-  final String? _fragmentId;
+  String? _fragmentId;
   final bool _overrideFragment;
   final bool _replaceHardware;
   final Map<String, dynamic>? _robotConfig;
@@ -75,7 +75,7 @@ class ConfirmationViewModel {
 
 // Override the currentfragment on the robot with the new fragment
   Future<void> performFragmentOverride() async {
-    if (_fragmentId == null || _fragmentId.isEmpty) return;
+    if (_fragmentId == null || _fragmentId!.isEmpty) return;
     Map<String, dynamic> config = {
       "fragments": [_fragmentId]
     };
@@ -113,5 +113,9 @@ class ConfirmationViewModel {
   void closeMachineStatusStream() {
     timer?.cancel();
     _machineStatusController.close();
+  }
+
+  void updateFragmentId(String? fragmentId) {
+    _fragmentId = fragmentId;
   }
 }

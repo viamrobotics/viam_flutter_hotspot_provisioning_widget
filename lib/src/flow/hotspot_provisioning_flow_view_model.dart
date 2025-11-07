@@ -91,6 +91,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
 
   void onPasswordSubmitted(String? fragmentId) {
     _determinedFragmentId = fragmentId;
+    confirmationViewModel.updateFragmentId(_determinedFragmentId);
     notifyListeners();
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
