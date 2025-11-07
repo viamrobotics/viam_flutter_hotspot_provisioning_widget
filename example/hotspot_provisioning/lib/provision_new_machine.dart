@@ -86,6 +86,8 @@ class _ProvisionNewMachineScreenState extends State<ProvisionNewMachineScreen> {
             robot: robot,
             viam: viam,
             mainPart: mainPart,
+            hotspotPrefix: null, // set to null, because we receiving these credentials from the user
+            hotspotPassword: null,
             fragmentId: null, // Optional, if null, the fragmentId will be read from the device.
             promptForCredentials: true,
             overrideFragment: true, // Override fragment for new machine provisioning
