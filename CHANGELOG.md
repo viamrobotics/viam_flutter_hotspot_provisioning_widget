@@ -1,4 +1,5 @@
 ## 0.0.22
+- Read and update fragmentId from agent when fragmentId is not supplied by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/90 
 - Update README by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/89
 
 ## 0.0.21
