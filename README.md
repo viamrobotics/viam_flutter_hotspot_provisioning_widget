@@ -116,9 +116,9 @@ final result = await HotspotProvisioningFlow.show(
   robot: robot,
   viam: viam,
   mainPart: mainPart,
-  fragmentId: 'your-fragment-id', // Optional, if null, the fragmentId will be read from the device.
   hotspotPrefix: 'your-hotspot-prefix',  // Must match viam-defaults.json & must be at least 3 characters long 
   hotspotPassword: 'your-hotspot-password', // Must match viam-defaults.json
+  fragmentId: 'your-fragment-id', // Optional, if null, the fragmentId will be read from the device.
   promptForCredentials: false, // Use hardcoded credentials
   overrideFragment: true, // Set to true if you want to override the fragment, common for new machines. 
   replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
@@ -131,6 +131,8 @@ final result = await HotspotProvisioningFlow.show(
   robot: robot,
   viam: viam,
   mainPart: mainPart,
+  hotspotPrefix: null,
+  hotspotPassword: null
   fragmentId: 'your-fragment-id',
   promptForCredentials: true, // This will show a credential input screen
   overrideFragment: true, // Set to true if you want to override the fragment, common for new machines.
@@ -165,6 +167,7 @@ final result = await HotspotProvisioningFlow.show(
   mainPart: mainPart,
   hotspotPrefix: 'your-prefix',
   hotspotPassword: 'your-password',
+  fragmentId: 'your-fragment-id',
   promptForCredentials: false, // Use hardcoded credentials
   overrideFragment: true, // Set to true if you want to override the fragment, common for new machines.
   replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
@@ -181,6 +184,9 @@ final result = await HotspotProvisioningFlow.show(
   robot: robot,
   viam: viam,
   mainPart: mainPart,
+  hotspotPrefix: null,
+  hotspotPassword: null,
+  fragmentId: 'your-fragment-id',
   promptForCredentials: true, // This will show a credential input screen
   overrideFragment: true, // Set to true if you want to override the fragment, common for new machines.
   replaceHardware: false, // Set to true when replacing hardware and want to apply saved robot config
@@ -209,9 +215,9 @@ final result = await HotspotProvisioningFlow.show(
   robot: newRobot, // Pass in the new replacement robot
   viam: viam,
   mainPart: newMainPart, // Pass in the new replacement mainPart
-  fragmentId: 'your-fragment-id',
   hotspotPrefix: 'your-hotspot-prefix',
   hotspotPassword: 'your-hotspot-password',
+  fragmentId: 'your-fragment-id',
   promptForCredentials: false,
   overrideFragment: false,
   replaceHardware: true, // Enable hardware replacement mode
@@ -226,8 +232,8 @@ The main widget that handles the entire provisioning flow.
 What you need to pass into the widget:
 - `robot`: The Viam robot to provision
 - `viam`: The Viam SDK instance
-- `fragmentId`: The optional fragment ID you want to configure this robot with.
 - `mainPart`: The main robot part
+- `fragmentId`: The optional fragment ID you want to configure this robot with.
 - `hotspotPrefix`: The SSID prefix for the robot's hotspot. This prefix **must match** the prefix you set in the viam-defaults.json. **The hotspot prefix must be at least 3 characters long.** (Optional when `promptForCredentials` is true)
 - `hotspotPassword`: The password for the robot's hotspot. This password **must match** the password you set in the viam-defaults.json. (Optional when `promptForCredentials` is true)
 - `promptForCredentials`: Whether to show a credential input screen for the user to enter hotspot prefix and password. When true, `hotspotPrefix` and `hotspotPassword` are optional.
