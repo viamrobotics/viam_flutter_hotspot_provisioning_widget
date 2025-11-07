@@ -115,7 +115,6 @@ class ConfirmationViewModel {
     _machineStatusController.close();
   }
 
-  // Update the fragmentId with the determined fragmentId from password submission
   void updateFragmentId(String? fragmentId) {
     _fragmentId = fragmentId;
   }
