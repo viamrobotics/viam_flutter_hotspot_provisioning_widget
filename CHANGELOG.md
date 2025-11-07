@@ -1,5 +1,5 @@
 ## 0.0.22
-- Update README.md 
+- Update README by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/89
 
 ## 0.0.21
 - [CONSULT-1231] Provisioning: Unsecured Network Polish by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/86
