@@ -72,16 +72,22 @@ void main() {
 
   group('test onPasswordSubmitted', () {
     test('should update the determined fragment id', () async {
+      when(mockConfirmationViewModel.updateFragmentId('test-fragment-id-1')).thenAnswer((_) async {});
+
       hotspotProvisioningFlowViewModel.onPasswordSubmitted('test-fragment-id-1');
 
       expect(hotspotProvisioningFlowViewModel.determinedFragmentId, equals('test-fragment-id-1'));
+      verify(mockConfirmationViewModel.updateFragmentId('test-fragment-id-1')).called(1);
       verify(mockPageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut));
     });
 
     test('should handle null fragmentId in onPasswordSubmitted', () {
+      when(mockConfirmationViewModel.updateFragmentId(null)).thenAnswer((_) async {});
+
       hotspotProvisioningFlowViewModel.onPasswordSubmitted(null);
 
       expect(hotspotProvisioningFlowViewModel.determinedFragmentId, isNull);
+      verify(mockConfirmationViewModel.updateFragmentId(null)).called(1);
       verify(mockPageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut));
     });
   });
