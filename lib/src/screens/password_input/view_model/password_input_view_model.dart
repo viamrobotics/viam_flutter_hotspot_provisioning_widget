@@ -112,6 +112,7 @@ class PasswordInputViewModel extends ChangeNotifier {
         );
         await repository.exitProvisioning();
       } else {
+        // Agent versions less than 0.20.0 do not support 'awaiting' setNetworkCredentials
         repository.setNetworkCredentials(
           type: NetworkType.wifi,
           ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
