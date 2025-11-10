@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -195,7 +197,9 @@ void main() {
         saveNetwork: true,
       )).called(1);
     });
+  });
 
+  group('Error Dialogs', () {
     testWidgets('shows credential error dialog when button pressed without credentials', (WidgetTester tester) async {
       final emptyViewModel = ConnectHotspotPrefixViewModel(
         hotspotPrefix: '',
@@ -277,6 +281,35 @@ void main() {
 
       // Verify credential error dialog is shown
       expect(find.text('Missing Credentials'), findsOneWidget);
+    });
+
+    testWidgets('shows connection error dialog when failedToConnectToHotspot is true', (WidgetTester tester) async {
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      viewModel.setFailedToConnectToHotspot(true);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Connection Failed'), findsOneWidget);
+      expect(find.text('Failed to connect to the device hotspot. Please try again.'), findsOneWidget);
+      expect(find.text('OK'), findsOneWidget);
+    });
+
+    testWidgets('shows location permission dialog on Android when permission is denied', (WidgetTester tester) async {
+      when(mockRepository.getLocationPermission()).thenAnswer((_) async => false);
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      // Permission check only runs on Android
+      if (Platform.isAndroid) {
+        verify(mockRepository.getLocationPermission()).called(greaterThanOrEqualTo(1));
+        expect(find.text('Precise Location Permission Required'), findsOneWidget);
+        expect(
+          find.text(
+            'Please enable precise location permissions in your device settings to continue.\n\nWi-Fi information is considered location information on Android.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Continue'), findsOneWidget);
+      } else {
+        verifyNever(mockRepository.getLocationPermission());
+      }
     });
   });
 }
