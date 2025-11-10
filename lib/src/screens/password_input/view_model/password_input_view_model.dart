@@ -103,7 +103,7 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (response.agentVersion.isNotEmpty) {
         agentVersion = Version.parse(response.agentVersion);
       }
-      
+
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
         await repository.setNetworkCredentials(
           type: NetworkType.wifi,
