@@ -25,6 +25,18 @@ class HotspotProvisioningRepository {
     );
   }
 
+  Future<void> setNetworkCredentialsOnOldAgent({
+    required NetworkType type,
+    required String ssid,
+    required String psk,
+  }) {
+    return viam.provisioningClient.setNetworkCredentials(
+      type: type,
+      ssid: ssid,
+      psk: psk,
+    );
+  }
+
   Future<void> setNetworkCredentials({
     required NetworkType type,
     required String ssid,
