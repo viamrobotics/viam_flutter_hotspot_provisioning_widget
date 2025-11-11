@@ -25,6 +25,7 @@ class HotspotProvisioningRepository {
     );
   }
 
+  // For versions of viam-agent less than 0.20.0
   Future<void> setNetworkCredentialsOnOldAgent({
     required NetworkType type,
     required String ssid,
