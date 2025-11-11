@@ -1,3 +1,8 @@
+## 0.0.24
+- Do not await setNetworkCredentials on agent versions < 20 by @jckras in
+https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/95 
+- Create widget tests for connect_hotspot_prefix_screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/93
+
 ## 0.0.23
 - Lower SDK version and bump version by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/92
 
