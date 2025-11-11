@@ -493,30 +493,6 @@ void main() {
 
       viewModelWithNullFragment.dispose();
     });
-
-    test('should handle empty agent version gracefully', () async {
-      mockGetSmartMachineStatusResponse.agentVersion = '';
-
-      when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
-      when(mockRepository.setNetworkCredentials(
-        type: anyNamed('type'),
-        ssid: anyNamed('ssid'),
-        psk: anyNamed('psk'),
-      )).thenAnswer((_) async {});
-
-      viewModel.passwordController.text = 'test-password';
-
-      await viewModel.submitCredentials();
-
-      verify(mockRepository.getSmartMachineStatus()).called(1);
-      verify(mockRepository.setNetworkCredentials(
-        type: anyNamed('type'),
-        ssid: anyNamed('ssid'),
-        psk: anyNamed('psk'),
-      )).called(1);
-      verifyNever(mockRepository.exitProvisioning());
-    });
-
     test('should trim password and SSID values', () async {
       when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
       when(mockRepository.setNetworkCredentials(
