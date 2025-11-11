@@ -510,6 +510,26 @@ class MockHotspotProvisioningRepository extends _i1.Mock
       ) as _i8.Future<void>);
 
   @override
+  _i8.Future<void> setNetworkCredentialsOnOldAgent({
+    required _i2.NetworkType? type,
+    required String? ssid,
+    required String? psk,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setNetworkCredentialsOnOldAgent,
+          [],
+          {
+            #type: type,
+            #ssid: ssid,
+            #psk: psk,
+          },
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
   _i8.Future<void> setNetworkCredentials({
     required _i2.NetworkType? type,
     required String? ssid,
@@ -2532,6 +2552,17 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
       );
 
   @override
+  _i8.Future<void> onPublicNetworkSelected(_i2.NetworkInfo? network) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #onPublicNetworkSelected,
+          [network],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
   void navigateToNextPage() => super.noSuchMethod(
         Invocation.method(
           #navigateToNextPage,
@@ -3197,9 +3228,9 @@ class MockPasswordInputViewModel extends _i1.Mock
       );
 
   @override
-  _i8.Future<void> submitPassword() => (super.noSuchMethod(
+  _i8.Future<void> submitCredentials() => (super.noSuchMethod(
         Invocation.method(
-          #submitPassword,
+          #submitCredentials,
           [],
         ),
         returnValue: _i8.Future<void>.value(),
@@ -3346,6 +3377,15 @@ class MockConfirmationViewModel extends _i1.Mock
         Invocation.method(
           #closeMachineStatusStream,
           [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateFragmentId(String? fragmentId) => super.noSuchMethod(
+        Invocation.method(
+          #updateFragmentId,
+          [fragmentId],
         ),
         returnValueForMissingStub: null,
       );

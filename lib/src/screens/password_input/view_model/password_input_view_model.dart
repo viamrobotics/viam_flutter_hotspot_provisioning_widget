@@ -103,13 +103,20 @@ class PasswordInputViewModel extends ChangeNotifier {
       if (response.agentVersion.isNotEmpty) {
         agentVersion = Version.parse(response.agentVersion);
       }
-      await repository.setNetworkCredentials(
-        type: NetworkType.wifi,
-        ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
-        psk: password,
-      );
       if (agentVersion != null && agentVersion >= Version(0, 20, 0)) {
+        await repository.setNetworkCredentials(
+          type: NetworkType.wifi,
+          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+          psk: password,
+        );
         await repository.exitProvisioning();
+      } else {
+        // Agent versions less than 0.20.0 do not support 'awaiting' setNetworkCredentials
+        repository.setNetworkCredentialsOnOldAgent(
+          type: NetworkType.wifi,
+          ssid: _network?.ssid.trim() ?? _ssidController.text.trim(),
+          psk: password,
+        );
       }
       _onPasswordSubmitted(_fragmentIdToWrite);
     } catch (e) {
