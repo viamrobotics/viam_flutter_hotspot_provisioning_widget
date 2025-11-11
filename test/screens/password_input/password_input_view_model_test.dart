@@ -357,9 +357,9 @@ void main() {
 
       when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
       when(mockRepository.setNetworkCredentialsOnOldAgent(
-        type: anyNamed('type'),
-        ssid: anyNamed('ssid'),
-        psk: anyNamed('psk'),
+        type: NetworkType.wifi,
+        ssid: mockNetwork.ssid,
+        psk: 'test-password',
       )).thenAnswer((_) async {});
 
       viewModel.network = mockNetwork;
@@ -498,7 +498,7 @@ void main() {
       mockGetSmartMachineStatusResponse.agentVersion = '';
 
       when(mockRepository.getSmartMachineStatus()).thenAnswer((_) async => mockGetSmartMachineStatusResponse);
-      when(mockRepository.setNetworkCredentialsOnOldAgent(
+      when(mockRepository.setNetworkCredentials(
         type: anyNamed('type'),
         ssid: anyNamed('ssid'),
         psk: anyNamed('psk'),
@@ -509,7 +509,7 @@ void main() {
       await viewModel.submitCredentials();
 
       verify(mockRepository.getSmartMachineStatus()).called(1);
-      verify(mockRepository.setNetworkCredentialsOnOldAgent(
+      verify(mockRepository.setNetworkCredentials(
         type: anyNamed('type'),
         ssid: anyNamed('ssid'),
         psk: anyNamed('psk'),
