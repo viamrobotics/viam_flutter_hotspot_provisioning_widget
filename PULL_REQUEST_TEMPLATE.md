@@ -1,7 +1,7 @@
 
 
 ### QA Checklist  
-[View QA Test Doc](184MDRbFp_EWAj7St7X4Yh51t2pJyAvTcM48qr9BTKnE)
+[View QA Test Doc](https://docs.google.com/spreadsheets/d/184MDRbFp_EWAj7St7X4Yh51t2pJyAvTcM48qr9BTKnE/edit?gid=748601322#gid=748601322)
 
 Please confirm the following before requesting review:
 
