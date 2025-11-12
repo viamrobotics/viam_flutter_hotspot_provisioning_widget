@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 
-import '../../mocks/generate_mocks.mocks.dart';
+import '../../../mocks/generate_mocks.mocks.dart';
 
 void main() {
   late MockHotspotProvisioningRepository mockRepository;
