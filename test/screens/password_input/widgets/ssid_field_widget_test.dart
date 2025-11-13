@@ -53,7 +53,7 @@ void main() {
 
         await tester.pumpWidget(ssidFieldWidget(network: network));
 
-        expect(find.text('Wi-Fi network:'), findsOneWidget);
+        expect(find.text('Wi-Fi network: '), findsOneWidget);
         expect(find.text('Test Network'), findsOneWidget);
       });
 
