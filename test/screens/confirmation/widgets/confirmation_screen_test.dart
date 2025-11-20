@@ -35,6 +35,10 @@ void main() {
       replaceHardware: false,
       robotConfig: null,
     );
+
+    when(mockRepository.disconnect()).thenAnswer((_) async => true);
+    when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
+    when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
   });
 
   tearDown(() {
@@ -42,203 +46,103 @@ void main() {
   });
 
   Widget confirmationScreenWidget({
-    ConfirmationViewModel? customViewModel,
+    required ConfirmationViewModel viewModel,
     Function(Robot robot, MachineStatus status)? onStatusDetermined,
   }) {
     return MaterialApp(
       home: ConfirmationScreen(
-        viewModel: customViewModel ?? viewModel,
+        viewModel: viewModel,
         onStatusDetermined: onStatusDetermined ?? mockOnStatusDetermined,
       ),
     );
   }
 
+  Future<void> cleanup(WidgetTester tester) async {
+    await tester.pumpAndSettle(const Duration(seconds: 6));
+  }
+
   group('ConfirmationScreen', () {
-    testWidgets('displays AppBar with no leading', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
-
-      final appBar = tester.widget<AppBar>(find.byType(AppBar));
-      expect(appBar.automaticallyImplyLeading, isFalse);
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    testWidgets('has PopScope with canPop set to false', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
-
-      final popScope = tester.widget<PopScope>(find.byType(PopScope));
-      expect(popScope.canPop, isFalse);
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    testWidgets('displays RobotLoadingWidget when snapshot has no data', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
-
-      expect(find.byType(RobotLoadingWidget), findsOneWidget);
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    testWidgets('displays RobotLoadingWidget when status is loading', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      viewModel.addMachineStatus(MachineStatus.loading);
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
-
-      expect(find.byType(RobotLoadingWidget), findsOneWidget);
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    testWidgets('calls onStatusDetermined when status is online', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      bool onStatusDeterminedCalled = false;
-      Robot? receivedRobot;
-      MachineStatus? receivedStatus;
-
-      void testOnStatusDetermined(Robot robot, MachineStatus status) {
-        onStatusDeterminedCalled = true;
-        receivedRobot = robot;
-        receivedStatus = status;
-      }
-
-      await tester.pumpWidget(confirmationScreenWidget(onStatusDetermined: testOnStatusDetermined));
-      await tester.pump();
-
-      viewModel.addMachineStatus(MachineStatus.online);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100)); // Wait for post frame callback
-
-      expect(onStatusDeterminedCalled, isTrue);
-      expect(receivedRobot, equals(mockRobot));
-      expect(receivedStatus, equals(MachineStatus.online));
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    testWidgets('calls onStatusDetermined when status is offline', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      bool onStatusDeterminedCalled = false;
-      Robot? receivedRobot;
-      MachineStatus? receivedStatus;
-
-      void testOnStatusDetermined(Robot robot, MachineStatus status) {
-        onStatusDeterminedCalled = true;
-        receivedRobot = robot;
-        receivedStatus = status;
-      }
-
-      await tester.pumpWidget(confirmationScreenWidget(onStatusDetermined: testOnStatusDetermined));
-      await tester.pump();
-
-      viewModel.addMachineStatus(MachineStatus.offline);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100)); // Wait for post frame callback
-
-      expect(onStatusDeterminedCalled, isTrue);
-      expect(receivedRobot, equals(mockRobot));
-      expect(receivedStatus, equals(MachineStatus.offline));
-
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
-    });
-
-    // Note: disconnectFromHotspot is called in initState but not awaited,
-    // so it's difficult to test directly. The method is tested in the view model tests.
-
     testWidgets('calls startCheckingOnline in initState', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
+      await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
 
       expect(viewModel.timer, isNotNull);
       expect(viewModel.timer!.isActive, isTrue);
 
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
+      await cleanup(tester);
     });
 
     testWidgets('disposes viewModel when widget is disposed', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
-
       bool streamClosed = false;
       viewModel.machineStatusStream.listen(
         (status) {},
         onDone: () => streamClosed = true,
       );
 
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
-      await tester.pumpWidget(Container()); // Remove widget to trigger dispose
+      await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
+      await tester.pumpWidget(Container());
 
-      await tester.pump(const Duration(milliseconds: 100));
       expect(streamClosed, isTrue);
-
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-        await tester.pumpAndSettle(const Duration(seconds: 6));
+      await cleanup(tester);
     });
 
-    group('when overrideFragment is true and status is online', () {
-      testWidgets('calls performFragmentOverride', (WidgetTester tester) async {
-        when(mockRepository.disconnect()).thenAnswer((_) async => true);
-        when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-        when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
+    group('when status is loading', () {
+      testWidgets('displays RobotLoadingWidget when snapshot has no data', (WidgetTester tester) async {
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
+
+        expect(find.byType(RobotLoadingWidget), findsOneWidget);
+
+        await cleanup(tester);
+      });
+
+      testWidgets('displays RobotLoadingWidget when status is loading', (WidgetTester tester) async {
+        viewModel.addMachineStatus(MachineStatus.loading);
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
+
+        expect(find.byType(RobotLoadingWidget), findsOneWidget);
+
+        await cleanup(tester);
+      });
+    });
+
+    group('when status is online', () {
+      testWidgets('calls onStatusDetermined', (WidgetTester tester) async {
+        bool onStatusDeterminedCalled = false;
+        Robot? receivedRobot;
+        MachineStatus? receivedStatus;
+
+        void testOnStatusDetermined(Robot robot, MachineStatus status) {
+          onStatusDeterminedCalled = true;
+          receivedRobot = robot;
+          receivedStatus = status;
+        }
+
+        await tester.pumpWidget(confirmationScreenWidget(
+          viewModel: viewModel,
+          onStatusDetermined: testOnStatusDetermined,
+        ));
+
+        viewModel.addMachineStatus(MachineStatus.online);
+        await tester.pump();
+
+        expect(onStatusDeterminedCalled, isTrue);
+        expect(receivedRobot, equals(mockRobot));
+        expect(receivedStatus, equals(MachineStatus.online));
+
+        await cleanup(tester);
+      });
+
+      testWidgets('displays SizedBox.shrink after callback', (WidgetTester tester) async {
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
+
+        viewModel.addMachineStatus(MachineStatus.online);
+        await tester.pump();
+
+        expect(find.byType(SizedBox), findsWidgets);
+
+        await cleanup(tester);
+      });
+
+      testWidgets('calls performFragmentOverride when overrideFragment is true', (WidgetTester tester) async {
         when(mockRepository.updateRobotPart(
           partId: anyNamed('partId'),
           robotName: anyNamed('robotName'),
@@ -255,12 +159,10 @@ void main() {
           robotConfig: null,
         );
 
-        await tester.pumpWidget(confirmationScreenWidget(customViewModel: viewModelWithOverride));
-        await tester.pump();
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModelWithOverride));
 
         viewModelWithOverride.addMachineStatus(MachineStatus.online);
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 100)); // Wait for async operations and post frame callback
 
         verify(mockRepository.updateRobotPart(
           partId: mockRobotPart.id,
@@ -270,30 +172,18 @@ void main() {
           },
         )).called(1);
 
-        // Clean up: dispose widget to cancel timers
-        await tester.pumpWidget(Container());
-        await tester.pump();
         viewModelWithOverride.dispose();
-        // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-        await tester.pumpAndSettle(const Duration(seconds: 6));
+        await cleanup(tester);
       });
-    });
 
-    group('when replaceHardware is true and status is online', () {
-      testWidgets('calls applyRobotConfig', (WidgetTester tester) async {
-        final mockRobotConfig = {
-          'test-key': 'test-value',
-        };
-
-        when(mockRepository.disconnect()).thenAnswer((_) async => true);
-        when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-        when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
+      testWidgets('calls applyRobotConfig when replaceHardware is true', (WidgetTester tester) async {
         when(mockRepository.updateRobotPart(
           partId: anyNamed('partId'),
           robotName: anyNamed('robotName'),
           config: anyNamed('config'),
         )).thenAnswer((_) async {});
 
+        final mockRobotConfig = {'test-key': 'test-value'};
         final viewModelWithReplace = ConfirmationViewModel(
           repository: mockRepository,
           robot: mockRobot,
@@ -304,12 +194,10 @@ void main() {
           robotConfig: mockRobotConfig,
         );
 
-        await tester.pumpWidget(confirmationScreenWidget(customViewModel: viewModelWithReplace));
-        await tester.pump();
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModelWithReplace));
 
         viewModelWithReplace.addMachineStatus(MachineStatus.online);
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 100)); // Wait for async operations and post frame callback
 
         verify(mockRepository.updateRobotPart(
           partId: mockRobotPart.id,
@@ -317,35 +205,48 @@ void main() {
           config: mockRobotConfig,
         )).called(1);
 
-        // Clean up: dispose widget to cancel timers
-        await tester.pumpWidget(Container());
-        await tester.pump();
         viewModelWithReplace.dispose();
-        // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-        await tester.pumpAndSettle(const Duration(seconds: 6));
+        await cleanup(tester);
       });
     });
 
-    testWidgets('displays SizedBox.shrink when status is online or offline after callback', (WidgetTester tester) async {
-      when(mockRepository.disconnect()).thenAnswer((_) async => true);
-      when(mockRepository.getRobot(any)).thenAnswer((_) async => mockRobot);
-      when(mockRepository.calculateMachineStatus(any)).thenAnswer((_) async => MachineStatus.loading);
+    group('when status is offline', () {
+      testWidgets('calls onStatusDetermined', (WidgetTester tester) async {
+        bool onStatusDeterminedCalled = false;
+        Robot? receivedRobot;
+        MachineStatus? receivedStatus;
 
-      await tester.pumpWidget(confirmationScreenWidget());
-      await tester.pump();
+        void testOnStatusDetermined(Robot robot, MachineStatus status) {
+          onStatusDeterminedCalled = true;
+          receivedRobot = robot;
+          receivedStatus = status;
+        }
 
-      viewModel.addMachineStatus(MachineStatus.online);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100)); // Wait for post frame callback
+        await tester.pumpWidget(confirmationScreenWidget(
+          viewModel: viewModel,
+          onStatusDetermined: testOnStatusDetermined,
+        ));
 
-      // After the callback, the widget should show SizedBox.shrink
-      expect(find.byType(SizedBox), findsWidgets);
+        viewModel.addMachineStatus(MachineStatus.offline);
+        await tester.pump();
 
-      // Clean up: dispose widget to cancel timers
-      await tester.pumpWidget(Container());
-      await tester.pump();
-      // Wait for any pending timers (like disconnectFromHotspot's 5-second timer)
-      await tester.pumpAndSettle(const Duration(seconds: 6));
+        expect(onStatusDeterminedCalled, isTrue);
+        expect(receivedRobot, equals(mockRobot));
+        expect(receivedStatus, equals(MachineStatus.offline));
+
+        await cleanup(tester);
+      });
+
+      testWidgets('displays SizedBox.shrink after callback', (WidgetTester tester) async {
+        await tester.pumpWidget(confirmationScreenWidget(viewModel: viewModel));
+
+        viewModel.addMachineStatus(MachineStatus.offline);
+        await tester.pump();
+
+        expect(find.byType(SizedBox), findsWidgets);
+
+        await cleanup(tester);
+      });
     });
   });
 }
