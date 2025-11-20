@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
 import 'package:viam_sdk/src/gen/google/protobuf/struct.pb.dart';
 
-import '../../mocks/generate_mocks.mocks.dart';
+import '../../../mocks/generate_mocks.mocks.dart';
 
 void main() {
   late ConfirmationViewModel confirmationViewModel;
