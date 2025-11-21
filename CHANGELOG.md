@@ -1,3 +1,9 @@
+## 0.0.25
+- [APP-14301] Create widget tests for widgets in network_selection screen by @jckras in by https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/100
+- [APP-14303] create widget tests for widgets in confirmation screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/99
+- [APP-14302] create widget tests for widgets in password_input screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/98
+- [APP-14300] Create widget tests for widgets in hotspot_credentials_input screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/94
+
 ## 0.0.24
 - Do not await setNetworkCredentials on agent versions < 20 by @jckras in
 https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/95 
