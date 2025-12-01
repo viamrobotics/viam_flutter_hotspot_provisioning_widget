@@ -68,6 +68,11 @@ void main() {
       expect(hotspotProvisioningFlowViewModel.hotspotPrefix, equals('test-prefix'));
       expect(hotspotProvisioningFlowViewModel.hotspotPassword, equals('test-password'));
     });
+    test('should set isSubmitting to false after onCredentialsSubmitted is called', () {
+      hotspotProvisioningFlowViewModel.onCredentialsSubmitted('user-prefix', 'user-password');
+
+      expect(hotspotProvisioningFlowViewModel.hotspotCredentialsInputViewModel.isSubmitting, isFalse);
+    });
   });
 
   group('test onPasswordSubmitted', () {
