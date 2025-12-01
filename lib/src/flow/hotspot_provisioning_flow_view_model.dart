@@ -82,6 +82,9 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   String get hotspotPrefix => _userHotspotPrefix ?? configuredHotspotPrefix ?? '';
   String get hotspotPassword => _userHotspotPassword ?? configuredHotspotPassword ?? '';
 
+  // Check if robotConfig is missing when replaceHardware is enabled
+  bool get isMissingRobotConfig => replaceHardware && robotConfig == null;
+
   void onCredentialsSubmitted(String prefix, String password) {
     _userHotspotPrefix = prefix;
     _userHotspotPassword = password;
