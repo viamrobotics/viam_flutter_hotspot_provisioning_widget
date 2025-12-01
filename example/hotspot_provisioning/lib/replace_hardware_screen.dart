@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:viam_flutter_hotspot_provisioning_widget/viam_flutter_hotspot_provisioning_widget.dart';
@@ -157,7 +158,7 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
   }
 
   Future<(Robot, RobotPart)> createNewRobot(Robot existingRobot, Viam viam) async {
-    final replacementRobotname = '${existingRobot.name}-replacement';
+    final replacementRobotname = '${existingRobot.name}-replacement${Random().nextInt(10000)}';
     final replacementRobotId = await viam.appClient.newMachine(replacementRobotname, existingRobot.location);
     final parts = await viam.appClient.listRobotParts(replacementRobotId);
     final replacementMainPart = parts.firstWhere((element) => element.mainPart);
