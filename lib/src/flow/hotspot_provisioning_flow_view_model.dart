@@ -87,6 +87,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     _userHotspotPassword = password;
     notifyListeners();
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    hotspotCredentialsInputViewModel.isSubmitting = false;
   }
 
   void onPasswordSubmitted(String? fragmentId) {
