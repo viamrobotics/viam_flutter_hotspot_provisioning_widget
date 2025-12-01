@@ -31,4 +31,8 @@ class HotspotCredentialsInputViewModel extends ChangeNotifier {
     isSubmitting = true;
     onCredentialsSubmitted(prefix, password);
   }
+
+  void resetSubmitting() {
+    isSubmitting = false;
+  }
 }
