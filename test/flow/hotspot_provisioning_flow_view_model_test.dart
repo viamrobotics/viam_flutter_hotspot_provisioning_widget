@@ -58,7 +58,9 @@ void main() {
   });
   group('test onCredentialsSubmitted', () {
     test('should prioritize user credentials over configured ones when user credentials are submitted by the user', () async {
+      when(mockHotspotCredentialsInputViewModel.resetSubmitting()).thenAnswer((_) async {});
       hotspotProvisioningFlowViewModel.onCredentialsSubmitted('user-prefix', 'user-password');
+
 
       expect(hotspotProvisioningFlowViewModel.hotspotPrefix, equals('user-prefix'));
       expect(hotspotProvisioningFlowViewModel.hotspotPassword, equals('user-password'));
@@ -69,6 +71,7 @@ void main() {
       expect(hotspotProvisioningFlowViewModel.hotspotPassword, equals('test-password'));
     });
     test('should reset isSubmitting after onCredentialsSubmitted is called', () {
+      when(mockHotspotCredentialsInputViewModel.resetSubmitting()).thenAnswer((_) async {});
       hotspotProvisioningFlowViewModel.onCredentialsSubmitted('user-prefix', 'user-password');
 
       verify(mockHotspotCredentialsInputViewModel.resetSubmitting()).called(1);
