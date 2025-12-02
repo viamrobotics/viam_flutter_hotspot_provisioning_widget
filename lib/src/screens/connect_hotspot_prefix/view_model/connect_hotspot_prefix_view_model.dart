@@ -60,9 +60,8 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   }
 
   Future<void> resetConnectionState() async {
-    debugPrint('resetting connection state');
-    final disconnected = await repository.disconnect();
-    debugPrint('disconnected from hotspot, $disconnected');
+    debugPrint('Disconnecting from hotspot and resetting connection state');
+    await repository.disconnect();
     if (pollingTimer != null) {
       pollingTimer!.cancel();
     }
