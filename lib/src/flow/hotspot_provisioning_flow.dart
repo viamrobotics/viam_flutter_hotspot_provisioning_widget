@@ -88,6 +88,15 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
       replaceHardware: widget.replaceHardware,
       robotConfig: widget.robotConfig,
     );
+
+    // Show warning dialog if replaceHardware is true but robotConfig is null
+    if (_viewModel.isMissingRobotConfig) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          MissingRobotConfigDialog.show(context);
+        }
+      });
+    }
   }
 
   @override

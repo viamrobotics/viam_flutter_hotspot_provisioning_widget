@@ -57,3 +57,4 @@ part 'src/screens/shared_widgets/primary_button.dart';
 part 'src/screens/network_selection/widgets/provisioning_list_item.dart';
 part 'src/screens/confirmation/widgets/robot_loading_widget.dart';
 part 'src/screens/network_selection/widgets/troubleshooting_dialog.dart';
+part 'src/flow/widgets/missing_robot_config_dialog.dart';

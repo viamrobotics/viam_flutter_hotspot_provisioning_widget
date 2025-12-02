@@ -163,4 +163,75 @@ void main() {
       verify(mockPasswordInputViewModel.dispose()).called(1);
     });
   });
+
+  group('test isMissingRobotConfig', () {
+    test('should return true when replaceHardware is true and robotConfig is null', () {
+      final viewModel = HotspotProvisioningFlowViewModel(
+        robot: mockRobot,
+        viam: mockViam,
+        mainPart: mockRobotPart,
+        configuredHotspotPrefix: 'test-prefix',
+        configuredHotspotPassword: 'test-password',
+        fragmentId: 'test-fragment-id',
+        pageController: mockPageController,
+        pluginWifiConnectService: mockPluginWifiConnectService,
+        permissionService: mockPermissionService,
+        hotspotCredentialsInputViewModel: mockHotspotCredentialsInputViewModel,
+        networkSelectionViewModel: mockNetworkSelectionViewModel,
+        passwordInputViewModel: mockPasswordInputViewModel,
+        confirmationViewModel: mockConfirmationViewModel,
+        overrideFragment: true,
+        replaceHardware: true,
+        robotConfig: null,
+      );
+
+      expect(viewModel.isMissingRobotConfig, isTrue);
+    });
+
+    test('should return false when replaceHardware is true and robotConfig is not null', () {
+      final viewModel = HotspotProvisioningFlowViewModel(
+        robot: mockRobot,
+        viam: mockViam,
+        mainPart: mockRobotPart,
+        configuredHotspotPrefix: 'test-prefix',
+        configuredHotspotPassword: 'test-password',
+        fragmentId: 'test-fragment-id',
+        pageController: mockPageController,
+        pluginWifiConnectService: mockPluginWifiConnectService,
+        permissionService: mockPermissionService,
+        hotspotCredentialsInputViewModel: mockHotspotCredentialsInputViewModel,
+        networkSelectionViewModel: mockNetworkSelectionViewModel,
+        passwordInputViewModel: mockPasswordInputViewModel,
+        confirmationViewModel: mockConfirmationViewModel,
+        overrideFragment: true,
+        replaceHardware: true,
+        robotConfig: {'test-key': 'test-value'},
+      );
+
+      expect(viewModel.isMissingRobotConfig, isFalse);
+    });
+
+    test('should return false when replaceHardware is false', () {
+      final viewModel = HotspotProvisioningFlowViewModel(
+        robot: mockRobot,
+        viam: mockViam,
+        mainPart: mockRobotPart,
+        configuredHotspotPrefix: 'test-prefix',
+        configuredHotspotPassword: 'test-password',
+        fragmentId: 'test-fragment-id',
+        pageController: mockPageController,
+        pluginWifiConnectService: mockPluginWifiConnectService,
+        permissionService: mockPermissionService,
+        hotspotCredentialsInputViewModel: mockHotspotCredentialsInputViewModel,
+        networkSelectionViewModel: mockNetworkSelectionViewModel,
+        passwordInputViewModel: mockPasswordInputViewModel,
+        confirmationViewModel: mockConfirmationViewModel,
+        overrideFragment: true,
+        replaceHardware: false,
+        robotConfig: null,
+      );
+
+      expect(viewModel.isMissingRobotConfig, isFalse);
+    });
+  });
 }

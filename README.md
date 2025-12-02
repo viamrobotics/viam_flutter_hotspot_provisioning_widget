@@ -198,18 +198,20 @@ When `promptForCredentials` is `true`, the `hotspotPrefix` and `hotspotPassword`
 
 ## Hardware Replacement
 
-When replacing hardware, you can preserve the robot's configuration by setting `replaceHardware: true` and passing the saved robot configuration to `robotConfig`.
+To use hardware replacement mode, set `replaceHardware: true` and pass the saved robot configuration to `robotConfig`. This provisions a new machine that will inherit the configuration from an existing machine, allowing it to come online with the same components, services, and settings as the old machine, effectively acting as its replacement.
+
+**Why `robotConfig` is required**: Without `robotConfig`, the new machine will come online with an empty configuration, defeating the purpose of hardware replacement.
 
 **Important**: To replace hardware, you need to:
 1. Create a new robot instance for the replacement hardware
 2. Save the configuration from the old robot's main part
-3. Apply the saved configuration to the new robot during provisioning
+3. **Required**: Pass the saved configuration to `robotConfig` when setting `replaceHardware: true`
 
 ```dart
 // Get the saved robot configuration from the old robot
 final savedRobotConfig = oldRobotPart.robotConfig.toMap();
 
-// Apply the saved configuration to the new robot
+// Provision the new machine with the old machine's configuration
 final result = await HotspotProvisioningFlow.show(
   context,
   robot: newRobot, // Pass in the new replacement robot
@@ -221,7 +223,7 @@ final result = await HotspotProvisioningFlow.show(
   promptForCredentials: false,
   overrideFragment: false,
   replaceHardware: true, // Enable hardware replacement mode
-  robotConfig: savedRobotConfig, // Pass the saved configuration
+  robotConfig: savedRobotConfig, // Required: Pass the saved configuration from the old robot
 );
 ```
 
