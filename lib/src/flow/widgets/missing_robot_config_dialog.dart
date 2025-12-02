@@ -15,7 +15,7 @@ class MissingRobotConfigDialog extends StatelessWidget {
     return AlertDialog.adaptive(
       title: const Text('Missing Robot Configuration'),
       content: const Text(
-        'Hardware replacement mode is enabled, but no robot configuration was provided. The new machine will come online with an empty configuration. To preserve the old machine\'s settings, provide the robot configuration from the old robot.',
+        'Hardware replacement is enabled, but no robot configuration was provided. The new machine will start with an empty configuration',
       ),
       actions: [
         PlatformDialogAction(
