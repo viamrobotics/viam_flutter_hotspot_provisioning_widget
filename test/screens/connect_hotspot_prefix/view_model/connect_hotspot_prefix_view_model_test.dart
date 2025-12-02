@@ -372,7 +372,6 @@ void main() {
 
   group('test resetConnectionState', () {
     test('should reset all connection state flags and call disconnect', () async {
-      // Set all states to true
       connectHotspotPrefixViewModel.setIsAttemptingConnectionToHotspot(true);
       connectHotspotPrefixViewModel.setFailedToConnectToHotspot(true);
       connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(true);
@@ -383,22 +382,19 @@ void main() {
 
       connectHotspotPrefixViewModel.resetConnectionState();
 
-      // Wait for async operations to complete
+      // wait for async operations to complete
       await Future.delayed(const Duration(milliseconds: 100));
 
-      // Verify all states are reset
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isFalse);
       expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
 
-      // Verify disconnect was called
       verify(mockHotspotProvisioningRepository.disconnect()).called(1);
     });
 
     test('should reset state even if disconnect fails', () async {
-      // Set all states to true
       connectHotspotPrefixViewModel.setIsAttemptingConnectionToHotspot(true);
       connectHotspotPrefixViewModel.setFailedToConnectToHotspot(true);
       connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(true);
@@ -409,17 +405,15 @@ void main() {
 
       connectHotspotPrefixViewModel.resetConnectionState();
 
-      // Wait for async operations to complete
+      // wait for async operations to complete
       await Future.delayed(const Duration(milliseconds: 100));
 
-      // Verify all states are still reset even if disconnect fails
       expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
       expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isFalse);
       expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
 
-      // Verify disconnect was still called
       verify(mockHotspotProvisioningRepository.disconnect()).called(1);
     });
   });
