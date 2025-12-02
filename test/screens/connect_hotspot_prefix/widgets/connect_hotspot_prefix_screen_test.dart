@@ -316,31 +316,19 @@ void main() {
   });
 
   group('resetConnectionState', () {
-    testWidgets('calls disconnect and cancels timer when screen initializes with active timer', (WidgetTester tester) async {
+    testWidgets('calls disconnect and cancels timer when back button is pressed with connectedToHotspot true and active timer',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      await tester.pumpAndSettle();
+
+      viewModel.setConnectedToHotspot(true);
       final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
       viewModel.setPollingTimer(timer);
 
       expect(viewModel.pollingTimer, isNotNull);
       expect(viewModel.pollingTimer!.isActive, isTrue);
+      expect(viewModel.connectedToHotspot, isTrue);
 
-      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
-      await tester.pumpAndSettle();
-
-      verify(mockRepository.disconnect()).called(1);
-      expect(viewModel.pollingTimer?.isActive, isFalse);
-    });
-
-    testWidgets('calls disconnect and cancels timer when back button is pressed with active timer', (WidgetTester tester) async {
-      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
-      await tester.pumpAndSettle();
-
-      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
-      viewModel.setPollingTimer(timer);
-
-      expect(viewModel.pollingTimer, isNotNull);
-      expect(viewModel.pollingTimer!.isActive, isTrue);
-
-      // reset the mock to clear any previous calls from initState
       reset(mockRepository);
       when(mockRepository.disconnect()).thenAnswer((_) async => true);
 
@@ -352,16 +340,56 @@ void main() {
 
       verify(mockRepository.disconnect()).called(1);
       expect(viewModel.pollingTimer?.isActive, isFalse);
+      expect(viewModel.connectedToHotspot, isFalse);
     });
 
-    testWidgets('calls disconnect but does not cancel timer when timer is null', (WidgetTester tester) async {
-      viewModel.setPollingTimer(null);
-      expect(viewModel.pollingTimer, isNull);
-
+    testWidgets('does not call disconnect when back button is pressed with connectedToHotspot false', (WidgetTester tester) async {
       await tester.pumpWidget(connectHotspotPrefixScreenWidget());
       await tester.pumpAndSettle();
 
+      viewModel.setConnectedToHotspot(false);
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
+      viewModel.setPollingTimer(timer);
+
+      expect(viewModel.connectedToHotspot, isFalse);
+
+      reset(mockRepository);
+      when(mockRepository.disconnect()).thenAnswer((_) async => true);
+
+      final backButtonFinder = find.byIcon(Icons.arrow_back);
+      expect(backButtonFinder, findsOneWidget);
+
+      await tester.tap(backButtonFinder);
+      await tester.pump();
+
+      verifyNever(mockRepository.disconnect());
+      expect(viewModel.pollingTimer?.isActive, isTrue);
+
+      viewModel.pollingTimer?.cancel();
+    });
+
+    testWidgets('calls disconnect and resets state when back button is pressed with connectedToHotspot true and null timer',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      await tester.pumpAndSettle();
+
+      viewModel.setConnectedToHotspot(true);
+      viewModel.setPollingTimer(null);
+
+      expect(viewModel.pollingTimer, isNull);
+      expect(viewModel.connectedToHotspot, isTrue);
+
+      reset(mockRepository);
+      when(mockRepository.disconnect()).thenAnswer((_) async => true);
+
+      final backButtonFinder = find.byIcon(Icons.arrow_back);
+      expect(backButtonFinder, findsOneWidget);
+
+      await tester.tap(backButtonFinder);
+      await tester.pump();
+
       verify(mockRepository.disconnect()).called(1);
+      expect(viewModel.connectedToHotspot, isFalse);
       expect(viewModel.pollingTimer, isNull);
     });
   });
