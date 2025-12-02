@@ -18,6 +18,7 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   late final NetworkSelectionViewModel networkSelectionViewModel;
   late final PasswordInputViewModel passwordInputViewModel;
   late final ConfirmationViewModel confirmationViewModel;
+  ConnectHotspotPrefixViewModel? connectHotspotPrefixViewModel;
   late final HotspotProvisioningRepository _repository;
 
   String? _determinedFragmentId;
@@ -113,12 +114,17 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
+  Future<void> resetConnectionState() async {
+    await connectHotspotPrefixViewModel?.resetConnectionState();
+  }
+
   @override
   void dispose() {
     hotspotCredentialsInputViewModel.dispose();
     networkSelectionViewModel.dispose();
     passwordInputViewModel.dispose();
     confirmationViewModel.dispose();
+    connectHotspotPrefixViewModel?.dispose();
     super.dispose();
   }
 }

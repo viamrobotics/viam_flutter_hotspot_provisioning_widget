@@ -24,6 +24,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool get foundValidSmartMachineStatus => _foundValidSmartMachineStatus;
   bool get pollingForMachine => _pollingForMachine;
   bool get connectedToHotspot => _connectedToHotspot;
+  Timer? get pollingTimer => _pollingTimer;
 
   void setIsAttemptingConnectionToHotspot(bool value) {
     _isAttemptingConnectionToHotspot = value;
@@ -50,8 +51,25 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPollingTimer(Timer? timer) {
+    _pollingTimer = timer;
+  }
+
   Future<bool> getLocationPermission() async {
     return await repository.getLocationPermission();
+  }
+
+  Future<void> resetConnectionState() async {
+    debugPrint('Disconnecting from hotspot and resetting connection state');
+    await repository.disconnect();
+    if (pollingTimer != null) {
+      pollingTimer!.cancel();
+    }
+    setIsAttemptingConnectionToHotspot(false);
+    setFailedToConnectToHotspot(false);
+    setFoundValidSmartMachineStatus(false);
+    setPollingForMachine(false);
+    setConnectedToHotspot(false);
   }
 
 // This function should only ever be called after we are connected to the hotspot

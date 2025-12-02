@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -367,6 +368,63 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 100));
 
       expect(connectHotspotPrefixViewModel.connectedToHotspot, isTrue);
+    });
+  });
+
+  group('test resetConnectionState', () {
+    test('should reset all connection state flags and call disconnect', () async {
+      connectHotspotPrefixViewModel.setIsAttemptingConnectionToHotspot(true);
+      connectHotspotPrefixViewModel.setFailedToConnectToHotspot(true);
+      connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(true);
+      connectHotspotPrefixViewModel.setPollingForMachine(true);
+      connectHotspotPrefixViewModel.setConnectedToHotspot(true);
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
+      connectHotspotPrefixViewModel.setPollingTimer(timer);
+
+      when(mockHotspotProvisioningRepository.disconnect()).thenAnswer((_) async => true);
+
+      expect(connectHotspotPrefixViewModel.pollingTimer!.isActive, isTrue);
+
+      connectHotspotPrefixViewModel.resetConnectionState();
+
+      // wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isFalse);
+      expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+
+      verify(mockHotspotProvisioningRepository.disconnect()).called(1);
+      expect(connectHotspotPrefixViewModel.pollingTimer?.isActive, isFalse);
+    });
+
+    test('should reset state even if disconnect fails', () async {
+      connectHotspotPrefixViewModel.setIsAttemptingConnectionToHotspot(true);
+      connectHotspotPrefixViewModel.setFailedToConnectToHotspot(true);
+      connectHotspotPrefixViewModel.setFoundValidSmartMachineStatus(true);
+      connectHotspotPrefixViewModel.setPollingForMachine(true);
+      connectHotspotPrefixViewModel.setConnectedToHotspot(true);
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
+      connectHotspotPrefixViewModel.setPollingTimer(timer);
+
+      when(mockHotspotProvisioningRepository.disconnect()).thenAnswer((_) async => false);
+
+      expect(connectHotspotPrefixViewModel.pollingTimer!.isActive, isTrue);
+
+      connectHotspotPrefixViewModel.resetConnectionState();
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(connectHotspotPrefixViewModel.isAttemptingConnectionToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.foundValidSmartMachineStatus, isFalse);
+      expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+
+      verify(mockHotspotProvisioningRepository.disconnect()).called(1);
+      expect(connectHotspotPrefixViewModel.pollingTimer?.isActive, isFalse);
     });
   });
 }

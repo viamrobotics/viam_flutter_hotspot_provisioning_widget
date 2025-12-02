@@ -134,7 +134,7 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               ),
             ConnectHotspotPrefixScreen(
               onBack: _goToPreviousPage,
-              viewModel: ConnectHotspotPrefixViewModel(
+              viewModel: viewModel.connectHotspotPrefixViewModel ??= ConnectHotspotPrefixViewModel(
                 hotspotPrefix: viewModel.hotspotPrefix,
                 hotspotPassword: viewModel.hotspotPassword,
                 onNavigateToNetworkSelection: () {
@@ -148,7 +148,12 @@ class _HotspotProvisioningFlowState extends State<HotspotProvisioningFlow> {
               ),
             ),
             NetworkSelectionScreen(
-              onBack: _goToPreviousPage,
+              onBack: () async {
+                if (viewModel.connectHotspotPrefixViewModel?.connectedToHotspot == true) {
+                  await viewModel.resetConnectionState();
+                }
+                _goToPreviousPage();
+              },
               viewModel: viewModel.networkSelectionViewModel,
               onSelectPrivateNetwork: (network) {
                 viewModel.onNetworkSelected(network);

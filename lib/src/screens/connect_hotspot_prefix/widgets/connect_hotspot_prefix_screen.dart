@@ -102,7 +102,12 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 24, color: Theme.of(context).colorScheme.onSurface),
-          onPressed: widget.onBack,
+          onPressed: () async {
+            if (widget.viewModel.connectedToHotspot) {
+              await widget.viewModel.resetConnectionState();
+            }
+            widget.onBack();
+          },
         ),
       ),
       body: SafeArea(

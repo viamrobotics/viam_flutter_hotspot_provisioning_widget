@@ -124,6 +124,36 @@ void main() {
       verify(mockPageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut));
     });
   });
+  group('test resetConnectionState', () {
+    test('should call resetConnectionState on connectHotspotPrefixViewModel when it exists', () async {
+      final mockRepository = MockHotspotProvisioningRepository();
+      when(mockRepository.disconnect()).thenAnswer((_) async => true);
+      
+      final connectHotspotPrefixViewModel = ConnectHotspotPrefixViewModel(
+        hotspotPrefix: 'test-prefix',
+        hotspotPassword: 'test-password',
+        onNavigateToNetworkSelection: () {},
+        repository: mockRepository,
+      );
+      
+      connectHotspotPrefixViewModel.setConnectedToHotspot(true);
+      hotspotProvisioningFlowViewModel.connectHotspotPrefixViewModel = connectHotspotPrefixViewModel;
+
+      await hotspotProvisioningFlowViewModel.resetConnectionState();
+
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      verify(mockRepository.disconnect()).called(1);
+    });
+
+    test('should not throw when connectHotspotPrefixViewModel is null', () async {
+      hotspotProvisioningFlowViewModel.connectHotspotPrefixViewModel = null;
+
+      await hotspotProvisioningFlowViewModel.resetConnectionState();
+
+      // should complete without throwing
+      expect(hotspotProvisioningFlowViewModel.connectHotspotPrefixViewModel, isNull);
+    });
+  });
   group('test dispose', () {
     test('should dispose the view model', () async {
       hotspotProvisioningFlowViewModel.dispose();
