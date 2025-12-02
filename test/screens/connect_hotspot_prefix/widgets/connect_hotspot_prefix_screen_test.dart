@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -315,15 +316,31 @@ void main() {
   });
 
   group('resetConnectionState', () {
-    testWidgets('calls resetConnectionState when screen initializes', (WidgetTester tester) async {
+    testWidgets('calls disconnect and cancels timer when screen initializes with active timer', (WidgetTester tester) async {
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
+      viewModel.setPollingTimer(timer);
+
+      expect(viewModel.pollingTimer, isNotNull);
+      expect(viewModel.pollingTimer!.isActive, isTrue);
+
       await tester.pumpWidget(connectHotspotPrefixScreenWidget());
-      // verify disconnect was called, indicating resetConnectionState was called
+      await tester.pumpAndSettle();
+
       verify(mockRepository.disconnect()).called(1);
+      expect(viewModel.pollingTimer?.isActive, isFalse);
     });
 
-    testWidgets('calls resetConnectionState when back button is pressed', (WidgetTester tester) async {
+    testWidgets('calls disconnect and cancels timer when back button is pressed with active timer', (WidgetTester tester) async {
       await tester.pumpWidget(connectHotspotPrefixScreenWidget());
-      // reset the repository so that it does not have the first disconnect call from initState in its history
+      await tester.pumpAndSettle();
+
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {});
+      viewModel.setPollingTimer(timer);
+
+      expect(viewModel.pollingTimer, isNotNull);
+      expect(viewModel.pollingTimer!.isActive, isTrue);
+
+      // reset the mock to clear any previous calls from initState
       reset(mockRepository);
       when(mockRepository.disconnect()).thenAnswer((_) async => true);
 
@@ -333,8 +350,19 @@ void main() {
       await tester.tap(backButtonFinder);
       await tester.pump();
 
-      // verify disconnect was called, indicating resetConnectionState was called
       verify(mockRepository.disconnect()).called(1);
+      expect(viewModel.pollingTimer?.isActive, isFalse);
+    });
+
+    testWidgets('calls disconnect but does not cancel timer when timer is null', (WidgetTester tester) async {
+      viewModel.setPollingTimer(null);
+      expect(viewModel.pollingTimer, isNull);
+
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      await tester.pumpAndSettle();
+
+      verify(mockRepository.disconnect()).called(1);
+      expect(viewModel.pollingTimer, isNull);
     });
   });
 }

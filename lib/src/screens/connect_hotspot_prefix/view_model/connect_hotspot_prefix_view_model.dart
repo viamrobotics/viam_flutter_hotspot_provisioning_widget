@@ -24,6 +24,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool get foundValidSmartMachineStatus => _foundValidSmartMachineStatus;
   bool get pollingForMachine => _pollingForMachine;
   bool get connectedToHotspot => _connectedToHotspot;
+  Timer? get pollingTimer => _pollingTimer;
 
   void setIsAttemptingConnectionToHotspot(bool value) {
     _isAttemptingConnectionToHotspot = value;
@@ -50,13 +51,21 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPollingTimer(Timer? timer) {
+    _pollingTimer = timer;
+  }
+
   Future<bool> getLocationPermission() async {
     return await repository.getLocationPermission();
   }
 
-  void resetConnectionState() async {
-    await repository.disconnect();
-    _pollingTimer?.cancel();
+  Future<void> resetConnectionState() async {
+    debugPrint('resetting connection state');
+    final disconnected = await repository.disconnect();
+    debugPrint('disconnected from hotspot, $disconnected');
+    if (pollingTimer != null) {
+      pollingTimer!.cancel();
+    }
     setIsAttemptingConnectionToHotspot(false);
     setFailedToConnectToHotspot(false);
     setFoundValidSmartMachineStatus(false);
