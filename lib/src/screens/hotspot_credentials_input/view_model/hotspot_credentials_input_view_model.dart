@@ -13,6 +13,10 @@ class HotspotCredentialsInputViewModel extends ChangeNotifier {
 
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
+  set isSubmitting(bool value) {
+    _isSubmitting = value;
+    notifyListeners();
+  }
 
   // Treats any non-null, non-empty string as configured, including whitespace-only strings
   bool get hasConfiguredPrefix {
@@ -24,8 +28,11 @@ class HotspotCredentialsInputViewModel extends ChangeNotifier {
   }
 
   void submitCredentials(String prefix, String password) {
-    _isSubmitting = true;
-    notifyListeners();
+    isSubmitting = true;
     onCredentialsSubmitted(prefix, password);
+  }
+
+  void resetSubmitting() {
+    isSubmitting = false;
   }
 }
