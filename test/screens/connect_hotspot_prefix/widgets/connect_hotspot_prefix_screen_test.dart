@@ -21,6 +21,7 @@ void main() {
       onNavigateToNetworkSelection: () {},
       repository: mockRepository,
     );
+    when(mockRepository.disconnect()).thenAnswer((_) async => true);
   });
 
   Widget connectHotspotPrefixScreenWidget() {
@@ -310,6 +311,30 @@ void main() {
       } else {
         verifyNever(mockRepository.getLocationPermission());
       }
+    });
+  });
+
+  group('resetConnectionState', () {
+    testWidgets('calls resetConnectionState when screen initializes', (WidgetTester tester) async {
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      // verify disconnect was called, indicating resetConnectionState was called
+      verify(mockRepository.disconnect()).called(1);
+    });
+
+    testWidgets('calls resetConnectionState when back button is pressed', (WidgetTester tester) async {
+      await tester.pumpWidget(connectHotspotPrefixScreenWidget());
+      // reset the repository so that it does not have the first disconnect call from initState in its history
+      reset(mockRepository);
+      when(mockRepository.disconnect()).thenAnswer((_) async => true);
+
+      final backButtonFinder = find.byIcon(Icons.arrow_back);
+      expect(backButtonFinder, findsOneWidget);
+
+      await tester.tap(backButtonFinder);
+      await tester.pump();
+
+      // verify disconnect was called, indicating resetConnectionState was called
+      verify(mockRepository.disconnect()).called(1);
     });
   });
 }
