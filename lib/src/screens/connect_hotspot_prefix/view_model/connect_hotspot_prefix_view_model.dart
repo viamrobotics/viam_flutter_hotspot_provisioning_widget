@@ -53,6 +53,15 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   Future<bool> getLocationPermission() async {
     return await repository.getLocationPermission();
   }
+  
+  void resetConnectionState() async {
+    await repository.disconnect();
+    setIsAttemptingConnectionToHotspot(false);
+    setFailedToConnectToHotspot(false);
+    setFoundValidSmartMachineStatus(false);
+    setPollingForMachine(false);
+    setConnectedToHotspot(false);
+  }
 
 // This function should only ever be called after we are connected to the hotspot
   void findProvisionedMachine() {

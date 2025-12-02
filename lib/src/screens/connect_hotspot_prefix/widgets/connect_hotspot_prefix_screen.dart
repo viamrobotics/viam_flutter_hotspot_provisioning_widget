@@ -23,6 +23,7 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
+    widget.viewModel.resetConnectionState();
     if (Platform.isAndroid) {
       _checkLocationPermission();
     }
@@ -102,7 +103,10 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 24, color: Theme.of(context).colorScheme.onSurface),
-          onPressed: widget.onBack,
+          onPressed: () {
+            widget.viewModel.resetConnectionState();
+            widget.onBack();
+          },
         ),
       ),
       body: SafeArea(
