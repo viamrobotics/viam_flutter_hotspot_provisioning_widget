@@ -56,6 +56,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
 
   void resetConnectionState() async {
     await repository.disconnect();
+    _pollingTimer?.cancel();
     setIsAttemptingConnectionToHotspot(false);
     setFailedToConnectToHotspot(false);
     setFoundValidSmartMachineStatus(false);
