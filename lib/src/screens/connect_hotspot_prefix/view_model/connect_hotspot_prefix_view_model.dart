@@ -53,7 +53,7 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   Future<bool> getLocationPermission() async {
     return await repository.getLocationPermission();
   }
-  
+
   void resetConnectionState() async {
     await repository.disconnect();
     setIsAttemptingConnectionToHotspot(false);
