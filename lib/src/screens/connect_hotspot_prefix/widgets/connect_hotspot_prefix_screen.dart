@@ -23,9 +23,6 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await widget.viewModel.resetConnectionState();
-    });
     if (Platform.isAndroid) {
       _checkLocationPermission();
     }
@@ -106,7 +103,9 @@ class _ConnectHotspotPrefixScreenState extends State<ConnectHotspotPrefixScreen>
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 24, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () async {
-            await widget.viewModel.resetConnectionState();
+            if (widget.viewModel.connectedToHotspot) {
+              await widget.viewModel.resetConnectionState();
+            }
             widget.onBack();
           },
         ),
