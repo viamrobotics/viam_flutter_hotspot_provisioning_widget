@@ -1,3 +1,9 @@
+## 0.0.26
+- bump sdk by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/105
+- [APP-12902] If replaceHardware=true but robotConfig is null, showcase an error to the user by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/103
+- [APP-12715] Going backwards in hotspot provisioning flow breaks since we are still connected to the hotspot by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/104
+- Enter hotspot credentials back arrow should clear isSubmitting by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/102
+
 ## 0.0.25
 - [APP-14301] Create widget tests for widgets in network_selection screen by @jckras in by https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/100
 - [APP-14303] create widget tests for widgets in confirmation screen by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/99
