@@ -1,8 +1,8 @@
 part of '../../../../../viam_flutter_hotspot_provisioning_widget.dart';
 
 class ConnectHotspotPrefixViewModel extends ChangeNotifier {
-  final String hotspotPrefix;
-  final String hotspotPassword;
+  String _hotspotPrefix;
+  String _hotspotPassword;
   final VoidCallback onNavigateToNetworkSelection;
   final HotspotProvisioningRepository repository;
   bool _isAttemptingConnectionToHotspot = false;
@@ -13,11 +13,24 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
   bool _connectedToHotspot = false;
 
   ConnectHotspotPrefixViewModel({
-    required this.hotspotPrefix,
-    required this.hotspotPassword,
+    required String hotspotPrefix,
+    required String hotspotPassword,
     required this.onNavigateToNetworkSelection,
     required this.repository,
-  });
+  })  : _hotspotPrefix = hotspotPrefix,
+        _hotspotPassword = hotspotPassword;
+
+  String get hotspotPrefix => _hotspotPrefix;
+  String get hotspotPassword => _hotspotPassword;
+
+  void updateCredentials({
+    required String hotspotPrefix,
+    required String hotspotPassword,
+  }) {
+    _hotspotPrefix = hotspotPrefix;
+    _hotspotPassword = hotspotPassword;
+    notifyListeners();
+  }
 
   bool get isAttemptingConnectionToHotspot => _isAttemptingConnectionToHotspot;
   bool get failedToConnectToHotspot => _failedToConnectToHotspot;

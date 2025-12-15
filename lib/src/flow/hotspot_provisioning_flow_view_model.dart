@@ -89,6 +89,10 @@ class HotspotProvisioningFlowViewModel extends ChangeNotifier {
   void onCredentialsSubmitted(String prefix, String password) {
     _userHotspotPrefix = prefix;
     _userHotspotPassword = password;
+    connectHotspotPrefixViewModel?.updateCredentials(
+      hotspotPrefix: prefix,
+      hotspotPassword: password,
+    );
     notifyListeners();
     pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     hotspotCredentialsInputViewModel.resetSubmitting();
