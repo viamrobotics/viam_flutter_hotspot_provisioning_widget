@@ -1,5 +1,5 @@
 ## 0.0.29
-- Relax viam_sdk constraint to allow versions >=0.10.0 @jckras in 
+- Relax viam_sdk constraint to allow versions >=0.10.0 @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/110
 
 ## 0.0.28
 - Missing credentials error incorrectly showing up by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/108
