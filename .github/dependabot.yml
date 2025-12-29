@@ -15,5 +15,4 @@ updates:
     schedule:
       interval: "daily"
     ignore:
-      - dependency-name: "viam_sdk
-
+      - dependency-name: "viam_sdk"
