@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     allow:
       - dependency-name: "viam_sdk"
     versioning-strategy: widen
