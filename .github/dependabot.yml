@@ -1,18 +1,6 @@
 version: 2
 updates:
-  # job 1: only viam_sdk, use widen
-  - package-ecosystem: "pub"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    allow:
-      - dependency-name: "viam_sdk"
-    versioning-strategy: widen
-    
-  # job 2: all other pub deps, default behavior
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
       interval: "daily"
-    ignore:
-      - dependency-name: "viam_sdk"
