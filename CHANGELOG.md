@@ -1,5 +1,8 @@
+## 0.0.29
+- Relax viam_sdk constraint to allow versions >=0.10.0 and <=0.13.1 by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/110
+
 ## 0.0.28
-Missing credentials error incorrectly showing up by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/108
+- Missing credentials error incorrectly showing up by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/108
 
 ## 0.0.27
 - Bumping Viam SDK version to 0.13.0 by @martha-johnston in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/106 
