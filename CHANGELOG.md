@@ -1,3 +1,6 @@
+## 0.0.31
+- Fix max supported Viam SDK version
+
 ## 0.0.30
 - Bumping maximum supported Viam SDK version to 0.15.0 in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/115
 
