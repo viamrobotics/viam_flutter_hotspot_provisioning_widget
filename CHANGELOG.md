@@ -1,3 +1,6 @@
+## 0.0.32
+- extend range and try and fix workflow stuff by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/118
+
 ## 0.0.31
 - Fix max supported Viam SDK version
 
