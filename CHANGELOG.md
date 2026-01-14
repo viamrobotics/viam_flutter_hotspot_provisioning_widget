@@ -1,3 +1,7 @@
+## 0.0.33
+- Create release.yaml by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/122
+- Create publish.yaml by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/121
+
 ## 0.0.32
 - extend range and try and fix workflow stuff by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/118
 
