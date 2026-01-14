@@ -281,6 +281,22 @@ See the [`example/hotspot_provisioning`](example/hotspot_provisioning) directory
 
 4. **Network not found**: Ensure your robot's hotspot is active and broadcasting.
 
+## Publishing a New Release
+
+To publish a new version of this package:
+
+1. **Bump the version**: Update the version number in `pubspec.yaml` following [semantic versioning](https://semver.org/).
+
+2. **Update the changelog**: Document your changes in `CHANGELOG.md` with the new version number and release date.
+
+3. **Create and push a tag**: Create a git tag matching the version number and push it:
+   ```bash
+   git tag v1.0.0  # Replace with your version number
+   git push origin v1.0.0
+   ```
+
+This will automatically trigger a GitHub release and publish the package to [pub.dev](https://pub.dev).
+
 ## License
 
 See the [LICENSE](LICENSE) file for license rights and limitations.
