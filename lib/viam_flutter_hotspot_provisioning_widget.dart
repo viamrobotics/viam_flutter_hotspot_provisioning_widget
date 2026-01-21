@@ -14,7 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 export 'package:viam_sdk/viam_sdk.dart' hide Permission;
-export 'package:viam_sdk/protos/app/app.dart';
+export 'package:viam_sdk/protos/app/app.dart' hide APIKey;
 
 // views
 part 'src/screens/confirmation/widgets/confirmation_screen.dart';
