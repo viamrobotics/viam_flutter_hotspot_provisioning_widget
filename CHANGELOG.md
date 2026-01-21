@@ -1,3 +1,6 @@
+## 0.0.34
+- Add 'hide APIKey' to protos export
+
 ## 0.0.33
 - Create release.yaml by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/122
 - Create publish.yaml by @jckras in https://github.com/viamrobotics/viam_flutter_hotspot_provisioning_widget/pull/121
