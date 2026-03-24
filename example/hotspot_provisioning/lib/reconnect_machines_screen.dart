@@ -117,11 +117,11 @@ class _ReconnectRobotsScreenState extends State<ReconnectRobotsScreen> {
 
       if (result != null) {
         if (result.status == MachineStatus.online) {
-          if (mounted) {
+          if (context.mounted) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())));
           }
         } else {
-          if (mounted) {
+          if (context.mounted) {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())));
           }

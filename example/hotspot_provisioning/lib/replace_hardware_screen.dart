@@ -136,14 +136,14 @@ class _ReplaceHardwareScreenState extends State<ReplaceHardwareScreen> {
       }
       switch (result.status) {
         case MachineStatus.online:
-          if (mounted) {
+          if (context.mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => OnlineScreen(onPressed: () => Navigator.of(context).pop())),
             );
           }
           break;
         case MachineStatus.offline:
-          if (mounted) {
+          if (context.mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => OfflineScreen(onPressed: () => Navigator.of(context).pop())),
             );
