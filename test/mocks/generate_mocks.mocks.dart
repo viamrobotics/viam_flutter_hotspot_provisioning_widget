@@ -32,6 +32,7 @@ import 'package:viam_sdk/viam_sdk.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeViam_0 extends _i1.SmartFake implements _i2.Viam {
   _FakeViam_0(
@@ -796,7 +797,9 @@ class MockProvisioningClient extends _i1.Mock
   @override
   _i8.Future<void> setSmartMachineCredentials({
     required String? id,
-    required String? secret,
+    String? secret,
+    String? apiKeyId,
+    String? apiKey,
     String? appAddress = 'https://app.viam.com:443',
   }) =>
       (super.noSuchMethod(
@@ -806,6 +809,8 @@ class MockProvisioningClient extends _i1.Mock
           {
             #id: id,
             #secret: secret,
+            #apiKeyId: apiKeyId,
+            #apiKey: apiKey,
             #appAddress: appAddress,
           },
         ),
@@ -951,6 +956,7 @@ class MockAppClient extends _i1.Mock implements _i5.AppClient {
     String? publicNamespace,
     String? region,
     String? cid,
+    _i4.FragmentImportList? defaultFragments,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -961,6 +967,7 @@ class MockAppClient extends _i1.Mock implements _i5.AppClient {
             #publicNamespace: publicNamespace,
             #region: region,
             #cid: cid,
+            #defaultFragments: defaultFragments,
           },
         ),
         returnValue: _i8.Future<_i4.Organization>.value(_FakeOrganization_11(
@@ -973,6 +980,7 @@ class MockAppClient extends _i1.Mock implements _i5.AppClient {
               #publicNamespace: publicNamespace,
               #region: region,
               #cid: cid,
+              #defaultFragments: defaultFragments,
             },
           ),
         )),
@@ -2467,46 +2475,58 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
       ) as String);
 
   @override
+  bool get isMissingRobotConfig => (super.noSuchMethod(
+        Invocation.getter(#isMissingRobotConfig),
+        returnValue: false,
+      ) as bool);
+
+  @override
   set hotspotCredentialsInputViewModel(
-          _i3.HotspotCredentialsInputViewModel?
-              _hotspotCredentialsInputViewModel) =>
+          _i3.HotspotCredentialsInputViewModel? value) =>
       super.noSuchMethod(
         Invocation.setter(
           #hotspotCredentialsInputViewModel,
-          _hotspotCredentialsInputViewModel,
+          value,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  set networkSelectionViewModel(
-          _i3.NetworkSelectionViewModel? _networkSelectionViewModel) =>
+  set networkSelectionViewModel(_i3.NetworkSelectionViewModel? value) =>
       super.noSuchMethod(
         Invocation.setter(
           #networkSelectionViewModel,
-          _networkSelectionViewModel,
+          value,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  set passwordInputViewModel(
-          _i3.PasswordInputViewModel? _passwordInputViewModel) =>
+  set passwordInputViewModel(_i3.PasswordInputViewModel? value) =>
       super.noSuchMethod(
         Invocation.setter(
           #passwordInputViewModel,
-          _passwordInputViewModel,
+          value,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  set confirmationViewModel(
-          _i3.ConfirmationViewModel? _confirmationViewModel) =>
+  set confirmationViewModel(_i3.ConfirmationViewModel? value) =>
       super.noSuchMethod(
         Invocation.setter(
           #confirmationViewModel,
-          _confirmationViewModel,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set connectHotspotPrefixViewModel(_i3.ConnectHotspotPrefixViewModel? value) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #connectHotspotPrefixViewModel,
+          value,
         ),
         returnValueForMissingStub: null,
       );
@@ -2572,6 +2592,16 @@ class MockHotspotProvisioningFlowViewModel extends _i1.Mock
       );
 
   @override
+  _i8.Future<void> resetConnectionState() => (super.noSuchMethod(
+        Invocation.method(
+          #resetConnectionState,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
   void dispose() => super.noSuchMethod(
         Invocation.method(
           #dispose,
@@ -2635,16 +2665,16 @@ class MockPageController extends _i1.Mock implements _i7.PageController {
       ) as double);
 
   @override
-  bool get keepScrollOffset => (super.noSuchMethod(
-        Invocation.getter(#keepScrollOffset),
-        returnValue: false,
-      ) as bool);
-
-  @override
   double get initialScrollOffset => (super.noSuchMethod(
         Invocation.getter(#initialScrollOffset),
         returnValue: 0.0,
       ) as double);
+
+  @override
+  bool get keepScrollOffset => (super.noSuchMethod(
+        Invocation.getter(#keepScrollOffset),
+        returnValue: false,
+      ) as bool);
 
   @override
   Iterable<_i7.ScrollPosition> get positions => (super.noSuchMethod(
@@ -2907,6 +2937,15 @@ class MockHotspotCredentialsInputViewModel extends _i1.Mock
       ) as bool);
 
   @override
+  set isSubmitting(bool? value) => super.noSuchMethod(
+        Invocation.setter(
+          #isSubmitting,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -2924,6 +2963,15 @@ class MockHotspotCredentialsInputViewModel extends _i1.Mock
             prefix,
             password,
           ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void resetSubmitting() => super.noSuchMethod(
+        Invocation.method(
+          #resetSubmitting,
+          [],
         ),
         returnValueForMissingStub: null,
       );
@@ -3308,10 +3356,10 @@ class MockConfirmationViewModel extends _i1.Mock
       ) as bool);
 
   @override
-  set timer(_i8.Timer? _timer) => super.noSuchMethod(
+  set timer(_i8.Timer? value) => super.noSuchMethod(
         Invocation.setter(
           #timer,
-          _timer,
+          value,
         ),
         returnValueForMissingStub: null,
       );
