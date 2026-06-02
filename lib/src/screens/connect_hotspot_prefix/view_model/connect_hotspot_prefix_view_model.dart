@@ -147,12 +147,20 @@ class ConnectHotspotPrefixViewModel extends ChangeNotifier {
         setConnectedToHotspot(true);
         findProvisionedMachine();
       } else {
-        setConnectedToHotspot(false);
-        if (Platform.isIOS) {
-          setIsAttemptingConnectionToHotspot(false);
-          setFailedToConnectToHotspot(true);
-        }
+        await _handleConnectionFailure();
       }
+    } else {
+      await _handleConnectionFailure();
+    }
+  }
+
+  // Called when we couldn't auto-join the hotspot by prefix. Before failing, check if the device is
+  // already reachable on the current network, in case the user joined a non-matching SSID manually.
+  Future<void> _handleConnectionFailure() async {
+    if (await repository.isDeviceReachable()) {
+      debugPrint('Hotspot prefix did not match, but device is reachable on the current network. Continuing.');
+      setConnectedToHotspot(true);
+      findProvisionedMachine();
     } else {
       setConnectedToHotspot(false);
       if (Platform.isIOS) {

@@ -15,6 +15,17 @@ class HotspotProvisioningRepository {
     return await viam.provisioningClient.getSmartMachineStatus();
   }
 
+  // Returns true if the device's provisioning service responds, regardless of the connected SSID
+  Future<bool> isDeviceReachable() async {
+    try {
+      await getSmartMachineStatus();
+      return true;
+    } catch (e) {
+      debugPrint('Device not reachable on current network: $e');
+      return false;
+    }
+  }
+
   Future<void> setSmartMachineCredentials({
     required String id,
     required String secret,

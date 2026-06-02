@@ -493,6 +493,15 @@ class MockHotspotProvisioningRepository extends _i1.Mock
       ) as _i8.Future<_i2.GetSmartMachineStatusResponse>);
 
   @override
+  _i8.Future<bool> isDeviceReachable() => (super.noSuchMethod(
+        Invocation.method(
+          #isDeviceReachable,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+
+  @override
   _i8.Future<void> setSmartMachineCredentials({
     required String? id,
     required String? secret,

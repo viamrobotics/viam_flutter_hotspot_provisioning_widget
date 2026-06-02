@@ -23,6 +23,7 @@ void main() {
       repository: mockRepository,
     );
     when(mockRepository.disconnect()).thenAnswer((_) async => true);
+    when(mockRepository.isDeviceReachable()).thenAnswer((_) async => false);
   });
 
   Widget connectHotspotPrefixScreenWidget() {

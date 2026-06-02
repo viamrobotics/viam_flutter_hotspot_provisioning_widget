@@ -13,6 +13,8 @@ void main() {
 
   setUp(() {
     mockHotspotProvisioningRepository = MockHotspotProvisioningRepository();
+    // Default to unreachable; fallback tests override with true
+    when(mockHotspotProvisioningRepository.isDeviceReachable()).thenAnswer((_) async => false);
     connectHotspotPrefixViewModel = ConnectHotspotPrefixViewModel(
       hotspotPrefix: 'test-prefix',
       hotspotPassword: 'test-password',
@@ -266,6 +268,76 @@ void main() {
         expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
       } else {
         // Android uses native dialogs, doesn't set these flags
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      }
+    });
+
+    test('should proceed to provisioning when prefix join fails but device is reachable', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'random-old-ssid');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => false);
+      when(mockHotspotProvisioningRepository.isDeviceReachable()).thenAnswer((_) async => true);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      verify(mockHotspotProvisioningRepository.isDeviceReachable()).called(1);
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isTrue);
+      expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.pollingForMachine, isTrue);
+    });
+
+    test('should proceed to provisioning when connected SSID does not match prefix but device is reachable', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'random-old-ssid');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => true);
+      when(mockHotspotProvisioningRepository.isDeviceReachable()).thenAnswer((_) async => true);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      verify(mockHotspotProvisioningRepository.isDeviceReachable()).called(1);
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isTrue);
+      expect(connectHotspotPrefixViewModel.pollingForMachine, isTrue);
+    });
+
+    test('should fail normally when prefix join fails and device is not reachable', () async {
+      when(mockHotspotProvisioningRepository.getCurrentSSID()).thenAnswer((_) async => 'random-old-ssid');
+      when(mockHotspotProvisioningRepository.connectToSecureNetworkByPrefix(
+        prefix: anyNamed('prefix'),
+        password: anyNamed('password'),
+        isWep: anyNamed('isWep'),
+        isWpa3: anyNamed('isWpa3'),
+        saveNetwork: anyNamed('saveNetwork'),
+      )).thenAnswer((_) async => false);
+      when(mockHotspotProvisioningRepository.isDeviceReachable()).thenAnswer((_) async => false);
+
+      connectHotspotPrefixViewModel.connectToHotspot();
+
+      // Wait for async operations to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      verify(mockHotspotProvisioningRepository.isDeviceReachable()).called(1);
+      expect(connectHotspotPrefixViewModel.connectedToHotspot, isFalse);
+      expect(connectHotspotPrefixViewModel.pollingForMachine, isFalse);
+
+      if (Platform.isIOS) {
+        expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isTrue);
+      } else {
         expect(connectHotspotPrefixViewModel.failedToConnectToHotspot, isFalse);
       }
     });

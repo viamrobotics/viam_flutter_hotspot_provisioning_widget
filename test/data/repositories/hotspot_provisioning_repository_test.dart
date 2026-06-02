@@ -56,6 +56,18 @@ void main() {
     });
   });
 
+  group('isDeviceReachable', () {
+    test('returns true when getSmartMachineStatus succeeds', () async {
+      when(mockProvisioningClient.getSmartMachineStatus()).thenAnswer((_) async => GetSmartMachineStatusResponse());
+      expect(await hotspotProvisioningRepository.isDeviceReachable(), isTrue);
+    });
+
+    test('returns false when getSmartMachineStatus throws', () async {
+      when(mockProvisioningClient.getSmartMachineStatus()).thenAnswer((_) async => throw Exception('unreachable'));
+      expect(await hotspotProvisioningRepository.isDeviceReachable(), isFalse);
+    });
+  });
+
   group('setSmartMachineCredentials', () {
     test('setSmartMachineCredentials calls the setSmartMachineCredentials method on the provisioning client', () async {
       when(mockProvisioningClient.setSmartMachineCredentials(
