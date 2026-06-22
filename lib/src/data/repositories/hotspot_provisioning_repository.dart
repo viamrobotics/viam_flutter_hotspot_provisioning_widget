@@ -15,10 +15,13 @@ class HotspotProvisioningRepository {
     return await viam.provisioningClient.getSmartMachineStatus();
   }
 
-  // Returns true if the device's provisioning service responds, regardless of the connected SSID
-  Future<bool> isDeviceReachable() async {
+  // Returns true if the device's provisioning service responds, regardless of the connected SSID.
+  // The underlying gRPC call has no deadline of its own, so we bound it here: if the device isn't
+  // on the current network the connection can hang indefinitely rather than throwing, which would
+  // otherwise leave the UI spinning forever.
+  Future<bool> isDeviceReachable({Duration timeout = const Duration(seconds: 10)}) async {
     try {
-      await getSmartMachineStatus();
+      await getSmartMachineStatus().timeout(timeout);
       return true;
     } catch (e) {
       debugPrint('Device not reachable on current network: $e');

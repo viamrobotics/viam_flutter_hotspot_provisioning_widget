@@ -493,10 +493,13 @@ class MockHotspotProvisioningRepository extends _i1.Mock
       ) as _i8.Future<_i2.GetSmartMachineStatusResponse>);
 
   @override
-  _i8.Future<bool> isDeviceReachable() => (super.noSuchMethod(
+  _i8.Future<bool> isDeviceReachable(
+          {Duration? timeout = const Duration(seconds: 10)}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #isDeviceReachable,
           [],
+          {#timeout: timeout},
         ),
         returnValue: _i8.Future<bool>.value(false),
       ) as _i8.Future<bool>);

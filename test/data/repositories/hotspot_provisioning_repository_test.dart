@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -65,6 +67,16 @@ void main() {
     test('returns false when getSmartMachineStatus throws', () async {
       when(mockProvisioningClient.getSmartMachineStatus()).thenAnswer((_) async => throw Exception('unreachable'));
       expect(await hotspotProvisioningRepository.isDeviceReachable(), isFalse);
+    });
+
+    test('returns false when getSmartMachineStatus hangs past the timeout', () async {
+      // Simulate the device not being on the network: the gRPC call never completes.
+      when(mockProvisioningClient.getSmartMachineStatus())
+          .thenAnswer((_) => Completer<GetSmartMachineStatusResponse>().future);
+      expect(
+        await hotspotProvisioningRepository.isDeviceReachable(timeout: const Duration(milliseconds: 50)),
+        isFalse,
+      );
     });
   });
 
